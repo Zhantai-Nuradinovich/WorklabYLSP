@@ -1,0 +1,73 @@
+﻿@page "/account/register"
+
+@using  BlazorBoilerplate.Shared.Dto
+@using BlazorBoilerplate.Shared.Dto.Account
+@layout LoginLayout
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider authStateProvider
+@inject IMatToaster matToaster
+
+@using static Microsoft.AspNetCore.Http.StatusCodes
+
+<MatCard>
+    <div class="hidden-mdc-down">
+        <MatIconButton Icon="undo" Class="float-right" Link="/account/login" />
+    </div>
+
+    <div class="logo">
+        <img src="_content/BlazorBoilerplate.CommonUI/images/logo-work.png" style="width:100px;" /><br />Worklab
+        <br />
+        <h4>Регистрация</h4>
+    </div>
+
+    <EditForm Model="@registerParameters" OnValidSubmit="@RegisterUser">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <fieldset>
+            <div class="form-group">
+                <MatTextField @bind-Value="@registerParameters.UserName" Label="User Name" PlaceHolder="Логин..." Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+            </div>
+            <div class="form-group">
+                <MatTextField @bind-Value="@registerParameters.Email" Label="Email" PlaceHolder="Почта..." Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+            </div>
+            <div class="form-group">
+                <MatTextField @bind-Value="@registerParameters.Password" Label="Password" PlaceHolder="Пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+            </div>
+            <div class="form-group">
+                <MatTextField @bind-Value="@registerParameters.PasswordConfirm" Label="Password Confirmation" PlaceHolder="Повторите пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+            </div>
+            <div class="form-group d-flex justify-content-end">
+                <MatButton Type="submit" Raised="true">Зарегистрироваться</MatButton>
+            </div>
+            <hr />
+            <NavLink href="account/login">
+                <h6 class="font-weight-normal text-center">Уже зарегистрированы?</h6>
+            </NavLink>
+        </fieldset>
+    </EditForm>
+</MatCard>
+
+@code {
+    RegisterDto registerParameters { get; set; } = new RegisterDto();
+
+    async Task RegisterUser()
+    {
+        try
+        {
+            var response = await ((IdentityAuthenticationStateProvider)authStateProvider).Register(registerParameters);
+            if (response.StatusCode == Status200OK)
+            {
+                matToaster.Add("New User Email Verification was sent to: " + registerParameters.Email, MatToastType.Success, "User Creation Sucessful");
+                navigationManager.NavigateTo("");
+            }
+            else
+            {
+                matToaster.Add(response.Message, MatToastType.Danger, "User Creation Failed");
+            }
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.Message, MatToastType.Danger, "User Creation Failed");
+        }
+    }
+}

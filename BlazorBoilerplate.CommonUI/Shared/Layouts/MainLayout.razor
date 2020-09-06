@@ -1,0 +1,180 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager navigationManager
+@inject AppState appState
+
+<MatDrawerContainer Style="width: 100vw; height: 100vh;" Class="@bbDrawerClass">
+    <MatDrawer @bind-Opened="@_navMenuOpened">
+        <header class="drawer-header">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <div class="drawer-logo">
+                <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.CommonUI/images/logo-work.png" title="Worklab">
+                <a class="miniHover" href="/">Worklab</a>
+            </div>
+            <UserProfile />
+        </header>
+        <NavMenu />
+        <footer class="drawer-footer">
+            <MatTooltip Tooltip="Help">
+                <MatButton Icon="help" RefBack="@context" Link="https://github.com/enkodellc/blazorboilerplate"><span class="miniHover">Help & Support</span></MatButton>
+            </MatTooltip>
+        </footer>
+    </MatDrawer>
+    <MatDrawerContent>
+        <MatAppBarContainer>
+            <MatAppBar Fixed="true">
+                <MatAppBarRow>
+                    <MatAppBarSection>
+                        @if(!IsAuthenticated){
+                        <MatAppBarTitle>
+                            <div>
+                                <a href="/">
+                                    <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.CommonUI/images/logo-work.png" title="Worklab">
+                                </a>
+                            </div>
+                        </MatAppBarTitle>
+                        }
+                        <div class="hidden-mdc-down">
+                            @*<nav>
+        <ul>
+            <li>*@
+                            @if (IsAuthenticated)
+                            {
+                        <MatTooltip Tooltip="Toggle Navigation">
+                            <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())" RefBack="@context"></MatIconButton>
+                        </MatTooltip> @*</li>
+    <li>*@
+                                                                <MatTooltip Tooltip="Minify Navigation">
+                                                                    <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
+                                                                </MatTooltip> } @*</li>
+                                        <li>
+                                            <MatTooltip Tooltip="Lock Navigation" >
+                                                <MatIconButton Class="navToggle" Icon="lock" ToggleIcon="radio_button_unchecked" OnClick="@((e) => NavLock())" RefBack="@context"></MatIconButton>
+                                            </MatTooltip>
+                                            </li>*@ @*</ul>
+                                            </nav>*@
+                        </div>
+                    </MatAppBarSection>
+                    
+                    <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+                        <MatTooltip Tooltip="Перейти на главную страницу">
+                            <MatButton Icon="home"
+                                       Style="box-shadow: 1px 0 1px 0 rgba(255, 173, 173, 1), 3px 1px 1px -2px rgba(0, 0, 0, 0.2), 7px 1px 5px 0 rgba(0, 0, 0, 0.12)"
+                                       RefBack="@context" 
+                                       Link="/">
+                            </MatButton>
+                        </MatTooltip>
+                        <Login></Login>
+                    </MatAppBarSection>
+                </MatAppBarRow>
+            </MatAppBar>
+            <MatAppBarContent>
+                <section>
+                    @Body
+                </section>
+                <footer class="page-footer">
+                    <div class="flex-1">
+                        <MatTooltip Tooltip="Следите за нами в инстаграме">
+                            <MatButton Link="https://www.instagram.com/ylsp_kg/"
+                                       Target="_blank"
+                                       Style="box-shadow: 1px 0 1px 0 rgba(255, 173, 173, 1), 3px 1px 1px -2px rgba(0, 0, 0, 0.2), 7px 1px 5px 0 rgba(0, 0, 0, 0.12)"
+                                       RefBack="@context">
+                                <i class="fa fa-instagram"></i>
+                            </MatButton>
+                        </MatTooltip>
+                        <MatTooltip Tooltip="Следите за нами в Facebook">
+                            <MatButton Link="https://www.facebook.com/ylsp.2020/"
+                                       Target="_blank"
+                                       Style="box-shadow: 1px 0 1px 0 rgba(255, 173, 173, 1), 3px 1px 1px -2px rgba(0, 0, 0, 0.2), 7px 1px 5px 0 rgba(0, 0, 0, 0.12)"
+                                       RefBack="@context">
+                                <i class="fa fa-facebook" aria-hidden="true"></i>
+                            </MatButton>
+                        </MatTooltip>
+                    </div>
+                    <div class="flex-1">
+                        © 2020 Made by YLSP
+                    </div>
+                </footer>
+            </MatAppBarContent>
+        </MatAppBarContainer>
+    </MatDrawerContent>
+</MatDrawerContainer>
+
+@code {
+    bool _navMenuOpened = false;
+    bool _navMinified = false;
+    private bool IsAuthenticated = false;
+    public string bbDrawerClass = "";
+
+
+    private void CallLogin()
+    {
+        var returnUrl =
+              navigationManager.ToBaseRelativePath(navigationManager.Uri);
+        navigationManager.NavigateTo($"/account/Login/{returnUrl}", forceLoad: false);
+    }
+    [CascadingParameter]
+    Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Uncomment to secure entire app  with no anonymous user access
+        //navigationManager.NavigateTo("/account/login");
+
+        // Set Default landing page if you want for anonymous user.
+        // Authenticated users are redirected after successful login.
+        //navigationManager.NavigateTo("/");
+
+        var user = (await authenticationStateTask).User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var profile = await appState.GetUserProfile();
+            _navMenuOpened = profile.IsNavOpen;
+            _navMinified = profile.IsNavMinified;
+            IsAuthenticated = true;
+        }
+    }
+
+    void NavToggle()
+    {
+        _navMenuOpened = !_navMenuOpened;
+        if (_navMenuOpened)
+        {
+            bbDrawerClass = "full";
+        }
+        else
+        {
+            bbDrawerClass = "closed";
+        }
+
+        this.StateHasChanged();
+    }
+
+    void NavLock()
+    {
+        //Todo Lock Nav
+    }
+
+    void NavMinify()
+    {
+        _navMinified = !_navMinified;
+
+        if (!_navMenuOpened)
+        {
+            _navMinified = true;
+        }
+
+        if (_navMinified)
+        {
+            bbDrawerClass = "mini";
+            _navMenuOpened = true;
+        }
+        else if (_navMenuOpened)
+        {
+            bbDrawerClass = "full";
+        }
+
+        _navMenuOpened = true;
+        this.StateHasChanged();
+    }
+}

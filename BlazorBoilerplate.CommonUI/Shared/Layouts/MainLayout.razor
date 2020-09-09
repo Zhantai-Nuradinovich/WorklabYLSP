@@ -2,22 +2,17 @@
 @inject NavigationManager navigationManager
 @inject AppState appState
 
-<MatDrawerContainer Style="width: 100vw; height: 100vh;" Class="@bbDrawerClass">
+<MatDrawerContainer Style="width: 100vw; height: 100vh" Class="@bbDrawerClass">
     <MatDrawer @bind-Opened="@_navMenuOpened">
         <header class="drawer-header">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-            <div class="drawer-logo">
-                <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.CommonUI/images/logo-work.png" title="Worklab">
-                <a class="miniHover" href="/">Worklab</a>
+            <div class="drawer-logo" style="background-color: darkblue">
+                <a href="/">
+                    <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.CommonUI/images/logo-work.png" title="Worklab">
+                </a>
             </div>
-            <UserProfile />
         </header>
         <NavMenu />
-        <footer class="drawer-footer">
-            <MatTooltip Tooltip="Help">
-                <MatButton Icon="help" RefBack="@context" Link="https://github.com/enkodellc/blazorboilerplate"><span class="miniHover">Help & Support</span></MatButton>
-            </MatTooltip>
-        </footer>
     </MatDrawer>
     <MatDrawerContent>
         <MatAppBarContainer>
@@ -59,8 +54,22 @@
                         <MatTooltip Tooltip="Перейти на главную страницу">
                             <MatButton Icon="home"
                                        Style="box-shadow: 1px 0 1px 0 rgba(255, 173, 173, 1), 3px 1px 1px -2px rgba(0, 0, 0, 0.2), 7px 1px 5px 0 rgba(0, 0, 0, 0.12)"
-                                       RefBack="@context" 
+                                       RefBack="@context"
                                        Link="/">
+                            </MatButton>
+                        </MatTooltip>
+                        <MatTooltip Tooltip="О нас">
+                            <MatButton Icon="info"
+                                       Style="box-shadow: 1px 0 1px 0 rgba(255, 173, 173, 1), 3px 1px 1px -2px rgba(0, 0, 0, 0.2), 7px 1px 5px 0 rgba(0, 0, 0, 0.12)"
+                                       RefBack="@context"
+                                       Link="/about-us">
+                            </MatButton>
+                        </MatTooltip>
+                        <MatTooltip Tooltip="Контакты">
+                            <MatButton Icon="contact_support"
+                                       Style="box-shadow: 1px 0 1px 0 rgba(255, 173, 173, 1), 3px 1px 1px -2px rgba(0, 0, 0, 0.2), 7px 1px 5px 0 rgba(0, 0, 0, 0.12)"
+                                       RefBack="@context"
+                                       Link="/contacts">
                             </MatButton>
                         </MatTooltip>
                         <Login></Login>
@@ -74,20 +83,20 @@
                 <footer class="page-footer">
                     <div class="flex-1">
                         <MatTooltip Tooltip="Следите за нами в инстаграме">
-                            <MatButton Link="https://www.instagram.com/ylsp_kg/"
-                                       Target="_blank"
-                                       Style="box-shadow: 1px 0 1px 0 rgba(255, 173, 173, 1), 3px 1px 1px -2px rgba(0, 0, 0, 0.2), 7px 1px 5px 0 rgba(0, 0, 0, 0.12)"
-                                       RefBack="@context">
-                                <i class="fa fa-instagram"></i>
-                            </MatButton>
+                            <a href="https://www.instagram.com/ylsp_kg/" target="_blank" style="text-decoration: none">
+                                <MatButton Style="box-shadow: 1px 0 1px 0 rgba(255, 173, 173, 1), 3px 1px 1px -2px rgba(0, 0, 0, 0.2), 7px 1px 5px 0 rgba(0, 0, 0, 0.12)"
+                                           RefBack="@context">
+                                    <i class="fa fa-instagram"></i>
+                                </MatButton>
+                            </a>
                         </MatTooltip>
                         <MatTooltip Tooltip="Следите за нами в Facebook">
-                            <MatButton Link="https://www.facebook.com/ylsp.2020/"
-                                       Target="_blank"
-                                       Style="box-shadow: 1px 0 1px 0 rgba(255, 173, 173, 1), 3px 1px 1px -2px rgba(0, 0, 0, 0.2), 7px 1px 5px 0 rgba(0, 0, 0, 0.12)"
-                                       RefBack="@context">
-                                <i class="fa fa-facebook" aria-hidden="true"></i>
-                            </MatButton>
+                            <a href="https://www.facebook.com/ylsp.2020/" target="_blank" style="text-decoration: none">
+                                <MatButton Style="box-shadow: 1px 0 1px 0 rgba(255, 173, 173, 1), 3px 1px 1px -2px rgba(0, 0, 0, 0.2), 7px 1px 5px 0 rgba(0, 0, 0, 0.12)"
+                                           RefBack="@context">
+                                    <i class="fa fa-facebook"></i>
+                                </MatButton>
+                            </a>
                         </MatTooltip>
                     </div>
                     <div class="flex-1">

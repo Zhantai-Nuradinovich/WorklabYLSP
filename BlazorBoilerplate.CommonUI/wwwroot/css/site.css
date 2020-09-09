@@ -26,7 +26,7 @@ app {
 
 /* material theme */
 :root {
-    --mdc-theme-primary: #5D2E8F;
+    --mdc-theme-primary: #2851a4;
     --mdc-theme-secondary: #fbaf41;
     /*--mdc-theme-on-primary: #495f90;
     --mdc-theme-on-secondary: #ffe172;*/
@@ -147,7 +147,7 @@ app {
 }
 
 .mdc-top-app-bar__section .mdc-icon-button i {
-    color: #5D2E8F;
+    color: #191b1f;
 }
 
 .logo-img {
@@ -312,22 +312,25 @@ app {
 }
 
 .mdc-drawer__content {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background-image: linear-gradient(180deg, #2284f1 0%, #191b1f 70%);
     color: #FFF;
 }
 
 .mdc-drawer .mdc-list-item {
     margin: 8px 0 !important;
-    border-radius: 0 !important;
+    border-radius: 4px !important;
     color: #fff !important;
 }
 
 .mdc-drawere .mdc-list-item:active {
-    box-shadow: inset 3px 0 0 #886ab5;
+    color: white !important;
+    background-color: rgba(255,255,255,0.25);
+    border-radius: 4px;
 }
 
-.mdc-drawer .mdc-list-item--disabled {
-    color: #775e91 !important;
+.mdc-drawer .mdc-list-item:hover {
+    background-color: rgba(243, 238, 238, 0.10);
+    color: white;
 }
 
 .mdc-drawer a.mdc-list-item {
@@ -336,6 +339,7 @@ app {
 
 .mdc-drawer .mdc-list-item--selected {
     border-left: solid 3px rgba(255, 255, 255, .5);
+    color: white !important;
 }
 
     .mdc-drawer .mdc-list-item--selected::before {
@@ -344,6 +348,7 @@ app {
 
 .mdc-expansion-panel--selected .mat-expansion-panel__summary {
     border-left: solid 3px rgba(255, 255, 255, .3);
+    color: white !important;
 }
 
     .mdc-expansion-panel--selected .mat-expansion-panel__summary::before {
@@ -358,7 +363,7 @@ app {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #5D2E8F;
+    background-color: darkblue;
     height: 64px;
     color: #fff;
 }
@@ -590,7 +595,7 @@ ul.breadcrumb {
 
 .mdc-dialog__title {
     color: #fff !important;
-    background: #5D2E8F;
+    background: #191b1f;
 }
 
 .mdc-dialog__actions {
@@ -684,11 +689,12 @@ ul.breadcrumb {
 #blazor-error-ui {
     z-index: 9999;
     display: none;
-    background: #fff;
+    background: #172ac2;
     margin: 0 auto;
     padding: 10px 20px;
     text-align: center;
     position: fixed;
+    border: 5px;
     top: 0;
     left: 50%;
     transform: translateX(-50%);

@@ -1,11 +1,23 @@
 @using Microsoft.AspNetCore.Components;
+@using BlazorBoilerplate.Shared.Dto.Account
 @inject NavigationManager navigationManager
+@inject AuthenticationStateProvider authStateProvider
 
-<MatNavMenu Style="color: silver" Multi="true" Class="app-sidebar">
+<MatNavMenu Style="color: white;" Multi="true" Class="app-sidebar">
+    <MatNavItem Href="@navigationManager.ToAbsoluteUri("account/profile").AbsoluteUri">
+        <MatIcon>account_circle</MatIcon>
+        @if (userInfo == null)
+        {
+            <div class="spinner-border spinner-border-sm" role="status"></div> 
+        }
+        else
+        {
+            <span class="miniHover">@userInfo.UserName</span>
+        }
+    </MatNavItem>
     <MatNavItem Href="@navigationManager.ToAbsoluteUri("todo_list").AbsoluteUri">
         <MatIcon>list_alt</MatIcon> <span class="miniHover">Todo List</span>
     </MatNavItem>
-
     <MatNavSubMenu>
         <MatNavSubMenuHeader>
             <MatNavItem AllowSelection="false">
@@ -23,72 +35,69 @@
     </MatNavSubMenu>
     @if (IsLoggedIn)
     {
-    <MatNavItem Href="@navigationManager.ToAbsoluteUri("dashboard").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-        <MatIcon>bar_chart</MatIcon> <span class="miniHover">Dashboard</span>
-    </MatNavItem>
-    <MatNavSubMenu>
-        <MatNavSubMenuHeader>
-            <MatNavItem AllowSelection="false" Disabled="@(!IsLoggedIn)">
-                <MatIcon>mail_outline</MatIcon>
-                    <span class="miniHover"> Email</span>
-            </MatNavItem>
-        </MatNavSubMenuHeader>
-        <MatNavSubMenuList>
-            <MatNavItem Href="@navigationManager.ToAbsoluteUri("email_view").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-                <MatIcon>inbox</MatIcon> <span class="miniHover">Read Email</span>
-            </MatNavItem>
-            <MatNavItem Href="@navigationManager.ToAbsoluteUri("email").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-                <MatIcon>send</MatIcon> <span class="miniHover">Send Email</span>
-            </MatNavItem>
-        </MatNavSubMenuList>
-    </MatNavSubMenu>}
+<MatNavItem Href="@navigationManager.ToAbsoluteUri("dashboard").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+    <MatIcon>bar_chart</MatIcon> <span class="miniHover">Dashboard</span>
+</MatNavItem>
+                    <MatNavSubMenu>
+                        <MatNavSubMenuHeader>
+                            <MatNavItem AllowSelection="false" Disabled="@(!IsLoggedIn)">
+                                <MatIcon>mail_outline</MatIcon>
+                                <span class="miniHover"> Email</span>
+                            </MatNavItem>
+                        </MatNavSubMenuHeader>
+                        <MatNavSubMenuList>
+                            <MatNavItem Href="@navigationManager.ToAbsoluteUri("email_view").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                                <MatIcon>inbox</MatIcon> <span class="miniHover">Read Email</span>
+                            </MatNavItem>
+                            <MatNavItem Href="@navigationManager.ToAbsoluteUri("email").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                                <MatIcon>send</MatIcon> <span class="miniHover">Send Email</span>
+                            </MatNavItem>
+                        </MatNavSubMenuList>
+                    </MatNavSubMenu>}
     <AuthorizeView Policy="@Policies.IsAdmin" Context="AuthorizeContext">
         <Authorized>
             @if (IsAdmin)
             {
-            <MatNavSubMenu>
-                <MatNavSubMenuHeader>
-                    <MatNavItem AllowSelection="false">
-                        <MatIcon>settings_applications</MatIcon> <span class="miniHover">Admin</span>
-                    </MatNavItem>
-                </MatNavSubMenuHeader>
-                <MatNavSubMenuList>
-                    <MatNavItem Href="@navigationManager.ToAbsoluteUri("admin/users").AbsoluteUri">
-                        <MatIcon>supervisor_account</MatIcon> <span class="miniHover">Users</span>
-                    </MatNavItem>
-                    <MatNavItem Href="@navigationManager.ToAbsoluteUri("admin/roles").AbsoluteUri">
-                        <MatIcon>supervisor_account</MatIcon> <span class="miniHover">Roles</span>
-                    </MatNavItem>
-                    <MatNavItem Href="@navigationManager.ToAbsoluteUri("admin/blazor_middlware_audit").AbsoluteUri">
-                        <MatIcon>change_history</MatIcon> <span class="miniHover">Api Audit Log</span>
-                    </MatNavItem>
-                    <MatNavItem Href="@navigationManager.ToAbsoluteUri("admin/dBlogViewer").AbsoluteUri">
-                        <MatIcon>notes</MatIcon> <span class="miniHover">DB Logging View</span>
-                    </MatNavItem>
-                </MatNavSubMenuList>
-            </MatNavSubMenu>
-            }
+<MatNavSubMenu>
+    <MatNavSubMenuHeader>
+        <MatNavItem AllowSelection="false">
+            <MatIcon>settings_applications</MatIcon> <span class="miniHover">Admin</span>
+        </MatNavItem>
+    </MatNavSubMenuHeader>
+    <MatNavSubMenuList>
+        <MatNavItem Href="@navigationManager.ToAbsoluteUri("admin/users").AbsoluteUri">
+            <MatIcon>supervisor_account</MatIcon> <span class="miniHover">Users</span>
+        </MatNavItem>
+        <MatNavItem Href="@navigationManager.ToAbsoluteUri("admin/roles").AbsoluteUri">
+            <MatIcon>supervisor_account</MatIcon> <span class="miniHover">Roles</span>
+        </MatNavItem>
+        <MatNavItem Href="@navigationManager.ToAbsoluteUri("admin/blazor_middlware_audit").AbsoluteUri">
+            <MatIcon>change_history</MatIcon> <span class="miniHover">Api Audit Log</span>
+        </MatNavItem>
+        <MatNavItem Href="@navigationManager.ToAbsoluteUri("admin/dBlogViewer").AbsoluteUri">
+            <MatIcon>notes</MatIcon> <span class="miniHover">DB Logging View</span>
+        </MatNavItem>
+    </MatNavSubMenuList>
+</MatNavSubMenu>}
         </Authorized>
         <NotAuthorized>
             @if (IsAdmin)
             {
-            <MatNavItem Href="@navigationManager.ToAbsoluteUri("admin/users").AbsoluteUri" Disabled="true">
-                <MatIcon>supervisor_account</MatIcon> <span class="miniHover">Admin</span>
-            </MatNavItem>
-            }
+<MatNavItem Href="@navigationManager.ToAbsoluteUri("admin/users").AbsoluteUri" Disabled="true">
+    <MatIcon>supervisor_account</MatIcon> <span class="miniHover">Admin</span>
+</MatNavItem>}
         </NotAuthorized>
     </AuthorizeView>
     @if (IsLoggedIn)
     {
-        <MatNavItem Href="@navigationManager.ToAbsoluteUri("forum").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-            <MatIcon>forum</MatIcon> <span class="miniHover">Forum</span>
-        </MatNavItem>
-    }
+<MatNavItem Href="@navigationManager.ToAbsoluteUri("forum").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+    <MatIcon>forum</MatIcon> <span class="miniHover">Forum</span>
+</MatNavItem>}
 </MatNavMenu>
 
-@code {
-    public bool IsLoggedIn = false;
+@code { public bool IsLoggedIn = false;
     private bool IsAdmin = false;
+    UserInfoDto userInfo = null;
 
     [CascadingParameter]
     Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -97,10 +106,12 @@
     {
         IsLoggedIn = false;
         var user = (await authenticationStateTask).User;
+        userInfo = null;
 
         if (user.Identity.IsAuthenticated)
         {
             IsLoggedIn = true;
+            userInfo = await ((IdentityAuthenticationStateProvider)authStateProvider).GetUserInfo();
         }
 
         if (user.IsInRole("Administrator"))
@@ -109,5 +120,4 @@
             // Perform some action only available to users in the 'admin' role
             //Console.WriteLine("Administrator");
         }
-    }
-}
+    } }

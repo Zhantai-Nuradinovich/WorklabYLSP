@@ -111,6 +111,8 @@ namespace BlazorBoilerplate.Server.Managers
                 var userNameClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
                 var userEmailClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
 
+                string userNameFromEmail = "";
+                userEmailClaim.Value.TakeWhile(x => x != '@').ToList().ForEach(x => userNameFromEmail += x);
                 //get the user by Email (we are forcing it to be unique)
                 var user = await _userManager.FindByEmailAsync(userEmailClaim.Value);
                 if (user != null)
@@ -144,7 +146,7 @@ namespace BlazorBoilerplate.Server.Managers
                     var requireConfirmEmail = Convert.ToBoolean(_configuration["BlazorBoilerplate:RequireConfirmedEmail"] ?? "false");
                     try
                     {
-                        user = await _accountManager.RegisterNewUserAsync(userNameClaim.Value, userEmailClaim.Value, null, requireConfirmEmail);
+                        user = await _accountManager.RegisterNewUserAsync(userNameFromEmail, userEmailClaim.Value, null, requireConfirmEmail);
                     }
                     catch (DomainException ex)
                     {
@@ -168,7 +170,7 @@ namespace BlazorBoilerplate.Server.Managers
                 
                 //All if fine, this user (email) did not try to log in before using this external provider
                 //Add external login info
-                var addExternalLoginResult = await _userManager.AddLoginAsync(user, new UserLoginInfo(externalProvider, externalUserId, userNameClaim.Value));
+                var addExternalLoginResult = await _userManager.AddLoginAsync(user, new UserLoginInfo(externalProvider, externalUserId, userNameFromEmail));
                 if (addExternalLoginResult.Succeeded == false)
                 {
                     return $"~/externalauth/error/{ErrorEnum.CannotAddExternalLogin}";

@@ -267,11 +267,11 @@ namespace BlazorBoilerplate.Server
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 6;
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
                 //options.Password.RequiredUniqueChars = 6;
 
                 // Lockout settings
@@ -280,9 +280,9 @@ namespace BlazorBoilerplate.Server
                 options.Lockout.AllowedForNewUsers = true;
 
                 // Require Confirmed Email User settings
+                options.User.RequireUniqueEmail = true;
                 if (Convert.ToBoolean(Configuration["BlazorBoilerplate:RequireConfirmedEmail"] ?? "false"))
                 {
-                    options.User.RequireUniqueEmail = false;
                     options.SignIn.RequireConfirmedEmail = true;
                 }
             });

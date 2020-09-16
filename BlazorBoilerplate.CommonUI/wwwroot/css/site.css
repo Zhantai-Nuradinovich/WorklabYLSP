@@ -24,10 +24,10 @@ app {
     background-image: linear-gradient(to bottom, rgba(17,17,17,1) 0%,rgba(76,76,76,1) 23%,rgba(76,76,76,1) 23%,rgba(71,71,71,1) 72%,rgba(17,17,17,1) 99%);
 }
 
-/* material theme */
+/* material theme 2851a4*/
 :root {
-    --mdc-theme-primary: #2851a4;
-    --mdc-theme-secondary: #fbaf41;
+    --mdc-theme-primary: #343e6d;
+    --mdc-theme-secondary: #2851a4;
     /*--mdc-theme-on-primary: #495f90;
     --mdc-theme-on-secondary: #ffe172;*/
     --mdc-theme-text-primary: #ffffff;
@@ -312,7 +312,7 @@ app {
 }
 
 .mdc-drawer__content {
-    background-image: linear-gradient(180deg, #2284f1 0%, #191b1f 70%);
+    background-color: rgb(59, 60, 66);
     color: #FFF;
 }
 
@@ -363,7 +363,7 @@ app {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: darkblue;
+    background-color: #28293B;
     height: 64px;
     color: #fff;
 }

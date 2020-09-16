@@ -9,8 +9,8 @@
 
 @using static Microsoft.AspNetCore.Http.StatusCodes
 
-<h1>User Profile</h1>
-<p>User profile management.</p>
+<h1>Личный кабинет</h1>
+<p>Основные настройки.</p>
 @if (userInfo == null)
 {
     <LoadingBackground ShowLogoBox="true"></LoadingBackground>
@@ -30,10 +30,10 @@ else
                 <MatTextField @bind-Value="@userInfo.Email" Label="Email" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
             </div>
             <div class="form-group">
-                <MatTextField @bind-Value="@userInfo.FirstName" Label="First Name" FullWidth="true"></MatTextField>
+                <MatTextField @bind-Value="@userInfo.FirstName" Label="First Name" PlaceHolder="Имя..." FullWidth="true"></MatTextField>
             </div>
             <div class="form-group">
-                <MatTextField @bind-Value="@userInfo.LastName" Label="Last Name" FullWidth="true"></MatTextField>
+                <MatTextField @bind-Value="@userInfo.LastName" Label="Last Name" PlaceHolder="Фамилия..." FullWidth="true"></MatTextField>
             </div>
 
             <div class="form-group">
@@ -91,7 +91,7 @@ else
     public void OpenResetPasswordDialog()
     {
         //Todo finish this reset password functionality - needs new API call "UserPasswordReset"
-        matToaster.Add("Not Yet Implemented", MatToastType.Warning);
+        matToaster.Add("Надо доделать", MatToastType.Warning);
 
         // reusing the registerParameters and User objects
         //registerParameters = new RegisterDto();  // reset object
@@ -103,14 +103,14 @@ else
     {
         if (registerParameters.Password != registerParameters.PasswordConfirm)
         {
-            matToaster.Add("Passwords Must Match", MatToastType.Warning);
+            matToaster.Add("Пароли должны совпадать", MatToastType.Warning);
         }
         else
         {
             apiResponse = await Http.PostJsonAsync<ApiResponseDto>($"api/Account/UserPasswordReset/{userInfo.UserId}", registerParameters.Password);
             if (apiResponse.StatusCode == Status204NoContent || apiResponse.StatusCode == Status200OK)
             {
-                matToaster.Add("Password Reset", MatToastType.Success, apiResponse.Message);
+                matToaster.Add("Пароль сброшен", MatToastType.Success, apiResponse.Message);
             }
             else
             {
@@ -128,16 +128,16 @@ else
 
             if (apiResponse.StatusCode == Status200OK)
             {
-                matToaster.Add("Profile update was Successful", MatToastType.Success);
+                matToaster.Add("Профиль обновлен", MatToastType.Success);
             }
             else
             {
-                matToaster.Add(apiResponse.Message, MatToastType.Danger, "Profile Update Failed");
+                matToaster.Add(apiResponse.Message, MatToastType.Danger, "Не удалось обновить профиль");
             }
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Profile Update Failed");
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось обновить профиль");
         }
     }
 }

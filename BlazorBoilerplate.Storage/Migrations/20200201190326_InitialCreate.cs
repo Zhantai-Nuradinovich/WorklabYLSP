@@ -283,6 +283,7 @@ namespace BlazorBoilerplate.Storage.Migrations
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "AspNetUsers",
+                unique: true,
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(

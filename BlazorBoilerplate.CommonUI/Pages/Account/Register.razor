@@ -15,8 +15,7 @@
     </div>
 
     <div class="logo">
-        <img src="_content/BlazorBoilerplate.CommonUI/images/logo-work.png" style="width:100px;" /><br />Worklab
-        <br />
+        <img src="_content/BlazorBoilerplate.CommonUI/images/logo-work.png" style="width:100px;" /><br />
         <h4>Регистрация</h4>
     </div>
 
@@ -57,17 +56,17 @@
             var response = await ((IdentityAuthenticationStateProvider)authStateProvider).Register(registerParameters);
             if (response.StatusCode == Status200OK)
             {
-                matToaster.Add("New User Email Verification was sent to: " + registerParameters.Email, MatToastType.Success, "User Creation Sucessful");
+                matToaster.Add("Отправлено письмо для подтверждение на: " + registerParameters.Email, MatToastType.Success, "Регистрация удалась");
                 navigationManager.NavigateTo("");
             }
             else
             {
-                matToaster.Add(response.Message, MatToastType.Danger, "User Creation Failed");
+                matToaster.Add(response.Message, MatToastType.Danger, "Регистрация не удалась");
             }
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, "User Creation Failed");
+            matToaster.Add(ex.Message, MatToastType.Danger, "Регистрация не удалась");
         }
     }
 }

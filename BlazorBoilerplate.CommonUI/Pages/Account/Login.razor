@@ -136,12 +136,12 @@
             }
             else
             {
-                matToaster.Add(response.Message, MatToastType.Danger, "Login Attempt Failed");
+                matToaster.Add(response.Message, MatToastType.Danger, "Не удалось войти");
             }
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Login Attempt Failed");
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось войти");
         }
     }
 
@@ -150,13 +150,13 @@
         try
         {
             await ((IdentityAuthenticationStateProvider)authStateProvider).ForgotPassword(forgotPasswordParameters);
-            matToaster.Add("Forgot Password Email Sent", MatToastType.Success);
+            matToaster.Add("Отправлено письмо на почту ", MatToastType.Success);
             forgotPasswordParameters.Email = "";
             forgotPasswordToggle = false;
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Reset Password Attempt Failed");
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сбросить пароль");
         }
     }
 }

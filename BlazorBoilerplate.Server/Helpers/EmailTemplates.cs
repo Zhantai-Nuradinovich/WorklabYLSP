@@ -32,7 +32,7 @@ namespace BlazorBoilerplate.Server.Helpers
                 .Replace("{user}", emailMessage.ToAddresses[0].Name)
                 .Replace("{testDate}", DateTime.Now.ToString());
 
-              emailMessage.Subject = string.Format("Hello {0} from Blazor Boilerplate", emailMessage.ToAddresses[0].Name);
+              emailMessage.Subject = string.Format("Hello {0} from YLSP Team", emailMessage.ToAddresses[0].Name);
 
           return emailMessage;
         }
@@ -60,7 +60,7 @@ namespace BlazorBoilerplate.Server.Helpers
                 .Replace("{userId}", userId)
                 .Replace("{token}", token);
 
-            emailMessage.Subject = string.Format("Welcome {0} to Blazor Boilerplate", recepientName);
+            emailMessage.Subject = string.Format("Welcome {0} to Worklab", recepientName);
 
             return emailMessage;
         }
@@ -76,7 +76,7 @@ namespace BlazorBoilerplate.Server.Helpers
                 .Replace("{email}", emailAddress)
                 .Replace("{password}", password);
 
-            emailMessage.Subject = string.Format("Welcome {0} to Blazor Boilerplate", fullName);
+            emailMessage.Subject = string.Format("Welcome {0} to Worklab", fullName);
 
             return emailMessage;
         }
@@ -93,7 +93,7 @@ namespace BlazorBoilerplate.Server.Helpers
                 .Replace("{roles}", roles)
                 .Replace("{company}", company);
 
-            emailMessage.Subject = string.Format("A new user [{0}] has registered on Blazor Boilerplate", userName);
+            emailMessage.Subject = string.Format("A new user [{0}] has registered on Worklab", userName);
 
             return emailMessage;
         }
@@ -107,7 +107,7 @@ namespace BlazorBoilerplate.Server.Helpers
                 .Replace("{token}", token)
                 .Replace("{callbackUrl}", callbackUrl);
 
-            emailMessage.Subject = string.Format("Blazor Boilerplate Forgot your Passord? [{0}]", name);
+            emailMessage.Subject = string.Format("Worklab Forgot your Passord? [{0}]", name);
 
             return emailMessage;
         }
@@ -119,7 +119,7 @@ namespace BlazorBoilerplate.Server.Helpers
             emailMessage.Body = passwordResetTemplate
                 .Replace("{userName}", userName);
 
-            emailMessage.Subject = string.Format("Blazor Boilerplate Password Reset for {0}", userName);
+            emailMessage.Subject = string.Format("Worklab Password Reset for {0}", userName);
 
             return emailMessage;
         }

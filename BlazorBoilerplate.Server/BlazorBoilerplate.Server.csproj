@@ -8,8 +8,8 @@
     </RestoreAdditionalProjectSources>
     <LangVersion>8.0</LangVersion>
     <Version>0.8.2</Version>
-    <Authors>Keith Fimreite</Authors>
-    <Company>EnkodeLLC</Company>
+    <Authors>Zhantai Nuradinov</Authors>
+    <Company>YLSP</Company>
     <Title>Blazor Boilerplate Server</Title>
     <Description>Blazor Boilerplate is starter kit / SPA Admin Template for Blazor</Description>
     <WebPage>https://blazorboilerplate.com/</WebPage>

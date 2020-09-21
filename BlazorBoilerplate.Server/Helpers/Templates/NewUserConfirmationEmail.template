@@ -1,14 +1,10 @@
 ﻿<div>
   <h1>
-    <img style="width:100px; vertical-align: middle;" src="https://blazorboilerplate.com/images/logo.png" alt="Blazor Boilerplate"/> Blazor Boilerplate
+    <img style="width:100px; vertical-align: middle;" src="_content/BlazorBoilerplate.CommonUI/images/logo-work.png" alt="YLSP Team приветствует вас!"/> Worklab
   </h1>
-  <p>Hello {userName},</p>
+  <p>Здравствуйте, {userName}.</p>
   <p>
-    Please confirm your account by: <a href='{callbackUrl}'>clicking this link.</a>
+    Пожалуйста, перейдите по: <a href='{callbackUrl}'>ссылке.</a>
   </p>
-  <p>
-    <strong>UserId:</strong> {userId}<br />
-    <strong>Token:</strong> {token}<br/>
-  </p>
-  <p>Thank you, and welcome to the Blazor Boilerplate</p>
+  <p>Благодарим вас и добро пожаловать на симулятор!</p>
 </div>

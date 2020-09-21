@@ -1,10 +1,10 @@
 ﻿<div>
   <h1>
-    <img style="width:100px; vertical-align: middle;" src="https://blazorboilerplate.com/images/logo.png" alt="Blazor Boilerplate"/> Blazor Boilerplate
+    <img style="width:100px; vertical-align: middle;" src="_content/BlazorBoilerplate.CommonUI/images/logo-work.png" alt="YLSP Team"/> Worklab
   </h1>
-  <p>Hello {fullName},</p>
+  <p>Приветствуем, {fullName}!</p>
   <p>
-    You have been added as a new user to <a href="https://blazorboilerplate.com" target="_blank">https://blazorboilerplate.com</a> Below are your new credentials.
+    Вы были зарегистрированы на сайте <a href="http://worklab.kg">Worklab</a>. Снизу ваши данные:
   </p>
   <p>
     User Name: {userName}<br />
@@ -13,14 +13,11 @@
   </p>
   <ul>
     <li>
-      Please save this email to refer to your login credentials.
-    </li>
-    <li>
-      You can log in using the <a href="https://blazorboilerplate.com/account/login">link provided here.</a>
+      Пожалуйста, сохраните это письмо.
     </li>
   </ul>
   <p>
     <br />
   </p>
-  <p>Thank you, and welcome aboard the Blazor Boilerplate</p>
+  <p>Благодарим вас и добро пожаловать к нам!</p>
 </div>

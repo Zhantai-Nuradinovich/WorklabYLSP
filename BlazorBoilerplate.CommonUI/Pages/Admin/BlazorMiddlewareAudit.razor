@@ -2,7 +2,7 @@
 
 @inject HttpClient Http
 @inject IMatToaster matToaster
-
+@attribute [Authorize(Policy = Policies.IsAdmin)]
 @using static Microsoft.AspNetCore.Http.StatusCodes
 
 <h1>Blazor / .NET Core Middleware Audit Log</h1>
@@ -18,56 +18,52 @@
 
 @if (apiResponses == null)
 {
-    <LoadingBackground ShowLogoBox="true">
-        <label>Loading ApI Log Data</label>
-    </LoadingBackground>
-}
-else
-{
-    <MatTable Items="@apiLogItems" Class="mat-elevation-z5" Striped="true" PageSize="10">
-        <MatTableHeader>
-            <th><div style="width:175px;"><MatFAB Icon="refresh" OnClick="@(() => LoadData())" Raised="true" Mini="true" Style="margin-right:16px;"></MatFAB> Date / Time</div></th>
-            <th>Http Code</th>
-            <th>IP Address</th>
-            <th>Method</th>
-            <th>Response Time</th>
-            <th><div style="width:175px;">UserId</div></th>
-            <th>Path</th>
-        </MatTableHeader>
-        <MatTableRow>
-            <td>@context.RequestTime</td>
-            <td>@context.StatusCode</td>
-            <td><span style="font-size:small">@context.IPAddress</span></td>
-            <td>@context.Method</td>
-            <td>@context.ResponseMillis</td>
-            <td>@context.ApplicationUserId</td>
-            <td>@context.Path</td>
-        </MatTableRow>
-    </MatTable>
-}
+<LoadingBackground ShowLogoBox="true">
+    <label>Loading ApI Log Data</label>
+</LoadingBackground> }
+            else
+            {
+<MatTable Items="@apiLogItems" Class="mat-elevation-z5" Striped="true" PageSize="10">
+    <MatTableHeader>
+        <th><div style="width:175px;"><MatFAB Icon="refresh" OnClick="@(() => LoadData())" Raised="true" Mini="true" Style="margin-right:16px;"></MatFAB> Date / Time</div></th>
+        <th>Http Code</th>
+        <th>IP Address</th>
+        <th>Method</th>
+        <th>Response Time</th>
+        <th><div style="width:175px;">UserId</div></th>
+        <th>Path</th>
+    </MatTableHeader>
+    <MatTableRow>
+        <td>@context.RequestTime</td>
+        <td>@context.StatusCode</td>
+        <td><span style="font-size:small">@context.IPAddress</span></td>
+        <td>@context.Method</td>
+        <td>@context.ResponseMillis</td>
+        <td>@context.ApplicationUserId</td>
+        <td>@context.Path</td>
+    </MatTableRow>
+</MatTable>}
 
 
-@code {
-    ApiResponseDto[] apiResponses = new ApiResponseDto[] { };
-    List<ApiLogItemDto> apiLogItems = new List<ApiLogItemDto>();
+@code { ApiResponseDto[] apiResponses = new ApiResponseDto[] { };
+            List<ApiLogItemDto> apiLogItems = new List<ApiLogItemDto>();
 
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadData();
-    }
+            protected override async Task OnInitializedAsync()
+            {
+                await LoadData();
+            }
 
-    protected async Task LoadData()
-    {
-        ApiResponseDto apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/apilog");
+            protected async Task LoadData()
+            {
+                ApiResponseDto apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/apilog");
 
-        if (apiResponse.StatusCode == Status200OK)
-        {
-            matToaster.Add(apiResponse.Message, MatToastType.Success, "Api Log Items Retrieved");
-            apiLogItems = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiLogItemDto[]>(apiResponse.Result.ToString()).ToList<ApiLogItemDto>();
-        }
-        else
-        {
-            matToaster.Add(apiResponse.Message, MatToastType.Danger, "Api Log Items Retrieval Failed");
-        }
-    }
-}
+                if (apiResponse.StatusCode == Status200OK)
+                {
+                    matToaster.Add(apiResponse.Message, MatToastType.Success, "Api Log Items Retrieved");
+                    apiLogItems = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiLogItemDto[]>(apiResponse.Result.ToString()).ToList<ApiLogItemDto>();
+                }
+                else
+                {
+                    matToaster.Add(apiResponse.Message, MatToastType.Danger, "Api Log Items Retrieval Failed");
+                }
+            } }

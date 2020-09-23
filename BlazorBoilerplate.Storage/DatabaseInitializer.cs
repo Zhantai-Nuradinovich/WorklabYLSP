@@ -72,12 +72,15 @@ namespace BlazorBoilerplate.Storage
                 //Generating inbuilt accounts
                 const string adminRoleName = "Administrator";
                 const string userRoleName = "User";
+                const string coordinatorRoleName = "Coordinator";
 
                 await EnsureRoleAsync(adminRoleName, "Default administrator", ApplicationPermissions.GetAllPermissionValues());
                 await EnsureRoleAsync(userRoleName, "Default user", new string[] { });
+                await EnsureRoleAsync(coordinatorRoleName, "Default coordinator", new string[] { });
 
-                await CreateUserAsync("admin", "admin123", "Admin", "Blazor", "Administrator", "admin@blazoreboilerplate.com", "+1 (123) 456-7890", new string[] { adminRoleName });
-                await CreateUserAsync("user", "user123", "User", "Blazor", "User Blazor", "user@blazoreboilerplate.com", "+1 (123) 456-7890`", new string[] { userRoleName });
+                await CreateUserAsync("admin", "Admin123456", "Admin", "YLSPTeam", "Administrator YLSP", "admin@blazoreboilerplate.com", "+1 (123) 456-7890", new string[] { adminRoleName });
+                await CreateUserAsync("user", "User123456", "User", "YLSPTeam", "User YLSP", "user@blazoreboilerplate.com", "+1 (123) 456-7890`", new string[] { userRoleName });
+                await CreateUserAsync("coordinator", "Coordinator123456", "Coordinator", "YLSPTeam", "Coordinator YLSP", "superexampleuser@gmail.com", "+7 (999) 825-0380`", new string[] { coordinatorRoleName, userRoleName });
 
                 _logger.LogInformation("Inbuilt account generation completed");
             }
@@ -117,7 +120,7 @@ namespace BlazorBoilerplate.Storage
                     ApplicationUser = user,
                     Count = 2,
                     IsNavOpen = true,
-                    LastPageVisited = "/dashboard",
+                    LastPageVisited = "/",
                     IsNavMinified = false,
                     LastUpdatedDate = DateTime.Now
                 };
@@ -130,12 +133,12 @@ namespace BlazorBoilerplate.Storage
                         new Todo
                         {
                             IsCompleted = false,
-                            Title = "Test Blazor Boilerplate"
+                            Title = "Test todo"
                         },
                         new Todo
                         {
                             IsCompleted = false,
-                            Title = "Test Blazor Boilerplate 1",
+                            Title = "Test todo 1",
                         }
                 );
             }

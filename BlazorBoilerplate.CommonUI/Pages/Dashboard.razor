@@ -1,36 +1,83 @@
 ﻿@page "/dashboard"
-@attribute [Authorize]
+@using System.Globalization
+@attribute [Authorize(Roles = "Administrator, Coordinator")]
 @inject AppState appState
 
-<h1>Dashboard</h1>
+<h1>Статистика</h1>
 
-<p>
-    Expecting to see a bunch of flashy charts then you download the repo and delete them all because you don't need them? <br />
-    Check out <a href="https://github.com/Joelius300/ChartJSBlazor" target="_blank">https://github.com/Joelius300/ChartJSBlazor</a> and you will find a great resource for animated charts for a dashboard.<br />
-</p>
 <hr />
-<h2>Counter</h2>
+<h2>Счетчик</h2>
 
 <MatFAB icon="exposure_plus_1" @onclick="@IncrementCount"></MatFAB>
 
 <p>
-    Current Page Count: <strong>@currentCount</strong>
+    Подсчитано: <strong>@currentCount</strong>
     <br />
-    Current User Profile / Persistent Count: <strong>@if (@profileCurrentCount != -1)@profileCurrentCount</strong>
+    Общее число: <strong>@if (@profileCurrentCount != -1)@profileCurrentCount</strong>
 </p>
+<MatDivider></MatDivider>
+<div class="row">
+    <div class="col-md-6 col-sm-12 p-4">
+        <RadzenChart ColorScheme="@colorScheme">
+            @for (var year = 2013; year <= 2020; year++)
+            {
+                var currentYearRevenue = revenue.Where(r => r.Year == year).ToList();
+                <RadzenColumnSeries Data="@currentYearRevenue" CategoryProperty="Quarter" Title="@year.ToString()" ValueProperty="Revenue" />
+            }
+            <RadzenColumnOptions Margin="0" />
+            <RadzenValueAxis Formatter="@FormatAsUSD" />
+        </RadzenChart>
+    </div>
+    <div class="col">
+        <RadzenChart ColorScheme="@colorScheme">
+            <RadzenPieSeries Data="@revenue.Where(r => r.Year == 2020)" Title="Доход" CategoryProperty="Quarter" ValueProperty="Revenue" />
+        </RadzenChart>
+    </div>
+</div>
+<h3>Стиль цветов</h3>
+<div class="col-md-6 col-sm-12 p-4">
+    <RadzenChart>
+        <RadzenAreaSeries Stroke="rgb(236,72,127)" StrokeWidth="2" Fill="rgba(236,72,127,.5)" Data="@revenue.Where(r => r.Year == 2020)" CategoryProperty="Quarter" ValueProperty="Revenue">
+            <ChildContent>
+                <RadzenMarkers MarkerType="MarkerType.Circle" Fill="#fff" Stroke="rgba(236,72,127)" StrokeWidth="2" Size="8" />
+            </ChildContent>
+            <TooltipTemplate Context="data">
+                Доход за <span>@data.Quarter</span> 2020: <strong>@data.Revenue.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</strong>
+            </TooltipTemplate>
+        </RadzenAreaSeries>
+        <RadzenCategoryAxis>
+            <RadzenGridLines Visible="true" Stroke="#ccc" LineType="LineType.Dashed" />
+        </RadzenCategoryAxis>
+        <RadzenValueAxis>
+            <RadzenGridLines Visible="true" />
+        </RadzenValueAxis>
+        <RadzenChartTooltipOptions Style="border: 1px solid rgb(236,72,127); background: #eee; color: #000;" />
+        <RadzenLegend Visible="false" />
+    </RadzenChart>
+</div>
 
-<p>
-    There is a "User Profile" for persistant user data built into Blazor Boilerplate. This is a bit of hack until Microsoft or others create that functionality.
-    Currently we store Sidebar Navigation settings, Count. In the future I would like to track the users last page but I don't see much for <br/>
-</p>
-
-@code {
-    int currentCount = 0;
+@code { int currentCount = 0;
     int profileCurrentCount = -1;
+    ColorScheme colorScheme = ColorScheme.Monochrome;
 
     protected override async Task OnInitializedAsync()
     {
         profileCurrentCount = await appState.GetUserProfileCount();
+
+        var random = new Random();
+
+        for (var year = 2013; year <= 2020; year++)
+        {
+            for (var quarter = 1; quarter <= 4; quarter++)
+            {
+                revenue.Add(new DataItem
+                {
+                    Year = year,
+                    Quarter = $"Q{quarter}",
+                    Revenue = random.NextDouble() * 200000
+                });
+            }
+        }
     }
 
     public async Task IncrementCount()
@@ -39,4 +86,17 @@
         profileCurrentCount++;
         await appState.UpdateUserProfileCount(profileCurrentCount);
     }
-}
+
+    class DataItem
+    {
+        public int Year { get; set; }
+        public string Quarter { get; set; }
+        public double Revenue { get; set; }
+    }
+
+    string FormatAsUSD(object value)
+    {
+        return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
+    }
+
+    IList<DataItem> revenue = new List<DataItem>(); }

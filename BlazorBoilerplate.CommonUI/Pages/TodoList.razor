@@ -1,17 +1,12 @@
 ﻿@page "/todo_list"
 @using BlazorBoilerplate.Shared.Dto.Sample
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Administrator, Coordinator")]
 @inject HttpClient Http
 @inject IMatToaster matToaster
 
 @using System.Net
 
-<h1>Todo List - CRUD</h1>
-<p>
-    This Todo List demonstrates fetching data from the server and CRUD for Blazor with .NET Core API server. This example unlike most is implemented with persistent data using N-Tier design patterns.
-    Check out the <a href="https://github.com/enkodellc/blazorboilerplate" target="_blank">repository to view the source.</a> If you find this helpful please contribute or <a href="https://www.paypal.me/enkodellc">donate</a> to support further development.
-    Delete is Protected to Admin users only.
-</p>
+<h1>Список дел прямиком из БД (CRUD)</h1>
 
 <MatTable Class="mat-elevation-z5" Items="@todos" LoadInitialData="true" Striped="true" FilterByColumnName="Title" DebounceMilliseconds="150" PageSize="10">
     <MatTableHeader>
@@ -21,7 +16,7 @@
             </div>
         </th>
         <th>Id</th>
-        <th>Completed</th>
+        <th>Завершён</th>
         <th style="min-width:180px;">Todo</th>
     </MatTableHeader>
     <MatTableRow Context="TodoRow">
@@ -35,35 +30,35 @@
 </MatTable>
 
 <MatDialog @bind-IsOpen="@dialogIsOpen">
-    <MatDialogTitle>Create Todo</MatDialogTitle>
+    <MatDialogTitle>Создать</MatDialogTitle>
     <MatDialogContent>
         <EditForm Model="@todo" OnValidSubmit="@CreateTodo">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <fieldset>
                 <div class="form-group">
-                    <MatTextField @bind-Value="@todo.Title" Label="Title" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    <MatTextField @bind-Value="@todo.Title" Label="Название" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
                 </div>
                 <div class="form-group">
-                    <MatCheckbox @bind-Value="@todo.IsCompleted" Label="Completed"></MatCheckbox>
+                    <MatCheckbox @bind-Value="@todo.IsCompleted" Label="Завершён"></MatCheckbox>
                 </div>
             </fieldset>
         </EditForm>
     </MatDialogContent>
     <MatDialogActions>
         <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
-        <MatButton OnClick="@CreateTodo">Create Todo</MatButton>
+        <MatButton OnClick="@CreateTodo">Создать</MatButton>
     </MatDialogActions>
 </MatDialog>
 
 <MatDialog @bind-IsOpen="@deleteDialogOpen" Style="z-index:100">
     <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Confirm Delete</MatDialogTitle>
     <MatDialogContent>
-        Are you sure you want to delete todo "@todo.Title" ?
+        Хотите удалить "@todo.Title" ?
     </MatDialogContent>
     <MatDialogActions>
-        <MatButton OnClick="@(e => { deleteDialogOpen = false; })">Cancel</MatButton>
-        <MatButton OnClick="@Delete">Delete</MatButton>
+        <MatButton OnClick="@(e => { deleteDialogOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@Delete">Удалить</MatButton>
     </MatDialogActions>
 </MatDialog>
 
@@ -89,7 +84,7 @@
         }
         else
         {
-            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo List Retrieval Failed");
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось получить");
         }
     }
 
@@ -108,13 +103,13 @@
             }
             else
             {
-                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo Save Failed");
+                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось сохранить");
                 todo.IsCompleted = !todo.IsCompleted; //update failed so reset IsCompleted
             }
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Todo Save Failed");
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
             todo.IsCompleted = !todo.IsCompleted; //update failed so reset IsCompleted
         }
     }
@@ -126,19 +121,19 @@
             var response = await Http.DeleteAsync("api/todo/" + todo.Id);
             if (response.StatusCode ==  (HttpStatusCode)Status200OK)
             {
-                matToaster.Add("Todo Deleted", MatToastType.Success);
+                matToaster.Add("Удалено", MatToastType.Success);
                 todos.Remove(todo);
             }
             else
             {
-                matToaster.Add("Todo Delete Failed: " + response.StatusCode, MatToastType.Danger);
+                matToaster.Add("Не удалось удалить: " + response.StatusCode, MatToastType.Danger);
             }
             deleteDialogOpen = false;
             todo = new TodoDto(); //reset todo after delete
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Todo Save Failed");
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
         }
     }
 
@@ -168,12 +163,12 @@
             }
             else
             {
-                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Todo Creation Failed");
+                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось создать");
             }
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Todo Creation Failed");
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось создать");
         }
     }
 }

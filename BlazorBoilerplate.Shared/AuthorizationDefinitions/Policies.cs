@@ -9,6 +9,7 @@ namespace BlazorBoilerplate.Shared.AuthorizationDefinitions
     {
         public const string IsAdmin = "IsAdmin";
         public const string IsUser = "IsUser";
+        public const string IsCoordinator = "IsCoordinator";
         public const string IsReadOnly = "IsReadOnly";
         public const string IsMyDomain = "IsMyDomain";
 
@@ -28,6 +29,13 @@ namespace BlazorBoilerplate.Shared.AuthorizationDefinitions
                 .Build();
         }
 
+        public static AuthorizationPolicy IsCoordinatorPolicy()
+        {
+            return new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireClaim("IsCoordinator")
+                .Build();
+        }
         public static AuthorizationPolicy IsReadOnlyPolicy()
         {
             return new AuthorizationPolicyBuilder()
@@ -40,7 +48,7 @@ namespace BlazorBoilerplate.Shared.AuthorizationDefinitions
         {
             return new AuthorizationPolicyBuilder()
             .RequireAuthenticatedUser()
-            .AddRequirements(new DomainRequirement("blazorboilerplate.com"))
+            .AddRequirements(new DomainRequirement("worklab.kg"))
             .Build();                
         }
     }

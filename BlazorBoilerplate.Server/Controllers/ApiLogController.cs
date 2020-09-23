@@ -21,7 +21,7 @@ namespace BlazorBoilerplate.Server.Controllers
 
         // GET: api/ApiLog
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize(Policy = Policies.IsAdmin)]
         public async Task<ApiResponse> Get()
         =>  await _apiLogManager.Get();
 

@@ -3,11 +3,12 @@
 
 @inject HttpClient Http
 @inject IMatToaster matToaster
+@attribute [Authorize(Policy = Policies.IsAdmin)]
 
 @using static Microsoft.AspNetCore.Http.StatusCodes
 
-<h1>Send Email</h1>
-<p>Test out SMTP email sending with MailKit. This will send out an email using a default "Test" template if you have setup your smtp server in <i>appsettings.json</i>.</p>
+<h1>Отправка письма</h1>
+<p>Отправляет тестовое письмо, которое находится в хелпере</p>
 <EditForm Model="@emailParameters" OnValidSubmit="@SendEmail">
     <DataAnnotationsValidator />
     <ValidationSummary />
@@ -16,7 +17,7 @@
             <MatTextField @bind-Value="@emailParameters.ToAddress" Label="Email" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
         </div>
         <div class="form-group d-flex justify-content-end">
-            <MatButton Type="submit" Raised="true">Send Test Template Email</MatButton>
+            <MatButton Type="submit" Raised="true">Отправить тестовое письмо</MatButton>
         </div>
     </fieldset>
 </EditForm>
@@ -42,12 +43,12 @@
             }
             else
             {
-                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Email Send Failed");
+                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось отправить");
             }
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Email Send Failed");
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось отправить");
         }
     }
 }

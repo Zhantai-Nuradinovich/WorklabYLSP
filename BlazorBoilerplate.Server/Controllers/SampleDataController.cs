@@ -15,7 +15,7 @@ using BlazorBoilerplate.Shared.Dto.Sample;
 namespace BlazorBoilerplate.Server.Controllers
 {
     [Route("api/[controller]")]
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Administrator")]
     [ApiController]
    
     public class SampleDataController : ControllerBase
@@ -34,7 +34,7 @@ namespace BlazorBoilerplate.Server.Controllers
         };
 
         [HttpGet("[action]")]
-        [Authorize(Roles = "SuperAdmin, Admin, User")]
+        [Authorize(Roles = "SuperAdmin, Administrator")]
         public IEnumerable<WeatherForecastDto> WeatherForecasts()
         {
             var rng = new Random();

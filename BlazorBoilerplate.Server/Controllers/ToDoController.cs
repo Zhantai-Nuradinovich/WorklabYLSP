@@ -11,6 +11,7 @@ namespace BlazorBoilerplate.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator, Coordinator")]
     public class ToDoController : ControllerBase
     {
         private readonly ITodoManager _todoManager;
@@ -22,13 +23,13 @@ namespace BlazorBoilerplate.Server.Controllers
 
         // GET: api/Todo
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ApiResponse> Get()
             => await _todoManager.Get();
 
         // GET: api/Todo/5
         [HttpGet("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ApiResponse> Get(int id)
             => ModelState.IsValid ?
                 await _todoManager.Get(id) :
@@ -36,7 +37,7 @@ namespace BlazorBoilerplate.Server.Controllers
 
         // POST: api/Todo
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ApiResponse> Post([FromBody] TodoDto todo)
             => ModelState.IsValid ?
                 await _todoManager.Create(todo) :
@@ -44,7 +45,7 @@ namespace BlazorBoilerplate.Server.Controllers
 
         // Put: api/Todo
         [HttpPut]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ApiResponse> Put([FromBody] TodoDto todo)
             => ModelState.IsValid ?
                 await _todoManager.Update(todo) :

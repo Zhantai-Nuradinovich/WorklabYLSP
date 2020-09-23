@@ -49,13 +49,12 @@ app {
     top: 0;
     bottom: 0;
     z-index: -1;
-    background-color: #0094ff;
+    background-color: #142d5f;
 }
 
 .triangles {
-    background-image: url("../images/triangles.svg");
+    background-image: url("../images/logo-work-dark.png");
     background-size: cover;
-    height: 100%;
     bottom: 0;
     left: 0;
     mix-blend-mode: hard-light;

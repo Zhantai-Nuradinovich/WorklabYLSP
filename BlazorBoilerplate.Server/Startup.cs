@@ -255,6 +255,7 @@ namespace BlazorBoilerplate.Server
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(Policies.IsAdmin, Policies.IsAdminPolicy());
+                options.AddPolicy(Policies.IsCoordinator, Policies.IsCoordinatorPolicy());
                 options.AddPolicy(Policies.IsUser, Policies.IsUserPolicy());
                 options.AddPolicy(Policies.IsReadOnly, Policies.IsReadOnlyPolicy());
                 options.AddPolicy(Policies.IsMyDomain, Policies.IsMyDomainPolicy());  // valid only on serverside operations
@@ -368,7 +369,6 @@ namespace BlazorBoilerplate.Server
             var autoMapper = automapperConfig.CreateMapper();
 
             services.AddSingleton(autoMapper);
-
 #if ServerSideBlazor
 
             services.AddScoped<IAuthorizeApi, AuthorizeApi>();

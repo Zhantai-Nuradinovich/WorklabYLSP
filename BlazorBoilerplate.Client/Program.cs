@@ -27,6 +27,7 @@ namespace BlazorBoilerplate.Client
             {
                 config.AddPolicy(Policies.IsAdmin, Policies.IsAdminPolicy());
                 config.AddPolicy(Policies.IsUser, Policies.IsUserPolicy());
+                config.AddPolicy(Policies.IsCoordinator, Policies.IsCoordinatorPolicy());
                 config.AddPolicy(Policies.IsReadOnly, Policies.IsUserPolicy());
                 // config.AddPolicy(Policies.IsMyDomain, Policies.IsMyDomainPolicy());  Only works on the server end
             });
@@ -45,7 +46,7 @@ namespace BlazorBoilerplate.Client
                 config.MaximumOpacity = 95;
                 config.VisibleStateDuration = 3000;
             });
-
+            
             await builder
             .Build()
             .UseLoadingBar()

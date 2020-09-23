@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 using Microsoft.AspNetCore.Mvc;
-
+using BlazorBoilerplate.Shared.AuthorizationDefinitions;
 
 namespace BlazorBoilerplate.Server.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Policy = Policies.IsAdmin)]
     [ApiController]
     public class EmailController : ControllerBase
     {

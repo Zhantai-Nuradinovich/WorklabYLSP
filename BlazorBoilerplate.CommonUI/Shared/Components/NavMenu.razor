@@ -3,6 +3,8 @@
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider authStateProvider
 
+@if(IsAdmin || IsCoordinator)
+{
 <MatNavMenu Style="color: white;" Multi="true" Class="app-sidebar">
     <MatNavItem Href="@navigationManager.ToAbsoluteUri("account/profile").AbsoluteUri">
         <MatIcon>account_circle</MatIcon>
@@ -15,52 +17,54 @@
             <span class="miniHover">@userInfo.UserName</span>
         }
     </MatNavItem>
-    <MatNavItem Href="@navigationManager.ToAbsoluteUri("todo_list").AbsoluteUri">
-        <MatIcon>list_alt</MatIcon> <span class="miniHover">Список дел</span>
-    </MatNavItem>
-    <MatNavSubMenu>
-        <MatNavSubMenuHeader>
-            <MatNavItem AllowSelection="false">
-                <MatIcon>stars</MatIcon><span class="miniHover"> Доп. функции</span>
-            </MatNavItem>
-        </MatNavSubMenuHeader>
-        <MatNavSubMenuList>
-            <MatNavItem Href="@navigationManager.ToAbsoluteUri("drag_and_drop").AbsoluteUri">
-                <MatIcon>touch_app</MatIcon> <span class="miniHover">Канбан</span>
-            </MatNavItem>
-            <MatNavItem Href="@navigationManager.ToAbsoluteUri("screenshots").AbsoluteUri">
-                <MatIcon>screen_share</MatIcon> <span class="miniHover">Скриншоты</span>
-            </MatNavItem>
-        </MatNavSubMenuList>
-    </MatNavSubMenu>
-    @if (IsLoggedIn)
-    {
-        <MatNavItem Href="@navigationManager.ToAbsoluteUri("dashboard").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-            <MatIcon>bar_chart</MatIcon> <span class="miniHover">Статистика</span>
-        </MatNavItem>
-        <MatNavItem Href="@navigationManager.ToAbsoluteUri("programs").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-            <MatIcon>widgets</MatIcon> <span class="miniHover">Программы</span>
-        </MatNavItem>
-        <MatNavSubMenu>
-            <MatNavSubMenuHeader>
-                <MatNavItem AllowSelection="false" Disabled="@(!IsLoggedIn)">
-                    <MatIcon>mail_outline</MatIcon>
-                    <span class="miniHover"> Письма</span>
+    <AuthorizeView Context="AuthorizeContext">
+        <Authorized>
+            @if (IsAdmin || IsCoordinator)
+            {
+                <MatNavSubMenu>
+                    <MatNavSubMenuHeader>
+                        <MatNavItem AllowSelection="false">
+                            <MatIcon>stars</MatIcon><span class="miniHover"> Доп. функции</span>
+                        </MatNavItem>
+                    </MatNavSubMenuHeader>
+                    <MatNavSubMenuList>
+                        <MatNavItem Href="@navigationManager.ToAbsoluteUri("drag_and_drop").AbsoluteUri">
+                            <MatIcon>touch_app</MatIcon> <span class="miniHover">Канбан</span>
+                        </MatNavItem>
+                        <MatNavItem Href="@navigationManager.ToAbsoluteUri("screenshots").AbsoluteUri">
+                            <MatIcon>screen_share</MatIcon> <span class="miniHover">Скриншоты</span>
+                        </MatNavItem>
+                    </MatNavSubMenuList>
+                </MatNavSubMenu>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("todo_list").AbsoluteUri">
+                    <MatIcon>list_alt</MatIcon> <span class="miniHover">Список дел</span>
                 </MatNavItem>
-            </MatNavSubMenuHeader>
-            <MatNavSubMenuList>
-                <MatNavItem Href="@navigationManager.ToAbsoluteUri("email_view").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-                    <MatIcon>inbox</MatIcon> <span class="miniHover"> Прочесть письмо</span>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("dashboard").AbsoluteUri">
+                    <MatIcon>bar_chart</MatIcon> <span class="miniHover">Статистика</span>
                 </MatNavItem>
-                <MatNavItem Href="@navigationManager.ToAbsoluteUri("email").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-                    <MatIcon>send</MatIcon> <span class="miniHover"> Отправить письмо</span>
-                </MatNavItem>
-            </MatNavSubMenuList>
-        </MatNavSubMenu>}
+            }
+        </Authorized>
+    </AuthorizeView>
     <AuthorizeView Policy="@Policies.IsAdmin" Context="AuthorizeContext">
         <Authorized>
             @if (IsAdmin)
             {
+                <MatNavSubMenu>
+                    <MatNavSubMenuHeader>
+                        <MatNavItem AllowSelection="false">
+                            <MatIcon>mail_outline</MatIcon>
+                            <span class="miniHover"> Письма</span>
+                        </MatNavItem>
+                    </MatNavSubMenuHeader>
+                    <MatNavSubMenuList>
+                        <MatNavItem Href="@navigationManager.ToAbsoluteUri("email_view").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                            <MatIcon>inbox</MatIcon> <span class="miniHover"> Прочесть письмо</span>
+                        </MatNavItem>
+                        <MatNavItem Href="@navigationManager.ToAbsoluteUri("email").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                            <MatIcon>send</MatIcon> <span class="miniHover"> Отправить письмо</span>
+                        </MatNavItem>
+                    </MatNavSubMenuList>
+                </MatNavSubMenu>
                 <MatNavSubMenu>
                     <MatNavSubMenuHeader>
                         <MatNavItem AllowSelection="false">
@@ -90,9 +94,10 @@
             <MatIcon>forum</MatIcon> <span class="miniHover">Чат</span>
         </MatNavItem>}
 </MatNavMenu>
-
+}
 @code { public bool IsLoggedIn = false;
     private bool IsAdmin = false;
+    private bool IsCoordinator = false;
     UserInfoDto userInfo = null;
 
     [CascadingParameter]
@@ -113,7 +118,10 @@
         if (user.IsInRole("Administrator"))
         {
             IsAdmin = true;
-            // Perform some action only available to users in the 'admin' role
-            //Console.WriteLine("Administrator");
+        }
+
+        if (user.IsInRole("Coordinator"))
+        {
+            IsCoordinator = true;
         }
     } }

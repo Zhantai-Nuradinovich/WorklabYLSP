@@ -13,6 +13,7 @@ namespace BlazorBoilerplate.Server.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = Policies.IsAdmin)]
     public class AdminController : ControllerBase
     {
         private readonly IAdminManager _adminManager;

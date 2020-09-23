@@ -13,7 +13,7 @@
     <Title>Blazor Boilerplate Server</Title>
     <Description>Blazor Boilerplate is starter kit / SPA Admin Template for Blazor</Description>
     <WebPage>https://blazorboilerplate.com/</WebPage>
-    <PackageProjectUrl>https://blazorboilerplate.com/</PackageProjectUrl>
+    <PackageProjectUrl>https://worklab.kg/</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/enkodellc/blazorboilerplate</RepositoryUrl>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>

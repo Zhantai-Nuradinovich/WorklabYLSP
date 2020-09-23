@@ -1,31 +1,27 @@
 ﻿@page "/email_view"
 @using BlazorBoilerplate.Shared.Dto.Email
-@attribute [Authorize]
+@attribute [Authorize(Policy = Policies.IsAdmin)]
 
 @inject HttpClient Http
 @inject IMatToaster matToaster
 
-<h1>Secure Page</h1>
-<p>This is a secure page. You must be logged in to have access.</p>
-<h2>Email Retrieval</h2>
-<p>This component demonstrates fetching and viewing emails from an account (if you have one configured in appsettings.json).</p>
-
-<button @onclick="GetMessagesAsync" class="btn-primary">FETCH MESSAGES</button>
+<h1>Письма</h1>
+<button @onclick="GetMessagesAsync" class="btn-primary">Получить письма</button>
 
 
 @if (emails == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Загрузка...</em></p>
 }
 else
 {
     <table class="table">
         <thead>
             <tr>
-                <th>From</th>
-                <th>To</th>
-                <th>Subject</th>
-                <th>Body</th>
+                <th>Отправитель</th>
+                <th>Получатель</th>
+                <th>Тема</th>
+                <th>Сообщение</th>
             </tr>
         </thead>
         <tbody>
@@ -42,7 +38,7 @@ else
             </td>
             <td>@email.Subject</td>
             <td>
-                <button class="btn-danger" @onclick="@( () => openModal(email.GetHashCode()))">View Email</button>
+                <button class="btn-danger" @onclick="@( () => openModal(email.GetHashCode()))">Прочитать</button>
             </td>
         </tr>
     }
@@ -63,7 +59,7 @@ else
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label for="From" class="control-label">From:</label>
+                                <label for="From" class="control-label">Отправитель:</label>
                                 <figure for="From" class="form-control">
                                     @foreach (EmailAddressDto sender in email.FromAddresses)
                                     {<figure>@sender.Name (@sender.Address)</figure>}
@@ -76,7 +72,7 @@ else
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-block btn-info" @onclick="closeModal" data-dismiss="modal">exit</button>
+                        <button class="btn btn-block btn-info" @onclick="closeModal" data-dismiss="modal">Выйти</button>
                     </div>
                 </div>
             </div>
@@ -124,7 +120,7 @@ else
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Email retrieval failed", null, config =>
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось получить", null, config =>
                 {
                     config.RequireInteraction = true;
                 });

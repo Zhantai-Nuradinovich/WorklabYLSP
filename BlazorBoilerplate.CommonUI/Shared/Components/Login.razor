@@ -1,34 +1,55 @@
 ﻿@using Microsoft.AspNetCore.Components
+@using BlazorBoilerplate.Shared.Dto.Account
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider authStateProvider
 
-<AuthorizeView Context="AuthorizeContext">
-    <Authorized>
-        <MatTooltip Tooltip="Выйти">
-            <MatButton Icon="account_box" 
-                       Raised="true" 
-                       Label="Выйти" 
-                       RefBack="@context" 
+<RadzenMenu Style="box-shadow: 0 1px 3px var(--black_alpha8); 
+                           border: 1px solid var(--steel_gray_140);
+                           border-color: #676767;
+                           border-radius: 4px;
+                           padding: 4px 0;">
+    <RadzenMenuItem Text="@username" Icon="account_circle">
+        <MatTooltip Tooltip="Перейти в личный кабинет">
+            <MatButton Icon="account_circle"
+                       Label="Личный кабинет"
+                       RefBack="@context"
+                       Link="/account/profile"
                        OnClick="LogoutClick">
             </MatButton>
         </MatTooltip>
-    </Authorized>
-    <NotAuthorized>
-        <MatTooltip Tooltip="Войти">
-            <MatButton Icon="exit_to_app" 
-                       Raised="true" 
-                       Label="Войти" 
-                       RefBack="@context" 
-                       Link="/account/login">
+        <MatDivider></MatDivider>
+        <MatTooltip Tooltip="Выйти">
+            <MatButton Icon="input"
+                       Label="Выйти"
+                       RefBack="@context"
+                       OnClick="LogoutClick">
             </MatButton>
         </MatTooltip>
-    </NotAuthorized>
-</AuthorizeView>
+    </RadzenMenuItem>
+</RadzenMenu>
 
-@code {
-    async Task LogoutClick()
-    {
-        await ((IdentityAuthenticationStateProvider)authStateProvider).Logout();
-        navigationManager.NavigateTo("/account/login");
+    @code {UserInfoDto userInfo = null;
+        string username = null;
+
+        async Task LogoutClick()
+        {
+            await ((IdentityAuthenticationStateProvider)authStateProvider).Logout();
+            navigationManager.NavigateTo("/account/login");
+        }
+
+        [CascadingParameter]
+        Task<AuthenticationState> authenticationStateTask { get; set; }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            var user = (await authenticationStateTask).User;
+            userInfo = null;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                userInfo = await ((IdentityAuthenticationStateProvider)authStateProvider).GetUserInfo();
+            }
+
+            username = userInfo.UserName;
+        }
     }
-}

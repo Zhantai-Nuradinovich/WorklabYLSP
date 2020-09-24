@@ -3,53 +3,52 @@
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider authStateProvider
 
-<RadzenMenu Style="box-shadow: 0 1px 3px var(--black_alpha8); 
-                           border: 1px solid var(--steel_gray_140);
-                           border-color: #676767;
-                           border-radius: 4px;
-                           padding: 4px 0;">
-    <RadzenMenuItem Text="@username" Icon="account_circle">
-        <MatTooltip Tooltip="Перейти в личный кабинет">
-            <MatButton Icon="account_circle"
-                       Label="Личный кабинет"
-                       RefBack="@context"
-                       Link="/account/profile"
-                       OnClick="LogoutClick">
-            </MatButton>
-        </MatTooltip>
-        <MatDivider></MatDivider>
-        <MatTooltip Tooltip="Выйти">
-            <MatButton Icon="input"
-                       Label="Выйти"
-                       RefBack="@context"
-                       OnClick="LogoutClick">
-            </MatButton>
-        </MatTooltip>
-    </RadzenMenuItem>
-</RadzenMenu>
 
-    @code {UserInfoDto userInfo = null;
-        string username = null;
 
-        async Task LogoutClick()
-        {
-            await ((IdentityAuthenticationStateProvider)authStateProvider).Logout();
-            navigationManager.NavigateTo("/account/login");
-        }
+<SubMenu Title="@username">
+    <MenuItem>
+        <MenuLink Href="/account/profile">
+            Личный кабинет
+        </MenuLink>
+    </MenuItem>
+    <MatDivider />
+    <MenuItem>
+        <MenuLink Href="/help">
+            Помощь
+        </MenuLink>
+    </MenuItem>
+    <MatDivider />
+    <MenuItem>
+        <Button OnClick="LogoutClick"
+                Style="background-color: #4F94C1; color: snow;">
+            Выйти
+        </Button>
+    </MenuItem>
+</SubMenu>
 
-        [CascadingParameter]
-        Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        protected override async Task OnParametersSetAsync()
-        {
-            var user = (await authenticationStateTask).User;
-            userInfo = null;
+@code {UserInfoDto userInfo = null;
+    string username = null;
 
-            if (user.Identity.IsAuthenticated)
-            {
-                userInfo = await ((IdentityAuthenticationStateProvider)authStateProvider).GetUserInfo();
-            }
-
-            username = userInfo.UserName;
-        }
+    async Task LogoutClick()
+    {
+        await ((IdentityAuthenticationStateProvider)authStateProvider).Logout();
+        navigationManager.NavigateTo("/account/login");
     }
+
+    [CascadingParameter]
+    Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var user = (await authenticationStateTask).User;
+        userInfo = null;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            userInfo = await ((IdentityAuthenticationStateProvider)authStateProvider).GetUserInfo();
+        }
+
+        username = userInfo.UserName;
+    }
+}

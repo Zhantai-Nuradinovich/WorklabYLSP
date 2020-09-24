@@ -42,9 +42,18 @@
                 <MatNavItem Href="@navigationManager.ToAbsoluteUri("dashboard").AbsoluteUri">
                     <MatIcon>bar_chart</MatIcon> <span class="miniHover">Статистика</span>
                 </MatNavItem>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("calendar_page").AbsoluteUri">
+                    <MatIcon>event</MatIcon> <span class="miniHover">Календарь</span>
+                </MatNavItem>
             }
         </Authorized>
     </AuthorizeView>
+    @if (IsLoggedIn)
+    {
+        <MatNavItem Href="@navigationManager.ToAbsoluteUri("forum").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+            <MatIcon>forum</MatIcon> <span class="miniHover">Чат</span>
+        </MatNavItem>
+    }
     <AuthorizeView Policy="@Policies.IsAdmin" Context="AuthorizeContext">
         <Authorized>
             @if (IsAdmin)
@@ -88,11 +97,6 @@
                 </MatNavSubMenu>}
         </Authorized>
     </AuthorizeView>
-    @if (IsLoggedIn)
-    {
-        <MatNavItem Href="@navigationManager.ToAbsoluteUri("forum").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-            <MatIcon>forum</MatIcon> <span class="miniHover">Чат</span>
-        </MatNavItem>}
 </MatNavMenu>
 }
 @code { public bool IsLoggedIn = false;

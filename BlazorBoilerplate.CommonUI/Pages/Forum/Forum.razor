@@ -6,24 +6,22 @@
 <AuthorizeView Context="AuthorizeContext">
     <NotAuthorized>
         <div class="alert alert-success">
-            <a href="/account/login">Log in</a> to post a message.
+            <a href="/account/login">Войдите</a> чтобы присоединиться к чату.
         </div>
     </NotAuthorized>
 </AuthorizeView>
 
-<h1>Forum</h1>
-<p>This forum page uses SignalR and persists in a database. </p>
+<h1>Чат пользователей</h1>
 
 <AuthorizeView Context="AuthorizeContext">
     <Authorized>
         <ForumMessageCreateForm Send="Send" />
-
         <MatList SingleSelection="true" TwoLine="true">
             @if (Messages == null || Messages.Count == 0)
             {
                 <MatListItem>
                     <MatListItemText>
-                        Loading messages...
+                        Загрузка сообщений...
                     </MatListItemText>
                 </MatListItem>
             }

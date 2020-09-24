@@ -24,7 +24,7 @@
                     <MatAppBarSection>
                         @if (!IsAdminOrCoordinator)
                         {
-                            <MatAppBarTitle>
+                            <MatAppBarTitle Style="padding-left: 100px">
                                 <div>
                                     <a href="/">
                                         <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.CommonUI/images/logo-work.png" title="Worklab">
@@ -44,37 +44,38 @@
                             </div>
                         }
                     </MatAppBarSection>
-                    <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-                        <MatTooltip Tooltip="Перейти на главную страницу">
-                            <MatButton Icon="home"
-                                       Style="border-left-color: #474b62"
-                                       RefBack="@context"
-                                       Label="Главная"
-                                       Link="/">
-                            </MatButton>
-                        </MatTooltip>
-                        <MatTooltip Tooltip="Программы">
-                            <MatButton Icon="widgets"
-                                       Style="border-left-color: #474b62"
-                                       RefBack="@context"
-                                       Label="Программы"
-                                       Link="/programs">
-                            </MatButton>
-                        </MatTooltip>
-                        <AuthorizeView Context="AuthorizeContext">
-                            <Authorized>
-                                <Login></Login>
-                            </Authorized>
-                            <NotAuthorized>
-                                <MatTooltip Tooltip="Войти">
-                                    <MatButton Icon="exit_to_app"
-                                               Label="Войти"
-                                               RefBack="@context"
-                                               Link="/account/login">
-                                    </MatButton>
-                                </MatTooltip>
-                            </NotAuthorized>
-                        </AuthorizeView>
+                    <MatAppBarSection Align="@MatAppBarSectionAlign.End" Style="padding-right: 100px;">
+                        <Menu Mode=MenuMode.Horizontal>
+                            <MenuItem>
+                                <MenuLink Href="/">
+                                    Главная
+                                </MenuLink>
+                            </MenuItem>
+                            <Divider Type="vertical" />
+                            <MenuItem>
+                                <MenuLink Href="/programs">
+                                    Программы
+                                </MenuLink>
+                            </MenuItem>
+                            <Divider Type="vertical" />
+                            <MenuItem>
+                                <AuthorizeView Context="AuthorizeContext">
+                                    <Authorized>
+                                        <Login></Login>
+                                    </Authorized>
+                                    <NotAuthorized>
+                                        <MenuItem>
+                                            <Button Style="background-color: #4F94C1;">
+                                                <MenuLink Style="color: snow;"
+                                                          Href="/account/login">
+                                                    Войти
+                                                </MenuLink>
+                                            </Button>
+                                        </MenuItem>
+                                    </NotAuthorized>
+                                </AuthorizeView>
+                            </MenuItem>
+                        </Menu>
                     </MatAppBarSection>
                 </MatAppBarRow>
             </MatAppBar>

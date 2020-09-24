@@ -401,7 +401,7 @@ namespace BlazorBoilerplate.Server
 
             Log.Logger.Debug("Adding AuthenticationStateProvider...");
             services.AddScoped<AuthenticationStateProvider, IdentityAuthenticationStateProvider>();
-
+            
 #endif
 
             Log.Logger.Debug($"Total Services Registered: {services.Count}");

@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
+
 namespace BlazorBoilerplate.Client
 {
     public class Program
@@ -46,7 +47,7 @@ namespace BlazorBoilerplate.Client
                 config.MaximumOpacity = 95;
                 config.VisibleStateDuration = 3000;
             });
-            
+            builder.Services.AddAntDesign();
             await builder
             .Build()
             .UseLoadingBar()

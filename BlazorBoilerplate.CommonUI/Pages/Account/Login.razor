@@ -29,24 +29,24 @@
         <ValidationSummary />
         <fieldset>
             <div class="form-group">
-                <MatTextField id="userName" @bind-Value="@loginParameters.UserName" Label="Логин" PlaceHolder="Логин..." Icon="person" IconTrailing="true" FullWidth="true" Required="true" tabindex="1"></MatTextField>
+                <MatTextField Style="font-family:cursive;" id="userName" @bind-Value="@loginParameters.UserName" Label="Логин" PlaceHolder="Логин..." Icon="person" IconTrailing="true" FullWidth="true" Required="true" tabindex="1"></MatTextField>
             </div>
             <div class="form-group">
-                <MatTextField @bind-Value="@loginParameters.Password" Label="Пароль" PlaceHolder="Пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password" tabindex="2"></MatTextField>
+                <MatTextField Style="font-family:cursive;" @bind-Value="@loginParameters.Password" Label="Пароль" PlaceHolder="Пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password" tabindex="2"></MatTextField>
             </div>
             <div class="form-group">
-                <MatButton class="float-right" Type="submit" Raised="true" tabindex="3">Войти</MatButton>
+                <MatButton Style="font-family:cursive;" class="float-right" Type="submit" Raised="true" tabindex="3">Войти</MatButton>
                 <MatCheckbox @bind-Value="@loginParameters.RememberMe" class="filled-in chk-col-blue">Запомнить</MatCheckbox>
             </div>
             <hr />
             <div>
-                <MatButton class="float-left" OnClick="@Register" Raised="true">Зарегистрироваться</MatButton>
-                <MatButton class="float-right" OnClick="@GoogleSignIn" Raised="true">Через <img height="18" style="margin-left: 5px" src="https://www.google.pl/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" /></MatButton><br />
+                <MatButton Style="border-radius: 15px; font-family: cursive;" class="float-left" OnClick="@Register" Raised="true">Зарегистрироваться</MatButton>
+                <MatButton Style="border-radius: 15px;" class="float-right" OnClick="@GoogleSignIn" Raised="true"><img height="18" style="margin-left: 5px" src="https://www.google.pl/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" /></MatButton><br />
             </div>
         </fieldset>
     </EditForm>
 </MatCard>
-<MatAccordion>
+<MatAccordion Style="border-radius: 20px">
     <MatExpansionPanel @bind-Expanded="@forgotPasswordToggle">
         <MatExpansionPanelSummary>
             <MatExpansionPanelHeader>Забыли пароль?</MatExpansionPanelHeader>
@@ -58,10 +58,10 @@
                 <ValidationSummary />
 
                 <div class="form-group">
-                    <MatTextField @bind-Value="@forgotPasswordParameters.Email" Label="Email" PlaceHolder="Почта..." Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    <MatTextField Style="font-family:cursive;" @bind-Value="@forgotPasswordParameters.Email" Label="Email" PlaceHolder="Почта..." Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
                 </div>
                 <div class="form-group">
-                    <MatButton class="float-right" Type="submit" Raised="true">Подтвердить</MatButton>
+                    <MatButton Style="font-family:cursive; border-radius: 15px" class="float-right" Type="submit" Raised="true">Подтвердить</MatButton>
                 </div>
             </EditForm>
         </MatExpansionPanelDetails>
@@ -131,7 +131,7 @@
                 }
                 else
                 {
-                    navigateTo = "/dashboard";
+                    navigateTo = "/";
                 }
             }
             else

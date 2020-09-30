@@ -9,71 +9,73 @@
 
 @using static Microsoft.AspNetCore.Http.StatusCodes
 
-<h1>Личный кабинет</h1>
-<p>Основные настройки.</p>
-@if (userInfo == null)
-{
-    <LoadingBackground ShowLogoBox="true"></LoadingBackground>
-}
-else
-{
-    <MatButton Icon="rotate_right" OnClick="@(() => OpenResetPasswordDialog())" Label="Изменить пароль" Raised="true" class="form-group d-flex justify-content-end"></MatButton>
-    <EditForm Model="@userInfo" OnValidSubmit="@UpdateUser">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <fieldset>
+<MainContainer Style="box-shadow: 1px 1px 0 500px rgba(0, 0, 0, 0.5) inset;"
+               Title="Worklab"
+               ContentTitle="Личный кабинет">
+    @if (userInfo == null)
+    {
+        <LoadingBackground ShowLogoBox="true"></LoadingBackground>
+    }
+    else
+    {
+        <MatButton Icon="rotate_right" OnClick="@(() => OpenResetPasswordDialog())" Label="Изменить пароль" Raised="true" class="form-group d-flex justify-content-end"></MatButton>
+        <EditForm Model="@userInfo" OnValidSubmit="@UpdateUser">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <fieldset>
 
-            <div class="form-group">
-                <MatTextField @bind-Value="@userInfo.UserName" Label="User Name" Icon="person" IconTrailing="true" FullWidth="true" Required="true" ReadOnly="true"></MatTextField>
-            </div>
-            <div class="form-group">
-                <MatTextField @bind-Value="@userInfo.Email" Label="Email" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
-            </div>
-            <div class="form-group">
-                <MatTextField @bind-Value="@userInfo.FirstName" Label="First Name" PlaceHolder="Имя..." FullWidth="true"></MatTextField>
-            </div>
-            <div class="form-group">
-                <MatTextField @bind-Value="@userInfo.LastName" Label="Last Name" PlaceHolder="Фамилия..." FullWidth="true"></MatTextField>
-            </div>
+                <div class="form-group">
+                    <MatTextField @bind-Value="@userInfo.UserName" Label="User Name" Icon="person" IconTrailing="true" FullWidth="true" Required="true" ReadOnly="true"></MatTextField>
+                </div>
+                <div class="form-group">
+                    <MatTextField @bind-Value="@userInfo.Email" Label="Email" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                </div>
+                <div class="form-group">
+                    <MatTextField @bind-Value="@userInfo.FirstName" Label="First Name" PlaceHolder="Имя..." FullWidth="true"></MatTextField>
+                </div>
+                <div class="form-group">
+                    <MatTextField @bind-Value="@userInfo.LastName" Label="Last Name" PlaceHolder="Фамилия..." FullWidth="true"></MatTextField>
+                </div>
 
-            <div class="form-group">
-                <strong>Roles</strong><br />
-                <MatChipSet>
-                    @foreach (var role in userInfo.Roles)
-                    {
-                        <MatChip Label="@role"></MatChip>
-                    }
-                </MatChipSet>
-            </div>
-            <div class="form-group d-flex justify-content-end">
-                <MatButton Type="submit" Raised="true">Обновить профиль</MatButton>
-            </div>
-        </fieldset>
-    </EditForm>
+                <div class="form-group">
+                    <strong>Roles</strong><br />
+                    <MatChipSet>
+                        @foreach (var role in userInfo.Roles)
+                        {
+                            <MatChip Label="@role"></MatChip>
+                        }
+                    </MatChipSet>
+                </div>
+                <div class="form-group d-flex justify-content-end">
+                    <MatButton Type="submit" Raised="true">Обновить профиль</MatButton>
+                </div>
+            </fieldset>
+        </EditForm>
 
-    <MatDialog @bind-IsOpen="@resetPasswordDialogOpen">
-        <MatDialogTitle>Изменение пароля</MatDialogTitle>
-        <MatDialogContent>
-            <EditForm Model="@registerParameters" OnValidSubmit="@ResetUserPasswordAsync">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <fieldset>
-                    <div class="form-group">
-                        <MatTextField @bind-Value="@registerParameters.Password" Label="Password" PlaceHolder="Пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
-                    </div>
-                    <div class="form-group">
-                        <MatTextField @bind-Value="@registerParameters.PasswordConfirm" Label="Password Confirmation" PlaceHolder="Повторите пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
-                    </div>
-                </fieldset>
-            </EditForm>
-        </MatDialogContent>
-        <MatDialogActions>
-            <MatButton OnClick="@(e => { resetPasswordDialogOpen = false; })">Закрыть</MatButton>
-            <MatButton OnClick="@ResetUserPasswordAsync">Изменить</MatButton>
-        </MatDialogActions>
-    </MatDialog>
+        <MatDialog @bind-IsOpen="@resetPasswordDialogOpen">
+            <MatDialogTitle>Изменение пароля</MatDialogTitle>
+            <MatDialogContent>
+                <EditForm Model="@registerParameters" OnValidSubmit="@ResetUserPasswordAsync">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <fieldset>
+                        <div class="form-group">
+                            <MatTextField @bind-Value="@registerParameters.Password" Label="Password" PlaceHolder="Пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                        </div>
+                        <div class="form-group">
+                            <MatTextField @bind-Value="@registerParameters.PasswordConfirm" Label="Password Confirmation" PlaceHolder="Повторите пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                        </div>
+                    </fieldset>
+                </EditForm>
+            </MatDialogContent>
+            <MatDialogActions>
+                <MatButton OnClick="@(e => { resetPasswordDialogOpen = false; })">Закрыть</MatButton>
+                <MatButton OnClick="@ResetUserPasswordAsync">Изменить</MatButton>
+            </MatDialogActions>
+        </MatDialog>
+    }
+</MainContainer>
 
-}
 @code {
     ApiResponseDto apiResponse;
     UserInfoDto userInfo;

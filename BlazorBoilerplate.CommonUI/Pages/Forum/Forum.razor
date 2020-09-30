@@ -3,35 +3,36 @@
 @inherits ForumPageModel
 @inject HttpClient Http
 
-<AuthorizeView Context="AuthorizeContext">
-    <NotAuthorized>
-        <div class="alert alert-success">
-            <a href="/account/login">Войдите</a> чтобы присоединиться к чату.
-        </div>
-    </NotAuthorized>
-</AuthorizeView>
-
-<h1>Чат пользователей</h1>
-
-<AuthorizeView Context="AuthorizeContext">
-    <Authorized>
-        <ForumMessageCreateForm Send="Send" />
-        <MatList SingleSelection="true" TwoLine="true">
-            @if (Messages == null || Messages.Count == 0)
-            {
-                <MatListItem>
-                    <MatListItemText>
-                        Загрузка сообщений...
-                    </MatListItemText>
-                </MatListItem>
-            }
-            else
-            {
-                @foreach (var message in Messages)
+<MainContainer Style="box-shadow: 1px 1px 0 500px rgba(0, 0, 0, 0.5) inset;"
+               Title="Worklab"
+               ContentTitle="Добро пожаловать в чат!">
+    <AuthorizeView Context="AuthorizeContext">
+        <NotAuthorized>
+            <div class="alert alert-success">
+                <a href="/account/login">Войдите</a> чтобы присоединиться к чату.
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+    <AuthorizeView Context="AuthorizeContext">
+        <Authorized>
+            <ForumMessageCreateForm Send="Send" />
+            <MatList SingleSelection="true" TwoLine="true">
+                @if (Messages == null || Messages.Count == 0)
                 {
-                    <ForumMessage Delete="Delete" Message="@message"  />
+                    <MatListItem>
+                        <MatListItemText>
+                            Загрузка сообщений...
+                        </MatListItemText>
+                    </MatListItem>
                 }
-            }
-        </MatList>
-    </Authorized>
-</AuthorizeView>
+                else
+                {
+                    @foreach (var message in Messages)
+                    {
+                        <ForumMessage Delete="Delete" Message="@message" />
+                    }
+                }
+            </MatList>
+        </Authorized>
+    </AuthorizeView>
+</MainContainer>

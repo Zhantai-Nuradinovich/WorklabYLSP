@@ -1,0 +1,43 @@
+﻿<div class="parallax" style="@Style">
+    <div class="my-container">
+        <div class="grid-container">
+            <div class="grid-item">
+                <div class="my-brand">
+                    <h1 class="my-title" style="flex-wrap:wrap ;color:aliceblue; font-family: cursive; text-shadow: 2px 2px 20px black;">@Title<br /></h1>
+                    <h3 class="my-subtitle" style="color:aliceblue; font-family: cursive; text-shadow: 2px 2px 20px black;">@SubTitle</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="my-main my-main-raised">
+    <div class="my-container">
+        <div class="grid-container" style="justify-content: center; text-align: center;">
+            <div class="grid-item col-sm-12 col-sm-12 col-md-8">
+                <h1 style="justify-content: center; text-align: center; font-family: cursive;">@ContentTitle</h1>
+            </div>
+            <Divider />
+            <div class="grid-item col-sm-12 col-sm-12 col-md-8">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string SubTitle { get; set; }
+
+    [Parameter]
+    public string ContentTitle { get; set; }
+
+    [Parameter]
+    public string Style { get; set; }
+    //box-shadow: 1px 1px 0 500px rgba(0, 0, 0, 0.5) inset; for black shapes
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

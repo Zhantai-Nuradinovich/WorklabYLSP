@@ -5,17 +5,17 @@
 <MatDrawerContainer Style="width: 100vw; height: 100vh" Class="@bbDrawerClass">
     @if (IsAdminOrCoordinator) 
     {
-    <MatDrawer @bind-Opened="@_navMenuOpened">
-        <header class="drawer-header">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-            <div class="drawer-logo" style="background-color: rgba(0, 0, 0, 0.09);">
-                <a href="/">
-                    <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.CommonUI/images/logo-work-dark.png" title="Worklab">
-                </a>
-            </div>
-        </header>
-        <NavMenu />
-    </MatDrawer>
+        <MatDrawer Opened="true">
+            <header class="drawer-header">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+                <div class="drawer-logo" style="background-color: rgba(0, 0, 0, 0.09);">
+                    <a href="/">
+                        <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.CommonUI/images/logo-work-dark.png" title="Worklab">
+                    </a>
+                </div>
+            </header>
+            <NavMenu />
+        </MatDrawer>
     }
     <MatDrawerContent>
         <MatAppBarContainer>
@@ -32,49 +32,36 @@
                                 </div>
                             </MatAppBarTitle>
                         }
-                        else
-                        {
-                            <div class="hidden-mdc-down">
-                                <MatTooltip Tooltip="Скрыть панель">
-                                    <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())" RefBack="@context"></MatIconButton>
-                                </MatTooltip>
-                                <MatTooltip Tooltip="Уменьшить панель">
-                                    <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
-                                </MatTooltip>
-                            </div>
-                        }
                     </MatAppBarSection>
                     <MatAppBarSection Align="@MatAppBarSectionAlign.End" Style="padding-right: 100px;">
-                        <Menu Mode=MenuMode.Horizontal>
+                        <Menu Mode=MenuMode.Horizontal Style="font-family: 'Segoe UI Emoji'">
                             <MenuItem>
                                 <MenuLink Href="/">
                                     Главная
                                 </MenuLink>
                             </MenuItem>
-                            <Divider Type="vertical" />
+                            <Divider Type="vertical" Style="font-size: 25px;" />
                             <MenuItem>
                                 <MenuLink Href="/programs">
                                     Программы
                                 </MenuLink>
                             </MenuItem>
-                            <Divider Type="vertical" />
-                            <MenuItem>
-                                <AuthorizeView Context="AuthorizeContext">
-                                    <Authorized>
-                                        <Login></Login>
-                                    </Authorized>
-                                    <NotAuthorized>
-                                        <MenuItem>
-                                            <Button Style="background-color: #4F94C1;">
-                                                <MenuLink Style="color: snow;"
-                                                          Href="/account/login">
-                                                    Войти
-                                                </MenuLink>
-                                            </Button>
-                                        </MenuItem>
-                                    </NotAuthorized>
-                                </AuthorizeView>
-                            </MenuItem>
+                            <Divider Type="vertical" Style="font-size: 25px;" />
+                            <AuthorizeView Context="AuthorizeContext">
+                                <Authorized>
+                                    <Login></Login>
+                                </Authorized>
+                                <NotAuthorized>
+                                    <MenuItem>
+                                        <Button Style="background-color: #4F94C1;">
+                                            <MenuLink Style="color: snow; border-radius: 5px"
+                                                      Href="/account/login">
+                                                Войти
+                                            </MenuLink>
+                                        </Button>
+                                    </MenuItem>
+                                </NotAuthorized>
+                            </AuthorizeView>
                         </Menu>
                     </MatAppBarSection>
                 </MatAppBarRow>
@@ -83,39 +70,75 @@
                 <section>
                     @Body
                 </section>
-                <footer class="page-footer">
+                <footer class="page-footer row">
+                    <h3 class="my-subtitle-2" style="color:black;  display: inline-block; position: relative; font-family: cursive; text-shadow: 2px 2px 20px black;">Worklab</h3><br />
+                    <h3 class="my-subtitle-2" style="color:black;  display: inline-block; position: relative; font-family: cursive; text-shadow: 2px 2px 20px black;">Ещё</h3><br />
+                    <Divider />
+                    <div class="my-subtitle-2">
+                        <MatTooltip Tooltip="Узнайте больше о проекте" Position="@MatTooltipPosition.Right">
+                            <MatButton Style="color: black;"
+                                       RefBack="@context"
+                                       Link="/help">
+                                О проекте
+                            </MatButton>
+                        </MatTooltip><br />
+                        <MatTooltip Tooltip="Наше руководство" Position="@MatTooltipPosition.Right">
+                            <MatButton Style="color: black;"
+                                       RefBack="@context"
+                                       Link="/help">
+                                Руководство
+                            </MatButton>
+                        </MatTooltip><br />
+                        <MatTooltip Tooltip="Нужно помощь?" Position="@MatTooltipPosition.Right">
+                            <MatButton Style="color: black;"
+                                       RefBack="@context"
+                                       Link="/help">
+                                Помощь
+                            </MatButton>
+                        </MatTooltip><br />
+                    </div>
+                    <div class="my-subtitle-2">
+                        <MatTooltip Tooltip="О нас" Position="@MatTooltipPosition.Right">
+                            <MatButton Style="color: black;"
+                                       RefBack="@context"
+                                       Link="/about-us">
+                                О нас
+                            </MatButton>
+                        </MatTooltip><br />
+                        <MatTooltip Tooltip="Контакты" Position="@MatTooltipPosition.Right">
+                            <MatButton Style="color: black;"
+                                       RefBack="@context"
+                                       Link="/contacts">
+                                Контакты
+                            </MatButton>
+                        </MatTooltip><br />
+                    </div>
+                    <Divider />
                     <div class="flex-1">
+                        © YLSP Team, все права защищены
+                    </div>
+                    <div class="flex-2">
                         <MatTooltip Tooltip="Следите за нами в инстаграме" Position="@MatTooltipPosition.Top">
                             <a href="https://www.instagram.com/ylsp_kg/" target="_blank" style="text-decoration: none">
                                 <MatButton RefBack="@context">
-                                    <i class="fa fa-instagram"></i>
+                                    <Icon Type="instagram" Theme="outline" Style="font-size: 18px; color: #535353;" />
                                 </MatButton>
                             </a>
                         </MatTooltip>
                         <MatTooltip Tooltip="Следите за нами в Facebook" Position="@MatTooltipPosition.Top">
                             <a href="https://www.facebook.com/ylsp.2020/" target="_blank" style="text-decoration: none">
                                 <MatButton RefBack="@context">
-                                    <i class="fa fa-facebook"></i>
+                                    <Icon Type="facebook" Theme="outline" Style="font-size: 18px;  color: #535353;" />
                                 </MatButton>
                             </a>
                         </MatTooltip>
-                        <MatTooltip Tooltip="О нас" Position="@MatTooltipPosition.Top">
-                            <MatButton Icon="info"
-                                       Style="border-left-color: #474b62"
-                                       RefBack="@context"
-                                       Link="/about-us">
-                            </MatButton>
+                        <MatTooltip Tooltip="Следите за нами в Telegram" Position="@MatTooltipPosition.Top">
+                            <a href="#" target="_blank" style="text-decoration: none">
+                                <MatButton RefBack="@context">
+                                    <i class="fa fa-telegram" style="font-size: 18px;  color: #535353;"></i>
+                                </MatButton>
+                            </a>
                         </MatTooltip>
-                        <MatTooltip Tooltip="Контакты" Position="@MatTooltipPosition.Top">
-                            <MatButton Icon="contact_support"
-                                       Style="border-left-color: #474b62"
-                                       RefBack="@context"
-                                       Link="/contacts">
-                            </MatButton>
-                        </MatTooltip>
-                    </div>
-                    <div class="flex-1">
-                        © 2020 Made by YLSP
                     </div>
                 </footer>
             </MatAppBarContent>
@@ -124,8 +147,6 @@
 </MatDrawerContainer>
 
 @code {
-    bool _navMenuOpened = false;
-    bool _navMinified = false;
     private bool IsAuthenticated = false;
     private bool IsAdminOrCoordinator = false;
     public string bbDrawerClass = "";
@@ -154,53 +175,8 @@
         if (user.Identity.IsAuthenticated)
         {
             var profile = await appState.GetUserProfile();
-            _navMenuOpened = profile.IsNavOpen;
-            _navMinified = profile.IsNavMinified;
             IsAuthenticated = true;
             IsAdminOrCoordinator = user.IsInRole("Administrator") || user.IsInRole("Coordinator") ? true : false;
         }
-    }
-
-    void NavToggle()
-    {
-        _navMenuOpened = !_navMenuOpened;
-        if (_navMenuOpened)
-        {
-            bbDrawerClass = "full";
-        }
-        else
-        {
-            bbDrawerClass = "closed";
-        }
-
-        this.StateHasChanged();
-    }
-
-    void NavLock()
-    {
-        //Todo Lock Nav
-    }
-
-    void NavMinify()
-    {
-        _navMinified = !_navMinified;
-
-        if (!_navMenuOpened)
-        {
-            _navMinified = true;
-        }
-
-        if (_navMinified)
-        {
-            bbDrawerClass = "mini";
-            _navMenuOpened = true;
-        }
-        else if (_navMenuOpened)
-        {
-            bbDrawerClass = "full";
-        }
-
-        _navMenuOpened = true;
-        this.StateHasChanged();
     }
 }

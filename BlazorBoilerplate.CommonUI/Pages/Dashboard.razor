@@ -2,19 +2,18 @@
 @attribute [Authorize(Roles = "Administrator, Coordinator")]
 @inject AppState appState
 
-<h1>Статистика</h1>
+<MainContainer Style="box-shadow: 1px 1px 0 500px rgba(0, 0, 0, 0.5) inset;"
+               Title="Worklab"
+               ContentTitle="Статистика">
+    <h2>Счетчик</h2>
+    <p>
+        Подсчитано: <strong>@currentCount</strong>
+        <br />
+        Общее число: <strong>@if (@profileCurrentCount != -1)@profileCurrentCount</strong>
+    </p>
+    <MatFAB icon="exposure_plus_1" @onclick="@IncrementCount"></MatFAB>
+</MainContainer>
 
-<hr />
-<h2>Счетчик</h2>
-
-<MatFAB icon="exposure_plus_1" @onclick="@IncrementCount"></MatFAB>
-
-<p>
-    Подсчитано: <strong>@currentCount</strong>
-    <br />
-    Общее число: <strong>@if (@profileCurrentCount != -1)@profileCurrentCount</strong>
-</p>
-<MatDivider></MatDivider>
 
 @code { int currentCount = 0;
     int profileCurrentCount = -1;
@@ -30,4 +29,4 @@
         profileCurrentCount++;
         await appState.UpdateUserProfileCount(profileCurrentCount);
     }
- }
+}

@@ -5,126 +5,123 @@
 @inject HttpClient Http
 @inject IMatToaster matToaster
 
-<h1>Письма</h1>
-<button @onclick="GetMessagesAsync" class="btn-primary">Получить письма</button>
+<MainContainer Style="box-shadow: 1px 1px 0 500px rgba(0, 0, 0, 0.5) inset;"
+               Title="Worklab"
+               ContentTitle="Письма">
+    <button @onclick="GetMessagesAsync" class="btn-primary">Получить письма</button>
 
 
-@if (emails == null)
-{
-    <p><em>Загрузка...</em></p>
-}
+    @if (emails == null)
+    {
+<p><em>Загрузка...</em></p> }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Отправитель</th>
-                <th>Получатель</th>
-                <th>Тема</th>
-                <th>Сообщение</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var email in emails)
-            {
-                <tr>
-                    <td>
-                        @foreach (EmailAddressDto sender in email.FromAddresses)
-                        {<figure>@sender.Name (@sender.Address)</figure>}
-                </td>
-                <td>
-                    @foreach (EmailAddressDto receipient in email.ToAddresses)
-                    {<figure>@receipient.Name (@receipient.Address)</figure>}
-            </td>
-            <td>@email.Subject</td>
-            <td>
-                <button class="btn-danger" @onclick="@( () => openModal(email.GetHashCode()))">Прочитать</button>
-            </td>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Отправитель</th>
+            <th>Получатель</th>
+            <th>Тема</th>
+            <th>Сообщение</th>
         </tr>
-    }
-        </tbody>
-    </table>
+    </thead>
+    <tbody>
+        @foreach (var email in emails)
+        {
+<tr>
+    <td>
+        @foreach (EmailAddressDto sender in email.FromAddresses)
+        {<figure>@sender.Name (@sender.Address)</figure>}
+    </td>
+    <td>
+        @foreach (EmailAddressDto receipient in email.ToAddresses)
+        {<figure>@receipient.Name (@receipient.Address)</figure>}
+    </td>
+    <td>@email.Subject</td>
+    <td>
+        <button class="btn-danger" @onclick="@( () => openModal(email.GetHashCode()))">Прочитать</button>
+    </td>
+</tr>}
+    </tbody>
+</table> if (ModalOpen)
+{
+<div class="modal" tabindex="-1" style="display:block" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">@modalTitle</h3>
+                <button type="button" class="close" @onclick="closeModal">
+                    <span aria-hidden="true">X</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="From" class="control-label">Отправитель:</label>
+                        <figure for="From" class="form-control">
+                            @foreach (EmailAddressDto sender in email.FromAddresses)
+                            {<figure>@sender.Name (@sender.Address)</figure>}
+                        </figure>
+                    </div>
+                    <div class="form-group container" style="max-height: calc(80vh - 210px); overflow-y:auto; overflow-x:auto; padding-bottom:50px">
+                        @((MarkupString)email.Body)
 
-    if (ModalOpen)
-    {
-        <div class="modal" tabindex="-1" style="display:block" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">@modalTitle</h3>
-                        <button type="button" class="close" @onclick="closeModal">
-                            <span aria-hidden="true">X</span>
-                        </button>
                     </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="From" class="control-label">Отправитель:</label>
-                                <figure for="From" class="form-control">
-                                    @foreach (EmailAddressDto sender in email.FromAddresses)
-                                    {<figure>@sender.Name (@sender.Address)</figure>}
-                                </figure>
-                            </div>
-                            <div class="form-group container" style="max-height: calc(80vh - 210px); overflow-y:auto; overflow-x:auto; padding-bottom:50px">
-                                @((MarkupString)email.Body)
-
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-block btn-info" @onclick="closeModal" data-dismiss="modal">Выйти</button>
-                    </div>
-                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-block btn-info" @onclick="closeModal" data-dismiss="modal">Выйти</button>
             </div>
         </div>
-    }
+    </div>
+</div>}
 }
+</MainContainer>
 
 
-@code {
 
-    List<EmailMessageDto> emails;
-    EmailMessageDto email = new EmailMessageDto();
 
-    ApiResponseDto apiResponse;
-    bool ModalOpen { get; set; }
-    //   string emailsAsString { get; set; }
-    string modalTitle { get; set; }
+@code { List<EmailMessageDto> emails;
+            EmailMessageDto email = new EmailMessageDto();
 
-    void openModal(int hash)
-    {
+            ApiResponseDto apiResponse;
+            bool ModalOpen { get; set; }
+            //   string emailsAsString { get; set; }
+            string modalTitle { get; set; }
 
-        email = emails.Where(x => x.GetHashCode().Equals(hash)).SingleOrDefault();
+            void openModal(int hash)
+            {
 
-        this.modalTitle = email.Subject;
-        this.ModalOpen = true;
+                email = emails.Where(x => x.GetHashCode().Equals(hash)).SingleOrDefault();
 
-    }
-    protected void closeModal()
-    {
-        this.ModalOpen = false;
-    }
+                this.modalTitle = email.Subject;
+                this.ModalOpen = true;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await GetMessagesAsync();
-    }
+            }
+            protected void closeModal()
+            {
+                this.ModalOpen = false;
+            }
 
-    public async Task GetMessagesAsync()
-    {
-        try
-        {
-            apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/Email/Receive");
-            emails = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EmailMessageDto>>(apiResponse.Result.ToString());
+            protected override async Task OnInitializedAsync()
+            {
+                await GetMessagesAsync();
+            }
 
-        }
-        catch (Exception ex)
-        {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось получить", null, config =>
+            public async Task GetMessagesAsync()
+            {
+                try
                 {
-                    config.RequireInteraction = true;
-                });
+                    apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/Email/Receive");
+                    emails = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EmailMessageDto>>(apiResponse.Result.ToString());
 
-        }
-    }
-}
+                }
+                catch (Exception ex)
+                {
+                    matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось получить", null, config =>
+                        {
+                            config.RequireInteraction = true;
+                        });
+
+                }
+            } }

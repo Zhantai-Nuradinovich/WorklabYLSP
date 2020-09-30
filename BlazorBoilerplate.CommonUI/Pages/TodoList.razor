@@ -6,169 +6,169 @@
 
 @using System.Net
 
-<h1>Список дел прямиком из БД (CRUD)</h1>
-
-<MatTable Class="mat-elevation-z5" Items="@todos" LoadInitialData="true" Striped="true" FilterByColumnName="Title" DebounceMilliseconds="150" PageSize="10">
-    <MatTableHeader>
-        <th>
-            <div style="width:135px;">
-                <MatButton Icon="playlist_add" Label="New Todo" OnClick="@((e) => OpenDialog())" Raised="true"></MatButton>
-            </div>
-        </th>
-        <th>Id</th>
-        <th>Завершён</th>
-        <th style="min-width:180px;">Todo</th>
-    </MatTableHeader>
-    <MatTableRow Context="TodoRow">
-        <td>
-            <MatIconButton Icon="delete" OnClick="@(() => OpenDeleteDialog(TodoRow.Id))"></MatIconButton>
-        </td>
-        <td>@String.Format("{0:d}", TodoRow.Id)</td>
-        <td><MatCheckbox class="filled-in chk-col-blue" TValue="bool" Value="@TodoRow.IsCompleted" ValueChanged="@((item) => Update(TodoRow))"></MatCheckbox></td>
-        <td>@TodoRow.Title</td>
-    </MatTableRow>
-</MatTable>
-
-<MatDialog @bind-IsOpen="@dialogIsOpen">
-    <MatDialogTitle>Создать</MatDialogTitle>
-    <MatDialogContent>
-        <EditForm Model="@todo" OnValidSubmit="@CreateTodo">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <fieldset>
-                <div class="form-group">
-                    <MatTextField @bind-Value="@todo.Title" Label="Название" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+<MainContainer Style="box-shadow: 1px 1px 0 500px rgba(0, 0, 0, 0.5) inset;"
+               Title="Worklab"
+               ContentTitle="Список дел">
+    <MatTable Class="mat-elevation-z5" Items="@todos" LoadInitialData="true" Striped="true" FilterByColumnName="Title" DebounceMilliseconds="150" PageSize="10">
+        <MatTableHeader>
+            <th>
+                <div style="width:135px;">
+                    <MatButton Icon="playlist_add" Label="New Todo" OnClick="@((e) => OpenDialog())" Raised="true"></MatButton>
                 </div>
-                <div class="form-group">
-                    <MatCheckbox @bind-Value="@todo.IsCompleted" Label="Завершён"></MatCheckbox>
-                </div>
-            </fieldset>
-        </EditForm>
-    </MatDialogContent>
-    <MatDialogActions>
-        <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
-        <MatButton OnClick="@CreateTodo">Создать</MatButton>
-    </MatDialogActions>
-</MatDialog>
+            </th>
+            <th>Id</th>
+            <th>Завершён</th>
+            <th style="min-width:180px;">Todo</th>
+        </MatTableHeader>
+        <MatTableRow Context="TodoRow">
+            <td>
+                <MatIconButton Icon="delete" OnClick="@(() => OpenDeleteDialog(TodoRow.Id))"></MatIconButton>
+            </td>
+            <td>@String.Format("{0:d}", TodoRow.Id)</td>
+            <td><MatCheckbox class="filled-in chk-col-blue" TValue="bool" Value="@TodoRow.IsCompleted" ValueChanged="@((item) => Update(TodoRow))"></MatCheckbox></td>
+            <td>@TodoRow.Title</td>
+        </MatTableRow>
+    </MatTable>
 
-<MatDialog @bind-IsOpen="@deleteDialogOpen" Style="z-index:100">
-    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Confirm Delete</MatDialogTitle>
-    <MatDialogContent>
-        Хотите удалить "@todo.Title" ?
-    </MatDialogContent>
-    <MatDialogActions>
-        <MatButton OnClick="@(e => { deleteDialogOpen = false; })">Закрыть</MatButton>
-        <MatButton OnClick="@Delete">Удалить</MatButton>
-    </MatDialogActions>
-</MatDialog>
+    <MatDialog @bind-IsOpen="@dialogIsOpen">
+        <MatDialogTitle>Создать</MatDialogTitle>
+        <MatDialogContent>
+            <EditForm Model="@todo" OnValidSubmit="@CreateTodo">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <fieldset>
+                    <div class="form-group">
+                        <MatTextField @bind-Value="@todo.Title" Label="Название" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    </div>
+                    <div class="form-group">
+                        <MatCheckbox @bind-Value="@todo.IsCompleted" Label="Завершён"></MatCheckbox>
+                    </div>
+                </fieldset>
+            </EditForm>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
+            <MatButton OnClick="@CreateTodo">Создать</MatButton>
+        </MatDialogActions>
+    </MatDialog>
 
-@code {
-    bool deleteDialogOpen = false;
-    bool dialogIsOpen = false;
-    List<TodoDto> todos = new List<TodoDto>();
-    TodoDto todo { get; set; } = new TodoDto();
+    <MatDialog @bind-IsOpen="@deleteDialogOpen" Style="z-index:100">
+        <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Confirm Delete</MatDialogTitle>
+        <MatDialogContent>
+            Хотите удалить "@todo.Title" ?
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@(e => { deleteDialogOpen = false; })">Закрыть</MatButton>
+            <MatButton OnClick="@Delete">Удалить</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+</MainContainer>
 
-    protected override async Task OnInitializedAsync()
-    {
-        await ReadTodos();
-    }
+@code { bool deleteDialogOpen = false;
+            bool dialogIsOpen = false;
+            List<TodoDto> todos = new List<TodoDto>();
+            TodoDto todo { get; set; } = new TodoDto();
 
-    async Task ReadTodos()
-    {
-        ApiResponseDto apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/todo");
-
-        if (apiResponse.StatusCode == Status200OK)
-        {
-            matToaster.Add(apiResponse.Message, MatToastType.Success, "Todo List Retrieved");
-            todos = Newtonsoft.Json.JsonConvert.DeserializeObject<TodoDto[]>(apiResponse.Result.ToString()).ToList<TodoDto>();
-        }
-        else
-        {
-            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось получить");
-        }
-    }
-
-    public async void Update(TodoDto todo)
-    {
-        //this updates the IsCompleted flag only
-        try
-        {
-
-            todo.IsCompleted = !todo.IsCompleted;
-            ApiResponseDto apiResponse = await Http.PutJsonAsync<ApiResponseDto>("api/todo", todo);
-
-            if (!apiResponse.IsError)
+            protected override async Task OnInitializedAsync()
             {
-                matToaster.Add(apiResponse.Message, MatToastType.Success);
+                await ReadTodos();
             }
-            else
-            {
-                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось сохранить");
-                todo.IsCompleted = !todo.IsCompleted; //update failed so reset IsCompleted
-            }
-        }
-        catch (Exception ex)
-        {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
-            todo.IsCompleted = !todo.IsCompleted; //update failed so reset IsCompleted
-        }
-    }
 
-    public async Task Delete()
-    {
-        try
-        {
-            var response = await Http.DeleteAsync("api/todo/" + todo.Id);
-            if (response.StatusCode ==  (HttpStatusCode)Status200OK)
+            async Task ReadTodos()
             {
-                matToaster.Add("Удалено", MatToastType.Success);
-                todos.Remove(todo);
-            }
-            else
-            {
-                matToaster.Add("Не удалось удалить: " + response.StatusCode, MatToastType.Danger);
-            }
-            deleteDialogOpen = false;
-            todo = new TodoDto(); //reset todo after delete
-        }
-        catch (Exception ex)
-        {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
-        }
-    }
+                ApiResponseDto apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/todo");
 
-    public void OpenDialog()
-    {
-        dialogIsOpen = true;
-    }
-
-    public void OpenDeleteDialog(long todoId)
-    {
-        todo = todos.Where(x => x.Id == todoId).SingleOrDefault();
-        this.deleteDialogOpen = true;
-    }
-
-    public async Task CreateTodo()
-    {
-        dialogIsOpen = false;
-        try
-        {
-            ApiResponseDto apiResponse = await Http.PostJsonAsync<ApiResponseDto>("api/todo", todo);
-            if (apiResponse.StatusCode == Status200OK)
-            {
-                matToaster.Add(apiResponse.Message, MatToastType.Success);
-                todo = Newtonsoft.Json.JsonConvert.DeserializeObject<TodoDto>(apiResponse.Result.ToString());
-                todos.Add(todo);
-                todo = new TodoDto(); //reset todo after insert
+                if (apiResponse.StatusCode == Status200OK)
+                {
+                    matToaster.Add(apiResponse.Message, MatToastType.Success, "Todo List Retrieved");
+                    todos = Newtonsoft.Json.JsonConvert.DeserializeObject<TodoDto[]>(apiResponse.Result.ToString()).ToList<TodoDto>();
+                }
+                else
+                {
+                    matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось получить");
+                }
             }
-            else
+
+            public async void Update(TodoDto todo)
             {
-                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось создать");
+                //this updates the IsCompleted flag only
+                try
+                {
+
+                    todo.IsCompleted = !todo.IsCompleted;
+                    ApiResponseDto apiResponse = await Http.PutJsonAsync<ApiResponseDto>("api/todo", todo);
+
+                    if (!apiResponse.IsError)
+                    {
+                        matToaster.Add(apiResponse.Message, MatToastType.Success);
+                    }
+                    else
+                    {
+                        matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось сохранить");
+                        todo.IsCompleted = !todo.IsCompleted; //update failed so reset IsCompleted
+                    }
+                }
+                catch (Exception ex)
+                {
+                    matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
+                    todo.IsCompleted = !todo.IsCompleted; //update failed so reset IsCompleted
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось создать");
-        }
-    }
-}
+
+            public async Task Delete()
+            {
+                try
+                {
+                    var response = await Http.DeleteAsync("api/todo/" + todo.Id);
+                    if (response.StatusCode == (HttpStatusCode)Status200OK)
+                    {
+                        matToaster.Add("Удалено", MatToastType.Success);
+                        todos.Remove(todo);
+                    }
+                    else
+                    {
+                        matToaster.Add("Не удалось удалить: " + response.StatusCode, MatToastType.Danger);
+                    }
+                    deleteDialogOpen = false;
+                    todo = new TodoDto(); //reset todo after delete
+                }
+                catch (Exception ex)
+                {
+                    matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
+                }
+            }
+
+            public void OpenDialog()
+            {
+                dialogIsOpen = true;
+            }
+
+            public void OpenDeleteDialog(long todoId)
+            {
+                todo = todos.Where(x => x.Id == todoId).SingleOrDefault();
+                this.deleteDialogOpen = true;
+            }
+
+            public async Task CreateTodo()
+            {
+                dialogIsOpen = false;
+                try
+                {
+                    ApiResponseDto apiResponse = await Http.PostJsonAsync<ApiResponseDto>("api/todo", todo);
+                    if (apiResponse.StatusCode == Status200OK)
+                    {
+                        matToaster.Add(apiResponse.Message, MatToastType.Success);
+                        todo = Newtonsoft.Json.JsonConvert.DeserializeObject<TodoDto>(apiResponse.Result.ToString());
+                        todos.Add(todo);
+                        todo = new TodoDto(); //reset todo after insert
+                    }
+                    else
+                    {
+                        matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось создать");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось создать");
+                }
+            } }

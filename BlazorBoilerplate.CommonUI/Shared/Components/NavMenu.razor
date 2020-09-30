@@ -3,8 +3,6 @@
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider authStateProvider
 
-@if(IsAdmin || IsCoordinator)
-{
 <MatNavMenu Style="color: white;" Multi="true" Class="app-sidebar">
     <MatNavItem Href="@navigationManager.ToAbsoluteUri("account/profile").AbsoluteUri">
         <MatIcon>account_circle</MatIcon>
@@ -19,41 +17,35 @@
     </MatNavItem>
     <AuthorizeView Context="AuthorizeContext">
         <Authorized>
-            @if (IsAdmin || IsCoordinator)
-            {
-                <MatNavSubMenu>
-                    <MatNavSubMenuHeader>
-                        <MatNavItem AllowSelection="false">
-                            <MatIcon>stars</MatIcon><span class="miniHover"> Доп. функции</span>
-                        </MatNavItem>
-                    </MatNavSubMenuHeader>
-                    <MatNavSubMenuList>
-                        <MatNavItem Href="@navigationManager.ToAbsoluteUri("drag_and_drop").AbsoluteUri">
-                            <MatIcon>touch_app</MatIcon> <span class="miniHover">Канбан</span>
-                        </MatNavItem>
-                        <MatNavItem Href="@navigationManager.ToAbsoluteUri("screenshots").AbsoluteUri">
-                            <MatIcon>screen_share</MatIcon> <span class="miniHover">Скриншоты</span>
-                        </MatNavItem>
-                    </MatNavSubMenuList>
-                </MatNavSubMenu>
-                <MatNavItem Href="@navigationManager.ToAbsoluteUri("todo_list").AbsoluteUri">
-                    <MatIcon>list_alt</MatIcon> <span class="miniHover">Список дел</span>
-                </MatNavItem>
-                <MatNavItem Href="@navigationManager.ToAbsoluteUri("dashboard").AbsoluteUri">
-                    <MatIcon>bar_chart</MatIcon> <span class="miniHover">Статистика</span>
-                </MatNavItem>
-                <MatNavItem Href="@navigationManager.ToAbsoluteUri("calendar_page").AbsoluteUri">
-                    <MatIcon>event</MatIcon> <span class="miniHover">Календарь</span>
-                </MatNavItem>
-            }
+            <MatNavSubMenu>
+                <MatNavSubMenuHeader>
+                    <MatNavItem AllowSelection="false">
+                        <MatIcon>stars</MatIcon><span class="miniHover">Доп. функции</span>
+                    </MatNavItem>
+                </MatNavSubMenuHeader>
+                <MatNavSubMenuList>
+                    <MatNavItem Href="@navigationManager.ToAbsoluteUri("drag_and_drop").AbsoluteUri">
+                        <MatIcon>touch_app</MatIcon> <span class="miniHover">Канбан</span>
+                    </MatNavItem>
+                    <MatNavItem Href="@navigationManager.ToAbsoluteUri("screenshots").AbsoluteUri">
+                        <MatIcon>screen_share</MatIcon> <span class="miniHover">Скриншоты</span>
+                    </MatNavItem>
+                </MatNavSubMenuList>
+            </MatNavSubMenu>
+            <MatNavItem Href="@navigationManager.ToAbsoluteUri("todo_list").AbsoluteUri">
+                <MatIcon>list_alt</MatIcon> <span class="miniHover">Список дел</span>
+            </MatNavItem>
+            <MatNavItem Href="@navigationManager.ToAbsoluteUri("dashboard").AbsoluteUri">
+                <MatIcon>bar_chart</MatIcon> <span class="miniHover">Статистика</span>
+            </MatNavItem>
+            <MatNavItem Href="@navigationManager.ToAbsoluteUri("calendar_page").AbsoluteUri">
+                <MatIcon>event</MatIcon> <span class="miniHover">Календарь</span>
+            </MatNavItem>
+            <MatNavItem Href="@navigationManager.ToAbsoluteUri("forum").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                <MatIcon>forum</MatIcon> <span class="miniHover">Чат</span>
+            </MatNavItem>
         </Authorized>
     </AuthorizeView>
-    @if (IsLoggedIn)
-    {
-        <MatNavItem Href="@navigationManager.ToAbsoluteUri("forum").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-            <MatIcon>forum</MatIcon> <span class="miniHover">Чат</span>
-        </MatNavItem>
-    }
     <AuthorizeView Policy="@Policies.IsAdmin" Context="AuthorizeContext">
         <Authorized>
             @if (IsAdmin)
@@ -98,7 +90,7 @@
         </Authorized>
     </AuthorizeView>
 </MatNavMenu>
-}
+
 @code { public bool IsLoggedIn = false;
     private bool IsAdmin = false;
     private bool IsCoordinator = false;
@@ -128,4 +120,4 @@
         {
             IsCoordinator = true;
         }
-    } }
+    }}

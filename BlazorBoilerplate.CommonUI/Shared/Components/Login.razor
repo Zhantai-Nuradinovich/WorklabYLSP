@@ -1,54 +1,39 @@
 ﻿@using Microsoft.AspNetCore.Components
-@using BlazorBoilerplate.Shared.Dto.Account
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider authStateProvider
 
-
-
-<SubMenu Title="@username">
+<SubMenu Title="@subTitle">
     <MenuItem>
-        <MenuLink Href="/account/profile">
+        <MenuLink Href="@navigationManager.ToAbsoluteUri("account/profile").AbsoluteUri">
             Личный кабинет
         </MenuLink>
     </MenuItem>
     <MatDivider />
     <MenuItem>
-        <MenuLink Href="/help">
+        <MenuLink Href="@navigationManager.ToAbsoluteUri("help").AbsoluteUri">
             Помощь
         </MenuLink>
     </MenuItem>
     <MatDivider />
     <MenuItem>
         <Button OnClick="LogoutClick"
-                Style="background-color: #4F94C1; color: snow;">
+                Style="background-color: #4F94C1; color: snow; border-radius: 5px">
             Выйти
         </Button>
     </MenuItem>
 </SubMenu>
 
 
-@code {UserInfoDto userInfo = null;
-    string username = null;
+@code {
+    RenderFragment subTitle =
+        @<span>
+            <span>Кабинет</span>
+            <Icon Type="down" Theme="outline" Style="font-size: 10px; vertical-align: middle;"></Icon>
+        </span>;
 
     async Task LogoutClick()
     {
         await ((IdentityAuthenticationStateProvider)authStateProvider).Logout();
         navigationManager.NavigateTo("/account/login");
-    }
-
-    [CascadingParameter]
-    Task<AuthenticationState> authenticationStateTask { get; set; }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        var user = (await authenticationStateTask).User;
-        userInfo = null;
-
-        if (user.Identity.IsAuthenticated)
-        {
-            userInfo = await ((IdentityAuthenticationStateProvider)authStateProvider).GetUserInfo();
-        }
-
-        username = userInfo.UserName;
     }
 }

@@ -1,87 +1,70 @@
 ﻿@page "/"
 
-<div class="parallax">
-    <div class="my-container">
-        <div class="grid-container">
-            <div class="grid-item">
-                <div class="my-brand">
-                    <h1 class="my-title" style="color:aliceblue; font-family: Verdana, Geneva, Tahoma, sans-serif">Worklab<br /></h1>
-                    <h3 class="my-subtitle" style="color:aliceblue; font-family: Verdana, Geneva, Tahoma, sans-serif">Выбирая профессию, ты выбираешь своё будущее</h3>
-                </div>
-            </div>
+<MainContainer Title="Worklab"
+               SubTitle="Выбирая профессию, ты выбираешь своё будущее"
+               ContentTitle="Ты можешь стать">
+    <!--About carousels https://mdbootstrap.com/docs/jquery/javascript/carousel/ -->
+    <div>
+        <Carousel @ref="_carousel" Autoplay="TimeSpan.FromSeconds(3)" Effect="@CarouselEffect.ScrollX">
+            <CarouselSlick>
+                <h3>1</h3>
+            </CarouselSlick>
+            <CarouselSlick>
+                <h3>2</h3>
+            </CarouselSlick>
+            <CarouselSlick>
+                <h3>3</h3>
+            </CarouselSlick>
+            <CarouselSlick>
+                <h3>4</h3>
+            </CarouselSlick>
+            <CarouselSlick>
+                <h3>5</h3>
+            </CarouselSlick>
+            <CarouselSlick>
+                <h3>6</h3>
+            </CarouselSlick>
+        </Carousel>
+    </div>
+    <div class="button-container">
+        <Button OnClick="@( _=>_carousel.Previous())" Size="small">Prev</Button>
+        <Button OnClick="@( _=>_carousel.Next())" Size="small">Next</Button>
+    </div>
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 4px;
+        }
+
+        .ant-carousel .slick-slide {
+            text-align: center;
+            height: 160px;
+            line-height: 160px;
+            background: #364d79;
+            overflow: hidden;
+        }
+
+            .ant-carousel .slick-slide h3 {
+                color: #fff;
+            }
+    </style>
+
+    <div class="grid-container" style="justify-content: center; text-align: center">
+        <div class="grid-item col-sm-12 col-sm-12 col-md-8">
+            <h3 style="justify-content: center; text-align: center; font-family: cursive;">Выбирай профессию и попробуй её прямо сейчас!!</h3>
+            @if (!IsAuthenticated)
+            {
+                <MatButton Icon="power_settings_new"
+                           Raised="true"
+                           Label="Начать"
+                           Link="/account/login">
+                </MatButton>
+            }
         </div>
     </div>
-</div>
-<div class="my-main my-main-raised">
-    <div class="my-container">
-        <div class="grid-container" style="justify-content: center">
-            <div class="grid-item col-sm-12 col-sm-12 col-md-8">
-                <h2 style="justify-content: center; text-align: center">Ты можешь стать</h2>
-            </div>
-        </div>
-        <!--About carousels https://mdbootstrap.com/docs/jquery/javascript/carousel/ -->
-        <div>
-            <Carousel @ref="_carousel">
-                <CarouselSlick>
-                    <h3>1</h3>
-                </CarouselSlick>
-                <CarouselSlick>
-                    <h3>2</h3>
-                </CarouselSlick>
-                <CarouselSlick>
-                    <h3>3</h3>
-                </CarouselSlick>
-                <CarouselSlick>
-                    <h3>4</h3>
-                </CarouselSlick>
-            </Carousel>
-        </div>
-        <div class="button-container">
-            <Button OnClick="@( _=>_carousel.Previous())" Size="small">Prev</Button>
-            <div>
-                @foreach (int i in Enumerable.Range(0, 4))
-                {
-                    <Button OnClick="@( _=>_carousel.GoTo(i))" Size="small">@(i+1)</Button>
-                }
-            </div>
-            <Button OnClick="@( _=>_carousel.Next())" Size="small">Next</Button>
+</MainContainer>
 
-        </div>
-        <style>
-            .button-container {
-                display: flex;
-                justify-content: space-between;
-                padding-top: 4px;
-            }
-
-            .ant-carousel .slick-slide {
-                text-align: center;
-                height: 160px;
-                line-height: 160px;
-                background: #364d79;
-                overflow: hidden;
-            }
-
-                .ant-carousel .slick-slide h3 {
-                    color: #fff;
-                }
-        </style>
-
-        <div class="grid-container" style="justify-content: center; text-align: center">
-            <div class="grid-item col-sm-12 col-sm-12 col-md-8">
-                <h3 style="justify-content: center; text-align: center">Выбирай профессию и попробуй её прямо сейчас!!</h3>
-                @if (!IsAuthenticated)
-                {
-                    <MatButton Icon="power_settings_new"
-                               Raised="true"
-                               Label="Начать"
-                               Link="/account/login">
-                    </MatButton>
-                }
-            </div>
-        </div>
-    </div>
-</div>
 <MatSnackbar @bind-IsOpen="@lazySnackbarIsOpen">
     <MatSnackbarContent>Если вам понравился продукт, поддержите нас в соцсетях</MatSnackbarContent>
     <MatSnackbarActions>

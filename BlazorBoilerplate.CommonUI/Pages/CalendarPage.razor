@@ -1,9 +1,11 @@
 ﻿@page "/calendar_page"
 @attribute [Authorize(Roles = "Administrator, Coordinator")]
 
-
-<h3>Календарь</h3>
-<Calendar DateCellRender="DateCellRender" MonthCellRender="MonthCellRender" />
+<MainContainer Style="box-shadow: 1px 1px 0 500px rgba(0, 0, 0, 0.5) inset;"
+               Title="Worklab"
+               ContentTitle="Календарь">
+    <Calendar DateCellRender="DateCellRender" MonthCellRender="MonthCellRender" />
+</MainContainer>
 
 @code {
     class ListData
@@ -19,14 +21,14 @@
         {
             case 8:
                 listData = new List<ListData>
-        {
+    {
                     new ListData { type = "warning", content = "This is warning event." },
                     new ListData { type = "success", content = "This is usual event." },
                 };
                 break;
             case 10:
                 listData = new List<ListData>
-        {
+    {
                     new ListData { type = "warning", content = "This is warning event." },
                     new ListData { type = "success", content = "This is usual event." },
                     new ListData { type = "error", content = "This is error event." },
@@ -34,7 +36,7 @@
                 break;
             case 15:
                 listData = new List<ListData>
-        {
+    {
                     new ListData { type = "warning", content = "This is warning event" },
                     new ListData { type = "success", content = "This is very long usual event。。...." },
                     new ListData { type = "error", content = "This is error event 1." },

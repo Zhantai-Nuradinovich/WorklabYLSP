@@ -49,15 +49,15 @@ app {
     top: 0;
     bottom: 0;
     z-index: -1;
-    background-color: #142d5f;
+    background-color: #0c2350;
 }
 
 .triangles {
-    background-image: url("../images/logo-work-dark.png");
+    background-image: url("../images/logo-work-dark-back.png");
     background-size: cover;
     bottom: 0;
     left: 0;
-    mix-blend-mode: hard-light;
+    mix-blend-mode: unset;
     position: fixed;
     right: 0;
     top: 0;
@@ -78,6 +78,7 @@ app {
 }
 
 .logo {
+    font-family: cursive;
     text-align: center;
 }
 
@@ -86,17 +87,19 @@ app {
     }
 
 .login-container, .loading-container, .mdc-card {
-    border-radius: 0 !important;
+    border-radius: 20px !important;
     box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19) !important;
 }
 
     .login-container .mdc-card {
         padding: 40px 30px;
         width: 500px;
+        border-radius: 20px;
     }
 
     .login-container .mat-accordion {
         width: 500px;
+        border-radius: 20px;
     }
 
 .container-fluid .login-container {
@@ -128,6 +131,7 @@ app {
 .login-body {
     flex-direction: column;
     margin: 0 auto;
+    font-family: cursive;
 }
 
     .login-body .mat-accordion .mat-expansion-panel__header {
@@ -235,8 +239,14 @@ app {
 
 .flex-1 {
     flex: 1;
+    text-align:start;
+    margin-left: 100px;
 }
 
+.flex-2 {
+    text-align: end;
+    margin-right: 100px;
+}
 /* Drawer */
 .mdc-nav-li {
     list-style: none;
@@ -311,19 +321,21 @@ app {
 }
 
 .mdc-drawer__content {
-    background-color: rgb(59, 60, 66);
+    background-color: rgb(36, 42, 72);
     color: #FFF;
 }
 
 .mdc-drawer .mdc-list-item {
     margin: 8px 0 !important;
     border-radius: 4px !important;
-    color: #fff !important;
+    color: #e0dcdc !important;
+    font-size: inherit;
+    font-family: cursive;
 }
 
 .mdc-drawere .mdc-list-item:active {
     color: white !important;
-    background-color: rgba(255,255,255,0.25);
+    background-color: #1890FF;
     border-radius: 4px;
 }
 
@@ -522,6 +534,8 @@ ul.breadcrumb {
     padding-right: 15px;
     padding-left: 15px;
     flex-basis: auto;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .my-brand {
@@ -529,19 +543,36 @@ ul.breadcrumb {
     text-align: left;
     font-family: serif, Arial, Helvetica, sans-serif;
     font: bold 700;
+    position: relative;
+    margin-left: 100px;
 }
 
 .my-title {
     font-size: 4.2rem;
     font-weight: 600;
-    display: inline-block;
+    display: block;
     position: relative;
+    margin-left: auto;
 }
 
 .my-subtitle {
     font-size: 1.313rem;
     max-width: 500px;
-    margin: 10px 0 0;
+    display: block;
+    position: relative;
+    margin-left: initial;
+}
+
+.my-subtitle-2 {
+    font-size: 1.313rem;
+    max-width: 500px;
+    margin-left: 150px;
+    margin-right: auto;
+}
+
+.ant-menu ant-menu-sub ant-menu-light ant-menu-vertical ant-menu-hidden {
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px 1px black;
 }
 
 .my-main {
@@ -576,12 +607,12 @@ ul.breadcrumb {
 }
 /*Custom container*/
 .my-container {
-    padding-right: 15px;
-    padding-left: 15px;
+    padding-right: 50px;
+    padding-left: 50px;
     margin-right: auto;
     margin-left: auto;
     width: 100%;
-    
+    justify-content: center;
 }
 /* dialog */
 .mdc-dialog__content {

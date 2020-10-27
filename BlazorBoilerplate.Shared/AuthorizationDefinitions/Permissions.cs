@@ -23,6 +23,66 @@ namespace BlazorBoilerplate.Shared.AuthorizationDefinitions
             [Description("Delete any ToDo")]
             public const string Delete = nameof(Todo) + "." + nameof(Actions.Delete);
         }
+
+        public static class Quiz
+        {
+            [Description("Create a new Quiz")]
+            public const string Create = nameof(Quiz) + "." + nameof(Actions.Create);
+            [Description("Read Quizzes")]
+            public const string Read = nameof(Quiz) + "." + nameof(Actions.Read);
+            [Description("Edit existing Quizzes")]
+            public const string Update = nameof(Quiz) + "." + nameof(Actions.Update);
+            [Description("Delete any Quizzes")]
+            public const string Delete = nameof(Quiz) + "." + nameof(Actions.Delete);
+        }
+
+        public static class ScienceDirection
+        {
+            [Description("Create a new ScienceDirection")]
+            public const string Create = nameof(ScienceDirection) + "." + nameof(Actions.Create);
+            [Description("Read ScienceDirections")]
+            public const string Read = nameof(ScienceDirection) + "." + nameof(Actions.Read);
+            [Description("Edit existing ScienceDirections")]
+            public const string Update = nameof(ScienceDirection) + "." + nameof(Actions.Update);
+            [Description("Delete any ScienceDirections")]
+            public const string Delete = nameof(ScienceDirection) + "." + nameof(Actions.Delete);
+        }
+
+        public static class ContentFile
+        {
+            [Description("Create a new ContentFile")]
+            public const string Create = nameof(ContentFile) + "." + nameof(Actions.Create);
+            [Description("Read ContentFile")]
+            public const string Read = nameof(ContentFile) + "." + nameof(Actions.Read);
+            [Description("Edit existing ContentFile")]
+            public const string Update = nameof(ContentFile) + "." + nameof(Actions.Update);
+            [Description("Delete any ContentFile")]
+            public const string Delete = nameof(ContentFile) + "." + nameof(Actions.Delete);
+        }
+
+        public static class Course
+        {
+            [Description("Create a new Course")]
+            public const string Create = nameof(Course) + "." + nameof(Actions.Create);
+            [Description("Read ScienceDirections")]
+            public const string Read = nameof(Course) + "." + nameof(Actions.Read);
+            [Description("Edit existing ScienceDirections")]
+            public const string Update = nameof(Course) + "." + nameof(Actions.Update);
+            [Description("Delete any ScienceDirections")]
+            public const string Delete = nameof(Course) + "." + nameof(Actions.Delete);
+        }
+
+        public static class Text
+        {
+            [Description("Create a new Text")]
+            public const string Create = nameof(Text) + "." + nameof(Actions.Create);
+            [Description("Read Texts")]
+            public const string Read = nameof(Text) + "." + nameof(Actions.Read);
+            [Description("Edit existing Texts")]
+            public const string Update = nameof(Text) + "." + nameof(Actions.Update);
+            [Description("Delete any Texts")]
+            public const string Delete = nameof(Text) + "." + nameof(Actions.Delete);
+        }
         public static class Role
         {
             [Description("Create a new Role")]

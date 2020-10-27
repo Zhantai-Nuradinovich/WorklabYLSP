@@ -3,7 +3,7 @@
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
             <NotAuthorized>
                 <div class="login-container">
-                    <LoadingBackground ShowLogoBox="true">
+                    <LoadingBackground>
                         <div class="login-body">
                             <label>Доступ запрещён.</label><br />
                             <MatButton Link="/" Raised="true">Главная</MatButton>
@@ -16,7 +16,7 @@
     <NotFound>
         <CascadingAuthenticationState>
             <LayoutView Layout="typeof(MainLayout)">
-                <LoadingBackground ShowLogoBox="true">
+                <LoadingBackground>
                     <div class="login-body">
                         <h1>Страница не найдена</h1>
                         <MatButton Link="/" Raised="true">Главная</MatButton>

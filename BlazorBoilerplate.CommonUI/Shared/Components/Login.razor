@@ -2,38 +2,18 @@
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider authStateProvider
 
-<SubMenu Title="@subTitle">
-    <MenuItem>
-        <MenuLink Href="@navigationManager.ToAbsoluteUri("account/profile").AbsoluteUri">
-            Личный кабинет
-        </MenuLink>
-    </MenuItem>
-    <MatDivider />
-    <MenuItem>
-        <MenuLink Href="@navigationManager.ToAbsoluteUri("help").AbsoluteUri">
-            Помощь
-        </MenuLink>
-    </MenuItem>
-    <MatDivider />
-    <MenuItem>
-        <Button OnClick="LogoutClick"
-                Style="background-color: #4F94C1; color: snow; border-radius: 5px">
-            Выйти
-        </Button>
-    </MenuItem>
-</SubMenu>
-
+<a href="@navigationManager.ToAbsoluteUri("help").AbsoluteUri" class="menu__link">Помощь</a>
+<a href="@navigationManager.ToAbsoluteUri("account/profile").AbsoluteUri" class="menu__link">Личный кабинет</a>
+<MatButton OnClick="LogoutClick"
+           Style="background-color: #4F94C1; color: snow; border-radius: 5px">
+    Выйти
+</MatButton>
 
 @code {
-    RenderFragment subTitle =
-        @<span>
-            <span>Кабинет</span>
-            <Icon Type="down" Theme="outline" Style="font-size: 10px; vertical-align: middle;"></Icon>
-        </span>;
 
-    async Task LogoutClick()
-    {
-        await ((IdentityAuthenticationStateProvider)authStateProvider).Logout();
-        navigationManager.NavigateTo("/account/login");
-    }
+async Task LogoutClick()
+{
+await ((IdentityAuthenticationStateProvider)authStateProvider).Logout();
+navigationManager.NavigateTo("/account/login");
+}
 }

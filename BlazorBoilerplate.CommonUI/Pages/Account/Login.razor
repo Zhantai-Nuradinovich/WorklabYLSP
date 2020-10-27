@@ -56,7 +56,6 @@
             <EditForm Model="@forgotPasswordParameters" OnValidSubmit="@ForgotPassword">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
-
                 <div class="form-group">
                     <MatTextField Style="font-family:cursive;" @bind-Value="@forgotPasswordParameters.Email" Label="Email" PlaceHolder="Почта..." Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
                 </div>

@@ -2,6 +2,7 @@
 using BlazorBoilerplate.Shared.DataModels;
 using BlazorBoilerplate.Shared.Dto;
 using BlazorBoilerplate.Shared.Dto.Account;
+using BlazorBoilerplate.Shared.Dto.Blog;
 using BlazorBoilerplate.Shared.Dto.Sample;
 using ApiLogItem = BlazorBoilerplate.Shared.DataModels.ApiLogItem;
 using Message = BlazorBoilerplate.Shared.DataModels.Message;
@@ -17,9 +18,16 @@ namespace BlazorBoilerplate.Storage.Mapping
         public MappingProfile()
         {
             CreateMap<Todo, TodoDto>().ReverseMap();           
+            CreateMap<Quiz, QuizDto>().ReverseMap();           
+            CreateMap<QuizItem, QuizItemDto>().ReverseMap();           
             CreateMap<UserProfile, UserProfileDto>().ReverseMap();
             CreateMap<ApiLogItem, ApiLogItemDto>().ReverseMap();
             CreateMap<Message, MessageDto>().ReverseMap();
+            CreateMap<Comment, CommentDto>().ReverseMap();
+            CreateMap<ContentFile, ContentFileDto>().ReverseMap();
+            CreateMap<Course, CourseDto>().ReverseMap();
+            CreateMap<ScienceDirection, ScienceDirectionDto>().ReverseMap();
+            CreateMap<Text, TextDto>().ReverseMap();
         }
     }
 }

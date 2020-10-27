@@ -23,6 +23,7 @@ namespace BlazorBoilerplate.Shared.DataModels
         public UserProfile Profile { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
 
         public virtual Tenant Tenant { get; set; }
     }

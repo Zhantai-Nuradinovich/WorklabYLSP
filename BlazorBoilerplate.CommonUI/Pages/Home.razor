@@ -1,55 +1,91 @@
 ﻿@page "/"
+@inject IJSRuntime JsRuntime
 
 <MainContainer Title="Worklab"
                SubTitle="Выбирая профессию, ты выбираешь своё будущее"
                ContentTitle="Ты можешь стать">
-    <!--About carousels https://mdbootstrap.com/docs/jquery/javascript/carousel/ -->
-    <div>
-        <Carousel @ref="_carousel" Autoplay="TimeSpan.FromSeconds(3)" Effect="@CarouselEffect.ScrollX">
-            <CarouselSlick>
-                <h3>1</h3>
-            </CarouselSlick>
-            <CarouselSlick>
-                <h3>2</h3>
-            </CarouselSlick>
-            <CarouselSlick>
-                <h3>3</h3>
-            </CarouselSlick>
-            <CarouselSlick>
-                <h3>4</h3>
-            </CarouselSlick>
-            <CarouselSlick>
-                <h3>5</h3>
-            </CarouselSlick>
-            <CarouselSlick>
-                <h3>6</h3>
-            </CarouselSlick>
-        </Carousel>
+    <!--Carousel Gallery sourse https://swiperjs.com/ + fancybox https://fancyapps.com/fancybox/3/ -->
+    <div class="carousel-gallery">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <a href="https://images.pexels.com/photos/48794/boy-walking-teddy-bear-child-48794.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" data-fancybox="gallery">
+                        <div class="image" style="background-image: url(https://images.pexels.com/photos/48794/boy-walking-teddy-bear-child-48794.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)">
+                            <div class="overlay">
+                                <em class="mdi mdi-magnify-plus"></em>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="carousel-caption">
+                        Экономистом
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <a href="https://images.pexels.com/photos/248280/pexels-photo-248280.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" data-fancybox="gallery">
+                        <div class="image" style="background-image: url(https://images.pexels.com/photos/248280/pexels-photo-248280.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)">
+                            <div class="overlay">
+                                <em class="mdi mdi-magnify-plus"></em>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="carousel-caption">
+                        Юристом
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <a href="https://images.pexels.com/photos/89095/pexels-photo-89095.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" data-fancybox="gallery">
+                        <div class="image" style="background-image: url(https://images.pexels.com/photos/89095/pexels-photo-89095.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)">
+                            <div class="overlay">
+                                <em class="mdi mdi-magnify-plus"></em>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="carousel-caption">
+                        Медиком
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <a href="https://images.pexels.com/photos/669319/pexels-photo-669319.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" data-fancybox="gallery">
+                        <div class="image" style="background-image: url(https://images.pexels.com/photos/669319/pexels-photo-669319.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)">
+                            <div class="overlay">
+                                <em class="mdi mdi-magnify-plus"></em>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="carousel-caption">
+                        Дипломатом
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <a href="https://images.pexels.com/photos/277477/pexels-photo-277477.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" data-fancybox="gallery">
+                        <div class="image" style="background-image: url(https://images.pexels.com/photos/277477/pexels-photo-277477.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)">
+                            <div class="overlay">
+                                <em class="mdi mdi-magnify-plus"></em>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="carousel-caption">
+                        Экологом
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <a href="https://images.pexels.com/photos/928276/pexels-photo-928276.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" data-fancybox="gallery">
+                        <div class="image" style="background-image: url(https://images.pexels.com/photos/928276/pexels-photo-928276.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)">
+                            <div class="overlay">
+                                <em class="mdi mdi-magnify-plus"></em>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="carousel-caption">
+                        Программистом
+                    </div>
+                </div>
+            </div>
+            <!-- Add Arrows -->
+            <div class="swiper-pagination"></div>
+        </div>
     </div>
-    <div class="button-container">
-        <Button OnClick="@( _=>_carousel.Previous())" Size="small">Prev</Button>
-        <Button OnClick="@( _=>_carousel.Next())" Size="small">Next</Button>
-    </div>
-    <style>
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            padding-top: 4px;
-        }
-
-        .ant-carousel .slick-slide {
-            text-align: center;
-            height: 160px;
-            line-height: 160px;
-            background: #364d79;
-            overflow: hidden;
-        }
-
-            .ant-carousel .slick-slide h3 {
-                color: #fff;
-            }
-    </style>
-
+    <!--#Carousel Gallery-->
     <div class="grid-container" style="justify-content: center; text-align: center">
         <div class="grid-item col-sm-12 col-sm-12 col-md-8">
             <h3 style="justify-content: center; text-align: center; font-family: cursive;">Выбирай профессию и попробуй её прямо сейчас!!</h3>
@@ -83,7 +119,7 @@
 
 @code{ bool lazySnackbarIsOpen = false;
     private bool IsAuthenticated = false;
-    Carousel _carousel;
+    bool MenuToggled { get; set; } = false;
 
     [CascadingParameter]
     Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -91,11 +127,11 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
         await Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith((_) =>
         {
             this.lazySnackbarIsOpen = true;
         });
+        await JsRuntime.InvokeAsync<object>("initializeCarousel");
 
         var user = (await authenticationStateTask).User;
         if (user.Identity.IsAuthenticated)

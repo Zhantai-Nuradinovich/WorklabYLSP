@@ -15,24 +15,27 @@
     </AuthorizeView>
     <AuthorizeView Context="AuthorizeContext">
         <Authorized>
-            <ForumMessageCreateForm Send="Send" />
-            <MatList SingleSelection="true" TwoLine="true">
-                @if (Messages == null || Messages.Count == 0)
-                {
-                    <MatListItem>
+            <div class="comments-container">
+                <div class="comments-list">
+
+                    @if (Messages == null || Messages.Count == 0)
+                    {
                         <MatListItemText>
                             Загрузка сообщений...
                         </MatListItemText>
-                    </MatListItem>
-                }
-                else
-                {
-                    @foreach (var message in Messages)
-                    {
-                        <ForumMessage Delete="Delete" Message="@message" />
                     }
-                }
-            </MatList>
+                    else
+                    {
+                        @foreach (var message in Messages.OrderBy(x => x.When))
+                        {
+                            <div class="comment-main-level">
+                                <ForumMessage Delete="Delete" Message="@message" />
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <ForumMessageCreateForm Send="Send" />
         </Authorized>
     </AuthorizeView>
 </MainContainer>

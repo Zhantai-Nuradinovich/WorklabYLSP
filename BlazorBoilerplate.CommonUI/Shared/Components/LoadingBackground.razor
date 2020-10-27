@@ -1,21 +1,19 @@
 ﻿<div class="triangle-container">
-    <div class="triangles">
+    <div class='loading' style="justify-content: center; background-position: top center">
+        <div class='loading__square'></div>
+        <div class='loading__square'></div>
+        <div class='loading__square'></div>
+        <div class='loading__square'></div>
+        <div class='loading__square'></div>
+        <div class='loading__square'></div>
+        <div class='loading__square'></div>
+    </div>
+    <div class='loading' style="justify-content: center; background-position: top center">
+        @ChildContent
     </div>
 </div>
 
-@if (ShowLogoBox)
-{
-    <div class="loading-container">
-        <img src="_content/BlazorBoilerplate.CommonUI/images/logo-work.png" style="width:200px;" /><br />
-        @ChildContent
-    </div>
-}
-
-
 @code {
-    [Parameter]
-    public bool ShowLogoBox { get; set; }
-
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 }

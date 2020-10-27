@@ -1,0 +1,83 @@
+﻿@using BlazorBoilerplate.Shared.Dto.Blog
+@inject HttpClient Http
+@inject IMatToaster matToaster
+@using System.Net
+
+
+@if (IsAdminOrCoordinator)
+{
+    <MatIconButton Icon="delete" OnClick="@(() => deleteDialogOpen = true)"></MatIconButton>
+}
+@foreach (var question in Quiz.Items)
+{
+    <h5>@question.Question</h5>
+    <MatListItem>
+        @foreach (var variant in question.Normalized)
+        {
+            <div class="list-group list-group-flush">
+                <div class="list-group-item ripple">
+                    <label for="@($"{question.Id+variant}")">@variant</label>
+                    <input type="checkbox" id="@($"{question.Id+variant}")"/>
+                </div>
+            </div>
+        }
+    </MatListItem>
+}
+
+<MatDialog @bind-IsOpen="@deleteDialogOpen" Style="z-index:100">
+    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить</MatDialogTitle>
+    <MatDialogContent>
+        Хотите удалить @Quiz.Id ?
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { deleteDialogOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@Delete">Удалить</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+<MatButton Label="Проверить" OnClick="@(e => { totalScoreDialogIsOpen = true;})"></MatButton>
+<MatDialog @bind-IsOpen="@totalScoreDialogIsOpen">
+    <MatDialogTitle>Ваши результаты</MatDialogTitle>
+    <MatDialogContent>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { totalScoreDialogIsOpen = false;})">Закрыть</MatButton>
+    </MatDialogActions>
+</MatDialog>
+<MatDivider />
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public QuizDto Quiz { get; set; }
+
+    [Parameter]
+    public bool IsAdminOrCoordinator { get; set; }
+
+    bool deleteDialogOpen = false;
+    bool totalScoreDialogIsOpen = false;
+
+    public async Task Delete()
+    {
+        try
+        {
+            var response = await Http.DeleteAsync("api/quiz/" + Quiz.Id);
+            if (response.StatusCode == (HttpStatusCode)Status200OK)
+            {
+                matToaster.Add("Удалено", MatToastType.Success);
+            }
+            else
+            {
+                matToaster.Add("Не удалось удалить: " + response.StatusCode, MatToastType.Danger);
+            }
+            deleteDialogOpen = false;
+            Quiz = new QuizDto();
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
+        }
+    }
+}

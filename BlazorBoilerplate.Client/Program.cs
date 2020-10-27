@@ -47,7 +47,6 @@ namespace BlazorBoilerplate.Client
                 config.MaximumOpacity = 95;
                 config.VisibleStateDuration = 3000;
             });
-            builder.Services.AddAntDesign();
             await builder
             .Build()
             .UseLoadingBar()

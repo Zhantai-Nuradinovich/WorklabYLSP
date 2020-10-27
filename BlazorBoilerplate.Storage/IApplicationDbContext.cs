@@ -15,7 +15,13 @@ namespace BlazorBoilerplate.Storage
         public DbSet<Message> Messages { get; set; }
         public DbSet<ApplicationUser> Users { get; set; }
         //public DbSet<Tenant> Tenants { get; set; }
-
+        public DbSet<Quiz> Quizzes { get; set; }
+        public DbSet<QuizItem> QuizItems { get; set; }
+        public DbSet<ContentFile> Files { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<ScienceDirection> ScienceDirections { get; set; }
+        public DbSet<Text> Texts { get; set; }
         public void SetGlobalQueryForSoftDelete<T>(ModelBuilder builder) where T : class, ISoftDelete;
 
         public void SetGlobalQueryForSoftDeleteAndTenant<T>(ModelBuilder builder) where T : class, ISoftDelete, ITenant;

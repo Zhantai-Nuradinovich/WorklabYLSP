@@ -38,7 +38,7 @@ namespace BlazorBoilerplate.Storage.Stores
 
         public List<MessageDto> GetMessages()
         {
-            return _autoMapper.ProjectTo<MessageDto>(_applicationDbContext.Messages).OrderBy(i => i.When).Take(10).ToList();
+            return _autoMapper.ProjectTo<MessageDto>(_applicationDbContext.Messages).OrderByDescending(i => i.When).Take(10).ToList();
         }
     }
 }

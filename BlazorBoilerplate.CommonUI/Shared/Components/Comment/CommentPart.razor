@@ -1,0 +1,154 @@
+﻿@using BlazorBoilerplate.Shared.Dto.Blog
+@using BlazorBoilerplate.Shared.Dto.Account
+@using System.Net
+@inject HttpClient Http
+@inject IMatToaster matToaster
+
+
+<AuthorizeView Context="AuthorizeContext">
+    <NotAuthorized>
+        <div class="alert alert-success">
+            <a href="/account/login">Войдите</a> чтобы присоединиться к чату.
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView Context="AuthorizeContext">
+    <Authorized>
+        <div class="comments-container">
+            <h1>Комментарии</h1>
+            <div class="comments-list">
+                @if (Comments == null || Comments.Count == 0)
+                {
+                    <MatListItem>
+                        <MatListItemText>
+                            Загрузка сообщений...
+                        </MatListItemText>
+                    </MatListItem>
+                }
+                else
+                {
+                    @foreach (var comment in Comments.OrderBy(x => x.When))
+                    {
+                        <EditForm Model="@comment" OnValidSubmit="@((e) => DeleteMessage(comment.CommentId))">
+                            <div class="comment-main-level">
+                                <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name by-author">@comment.UserName</h6>
+                                        <span>@comment.When</span>
+                                    </div>
+                                    <div class="comment-content">
+                                        <p>@comment.Text</p>
+                                    </div>
+                                </div>
+                                <MatIconButton Icon="delete"
+                                               Type="submit"
+                                               Style="float: right;">
+                                </MatIconButton>
+                            </div>
+                            <br />
+                            <br />
+                        </EditForm>
+                    }
+                }
+            </div>
+            <EditForm OnValidSubmit="CreateMessage" Model="@commentDto" autocomplete="off">
+                <div class="comment-block">
+                    @if (Creating)
+                    {
+                        <button style="width:100%;" class="btn btn-light">
+                            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Отправляется...
+                        </button>
+                    }
+                    else
+                    {
+                        <div class="form-control">
+                            <InputTextArea id="btn btn-input"
+                                           class="form-row"
+                                           placeholder="Пишите..."
+                                           aria-label="Message"
+                                           @bind-Value="@commentDto.Text" />
+                        </div>
+                        @* https://chrissainty.com/a-detailed-look-at-data-binding-in-blazor/ *@
+                        @* https://docs.microsoft.com/en-us/aspnet/core/blazor/forms-validation?view=aspnetcore-3.0 *@
+                        @* https://remibou.github.io/Using-the-Blazor-form-validation/ *@
+                        <div class="form-control">
+                            <button id="messageCreate"
+                                    class="btn btn-primary"
+                                    ref="createButton"
+                                    type="submit">
+                                Отправить
+                            </button>
+                        </div>
+                    }
+                </div>
+            </EditForm>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public List<CommentDto> Comments { get; set; }
+
+    [Parameter]
+    public long CourseId { get; set; }
+
+    [Parameter]
+    public UserInfoDto UserInfoDto { get; set; }
+
+    CommentDto commentDto { get; set; } = new CommentDto();
+    bool IsOpened { get; set; }
+    bool Creating { get; set; } = false;
+    string avatar = "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
+
+    async Task DeleteMessage(long id)
+    {
+        try
+        {
+            var response = await Http.DeleteAsync("api/comment/" + id);
+            if (response.StatusCode == (HttpStatusCode)Status200OK)
+            {
+                matToaster.Add("Удалено", MatToastType.Success);
+                Comments.Remove(Comments.Find(x => x.CommentId == id));
+            }
+            else
+            {
+                matToaster.Add("Не удалось удалить: " + response.StatusCode, MatToastType.Danger);
+            }
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
+        }
+    }
+
+    async Task CreateMessage()
+    {
+        Creating = true;
+
+        commentDto.CourseId = CourseId;
+        commentDto.UserID = UserInfoDto.UserId;
+        commentDto.UserName = UserInfoDto.UserName;
+        commentDto.When = DateTime.Now;
+        try
+        {
+            ApiResponseDto apiResponse = await Http.PostJsonAsync<ApiResponseDto>("api/comment", commentDto);
+            if (apiResponse.StatusCode == Status200OK)
+            {
+                matToaster.Add(apiResponse.Message, MatToastType.Success);
+                Comments.Add(commentDto); //Newtonsoft.Json.JsonConvert.DeserializeObject<CommentDto>((await Http.GetFromJsonAsync<ApiResponseDto>("api/comment/" + CourseId)).Result.ToString())
+            }
+            else
+            {
+                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось создать");
+            }
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось создать");
+        }
+        Creating = false;
+        commentDto = new CommentDto();
+    }
+}

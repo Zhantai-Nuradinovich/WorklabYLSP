@@ -19,7 +19,7 @@
     }
     <MatDrawerContent>
         <MatAppBarContainer>
-            <MatAppBar Fixed="true" Style="background-color: #F8F9FA; border-bottom: 1px solid #D6D5D5">
+            <MatAppBar Fixed="true" Style="background-color: #F8F9FA; border-bottom: 1px solid #D6D5D5; font-family: 'Segoe UI Emoji'">
                 <MatAppBarRow>
                     <MatAppBarSection>
                         @if (!IsAdminOrCoordinator)
@@ -34,35 +34,31 @@
                         }
                     </MatAppBarSection>
                     <MatAppBarSection Align="@MatAppBarSectionAlign.End" Style="padding-right: 100px;">
-                        <Menu Mode=MenuMode.Horizontal Style="font-family: 'Segoe UI Emoji'">
-                            <MenuItem>
-                                <MenuLink Href="/">
-                                    Главная
-                                </MenuLink>
-                            </MenuItem>
-                            <Divider Type="vertical" Style="font-size: 25px;" />
-                            <MenuItem>
-                                <MenuLink Href="/programs">
-                                    Программы
-                                </MenuLink>
-                            </MenuItem>
-                            <Divider Type="vertical" Style="font-size: 25px;" />
-                            <AuthorizeView Context="AuthorizeContext">
-                                <Authorized>
-                                    <Login></Login>
-                                </Authorized>
-                                <NotAuthorized>
-                                    <MenuItem>
-                                        <Button Style="background-color: #4F94C1;">
-                                            <MenuLink Style="color: snow; border-radius: 5px"
-                                                      Href="/account/login">
-                                                Войти
-                                            </MenuLink>
-                                        </Button>
-                                    </MenuItem>
-                                </NotAuthorized>
-                            </AuthorizeView>
-                        </Menu>
+                        <input type="checkbox" id="chk">
+                        <label for="chk" class="show-menu-btn">
+                            <i class="material-icons">Меню</i>
+                        </label>
+                        <div class="menu">
+                            <div class="links">
+                                <a href="/" class="menu__link">Главная</a>
+                                <a href="/program_list" class="menu__link">Программы</a>
+                                <AuthorizeView Context="AuthorizeContext">
+                                    <Authorized>
+                                        <Login></Login>
+                                    </Authorized>
+                                    <NotAuthorized>
+                                        <a href="/about-us" class="menu__link">О нас</a>
+                                        <MatButton Link="/account/login"
+                                                   Style="background-color: #4F94C1; color: snow; border-radius: 5px">
+                                            Войти
+                                        </MatButton>
+                                    </NotAuthorized>
+                                </AuthorizeView>
+                            </div>
+                            <label for="chk" class="hide-menu-btn">
+                                <i class="material-icons close" style="color: white">Закрыть</i>
+                            </label>
+                        </div>
                     </MatAppBarSection>
                 </MatAppBarRow>
             </MatAppBar>
@@ -70,10 +66,57 @@
                 <section>
                     @Body
                 </section>
-                <footer class="page-footer row">
+                <footer class="site-footer">
+                    <div class="container">
+                        <div class="row" style="color: black; font-family: sans-serif;">
+                            <div class="col-sm-12 col-md-6">
+                                <h6 style="color: black; font-family: sans-serif; text-shadow: 2px 2px 20px black;">Партнеры</h6>
+                                <p class="text-justify">Scanfcode.com <i>CODE WANTS TO BE SIMPLE </i> is an initiative  to help the upcoming programmers with the code. Scanfcode focuses on providing the most efficient code or snippets as the code wants to be simple. We will help programmers build up concepts in different programming languages that include C, C++, Java, HTML, CSS, Bootstrap, JavaScript, PHP, Android, SQL and Algorithm.</p>
+                            </div>
+
+                            <div class="col-xs-6 col-md-3">
+                                <h6 style="color: black; font-family: sans-serif; text-shadow: 2px 2px 20px black;">Worklab</h6>
+                                <ul class="footer-links">
+                                    <li><a href="/about-project">О проекте</a></li>
+                                    <li><a href="/team">Участники</a></li>
+                                    <li><a href="/help">Помощь</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-xs-6 col-md-3">
+                                <h6 style="color: black; font-family: sans-serif; text-shadow: 2px 2px 20px black;">Быстрые ссылки</h6>
+                                <ul class="footer-links">
+                                    <li><a href="/about-us">О нас</a></li>
+                                    <li><a href="/contacts">Контакты</a></li>
+                                    <li><a href="/help-us">Помочь</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-6 col-xs-12">
+                                <p class="copyright-text" style="font-family: sans-serif; text-shadow: 2px 2px 20px black;">
+                                    &copy; YLSP Team, все права защищены
+                                </p>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <ul class="social-icons">
+                                    <li><a class="facebook" target="_blank" href="https://www.facebook.com/ylsp.2020/"><i class="fa fa-facebook"></i></a></li>
+                                    <li><a class="dribbble" target="_blank" href="https://www.instagram.com/ylsp_kg/"><i class="fa fa-instagram"></i></a></li>
+                                    <li><a class="linkedin" target="_blank" href="#"><i class="fa fa-telegram"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                @*<footer class="page-footer row">
                     <h3 class="my-subtitle-2" style="color:black;  display: inline-block; position: relative; font-family: cursive; text-shadow: 2px 2px 20px black;">Worklab</h3><br />
                     <h3 class="my-subtitle-2" style="color:black;  display: inline-block; position: relative; font-family: cursive; text-shadow: 2px 2px 20px black;">Ещё</h3><br />
-                    <Divider />
+                    <hr class="solid">
+                    <MatDivider />
                     <div class="my-subtitle-2">
                         <MatTooltip Tooltip="Узнайте больше о проекте" Position="@MatTooltipPosition.Right">
                             <MatButton Style="color: black;"
@@ -113,7 +156,8 @@
                             </MatButton>
                         </MatTooltip><br />
                     </div>
-                    <Divider />
+                    <hr class="solid">
+                    <MatDivider />
                     <div class="flex-1">
                         © YLSP Team, все права защищены
                     </div>
@@ -121,14 +165,14 @@
                         <MatTooltip Tooltip="Следите за нами в инстаграме" Position="@MatTooltipPosition.Top">
                             <a href="https://www.instagram.com/ylsp_kg/" target="_blank" style="text-decoration: none">
                                 <MatButton RefBack="@context">
-                                    <Icon Type="instagram" Theme="outline" Style="font-size: 18px; color: #535353;" />
+                                    <i class="fa fa-instagram" style="font-size: 18px;  color: #535353;"></i>
                                 </MatButton>
                             </a>
                         </MatTooltip>
                         <MatTooltip Tooltip="Следите за нами в Facebook" Position="@MatTooltipPosition.Top">
                             <a href="https://www.facebook.com/ylsp.2020/" target="_blank" style="text-decoration: none">
                                 <MatButton RefBack="@context">
-                                    <Icon Type="facebook" Theme="outline" Style="font-size: 18px;  color: #535353;" />
+                                    <i class="fa fa-facebook" style="font-size: 18px;  color: #535353;"></i>
                                 </MatButton>
                             </a>
                         </MatTooltip>
@@ -140,7 +184,7 @@
                             </a>
                         </MatTooltip>
                     </div>
-                </footer>
+                </footer>*@
             </MatAppBarContent>
         </MatAppBarContainer>
     </MatDrawerContent>

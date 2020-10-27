@@ -26,7 +26,13 @@ namespace BlazorBoilerplate.Storage
         public DbSet<Tenant> Tenants { get; set; }
         private IUserSession _userSession { get; set; }
         public DbSet<DbLog> Logs { get; set; }
-
+        public DbSet<Quiz> Quizzes { get; set; }
+        public DbSet<QuizItem> QuizItems { get; set; }
+        public DbSet<ContentFile> Files { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<ScienceDirection> ScienceDirections { get; set; }
+        public DbSet<Text> Texts { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserSession userSession) : base(options)
         {
             _userSession = userSession;
@@ -60,6 +66,20 @@ namespace BlazorBoilerplate.Storage
             modelBuilder.Entity<Message>().ToTable("Messages");
 
             modelBuilder.ApplyConfiguration(new MessageConfiguration());
+
+            modelBuilder.Entity<Quiz>().ToTable("Quizzes");
+
+            modelBuilder.Entity<QuizItem>().ToTable("QuizItems");
+
+            modelBuilder.Entity<ContentFile>().ToTable("ContentFile");
+
+            modelBuilder.Entity<Comment>().ToTable("Comments");
+
+            modelBuilder.Entity<Course>().ToTable("Courses");
+
+            modelBuilder.Entity<ScienceDirection>().ToTable("ScienceDirections");
+
+            modelBuilder.Entity<Text>().ToTable("Texts");
 
             SetGlobalQueryFilters(modelBuilder);
         }

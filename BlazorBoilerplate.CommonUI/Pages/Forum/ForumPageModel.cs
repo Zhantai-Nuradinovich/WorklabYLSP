@@ -118,6 +118,7 @@ namespace BlazorBoilerplate.CommonUI.Pages
         {
             if (!string.IsNullOrWhiteSpace(messageDto.Text))
             {
+                messageDto.When = DateTime.Now;
                 // send message to hub
                 await Client.Send(messageDto.Text);
 

@@ -13,7 +13,7 @@
         <MatTableHeader>
             <th>
                 <div style="width:135px;">
-                    <MatButton Icon="playlist_add" Label="New Todo" OnClick="@((e) => OpenDialog())" Raised="true"></MatButton>
+                    <MatButton Icon="playlist_add" Label="Новое дело" OnClick="@((e) => OpenDialog())" Raised="true"></MatButton>
                 </div>
             </th>
             <th>Id</th>
@@ -47,7 +47,7 @@
             </EditForm>
         </MatDialogContent>
         <MatDialogActions>
-            <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
+            <MatButton OnClick="@(e => { dialogIsOpen = false; })">Закрыть</MatButton>
             <MatButton OnClick="@CreateTodo">Создать</MatButton>
         </MatDialogActions>
     </MatDialog>

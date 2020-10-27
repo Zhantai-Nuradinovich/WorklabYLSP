@@ -2,32 +2,32 @@
 @using Microsoft.AspNetCore.Components.Forms
 
 <EditForm OnValidSubmit="CreateMessage" Model="@messageDto" autocomplete="off" >
-    <div class="card-footer">
-        <div class="input-group">
-            @if (Creating)
-            {
-                <button style="width:100%;" class="btn btn-light">
-                    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Отправляется...
+    <div class="comment-block">
+        @if (Creating)
+        {
+            <button style="width:100%;" class="btn btn-light">
+                <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Отправляется...
+            </button>
+        }
+        else
+        {
+            <InputText id="btn btn-input"
+                       class="form-control"
+                       placeholder="Пишите..."
+                       aria-label="Message"
+                       @bind-Value="@messageDto.Text" />
+            @* https://chrissainty.com/a-detailed-look-at-data-binding-in-blazor/ *@
+            @* https://docs.microsoft.com/en-us/aspnet/core/blazor/forms-validation?view=aspnetcore-3.0 *@
+            @* https://remibou.github.io/Using-the-Blazor-form-validation/ *@
+            <div class="input-group-append">
+                <button id="messageCreate"
+                        class="btn btn-primary"
+                        ref="createButton"
+                        type="submit">
+                    Отправить
                 </button>
-            }
-            else
-            {
-                <InputText id="btn btn-input" 
-                            class="form-control"
-                            placeholder="Пишите..."
-                            aria-label="Message"
-                            @bind-Value="@messageDto.Text" />
-                @* https://chrissainty.com/a-detailed-look-at-data-binding-in-blazor/ *@
-                @* https://docs.microsoft.com/en-us/aspnet/core/blazor/forms-validation?view=aspnetcore-3.0 *@
-                @* https://remibou.github.io/Using-the-Blazor-form-validation/ *@
-                <div class="input-group-append">
-                    <button id="messageCreate" 
-                            class="btn btn-primary" 
-                            ref="createButton" 
-                            type="submit">Отправить</button>
-                </div>
-            }
-        </div>
+            </div>
+        }
     </div>
 </EditForm>
 
@@ -45,6 +45,7 @@
     async Task CreateMessage()
     {
         Creating = true;
+        messageDto.When = DateTime.Now;
         StateHasChanged();
         await Send(messageDto);
         messageDto.Text = "";

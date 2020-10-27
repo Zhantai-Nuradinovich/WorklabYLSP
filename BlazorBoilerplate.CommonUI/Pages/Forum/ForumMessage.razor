@@ -2,21 +2,20 @@
 @using Microsoft.AspNetCore.Components.Forms
 
 <EditForm Model="@messageDto" OnValidSubmit="@DeleteMessage">
-    <MatListItem Style="height: auto; max-height: none; width: auto; max-width: 500px; background-color: snow; border-radius: 15px 15px 15px 15px; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px -1px 4px rgba(0, 0, 0, 0.25); padding-left: 30px; margin-left: 30px">
-        <MatListItemText Style="width: auto; max-width: 450px; height: auto;">
-            <MatListItemSecondaryText Style="font-family:Arial, Helvetica, sans-serif; font-size: 12px;">
-                <b>@messageDto.UserName</b>
-            </MatListItemSecondaryText>
-            <MatListDivider></MatListDivider>
-            <MatListItemPrimaryText Style="padding-left: 20px; color: black; font-family: cursive; margin-bottom: 0; white-space:pre-wrap; font-size: 14px;">
-                @messageDto.Text
-            </MatListItemPrimaryText>
-        </MatListItemText>
+    <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
+    <div class="comment-box">
+        <div class="comment-head">
+            <h6 class="comment-name by-author">@messageDto.UserName</h6>
+            <span>@messageDto.When</span>
+        </div>
+        <div class="comment-content">
+            @messageDto.Text
+        </div>
         <MatIconButton Icon="delete"
                        Type="submit"
                        Style="float: right;">
         </MatIconButton>
-    </MatListItem>
+    </div>
     <br />
     <br />
 </EditForm>
@@ -29,11 +28,11 @@
     public Func<MessageDto, Task> Delete { get; set; }
 
     [Parameter]
-    public MessageDto message { get; set; }
-
+    public MessageDto Message { get; set; }
+    //Style="height: auto; max-height: none; width: auto; max-width: 500px; background-color: snow; border-radius: 15px 15px 15px 15px; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px -1px 4px rgba(0, 0, 0, 0.25); padding-left: 30px; margin-left: 30px"
     protected override void OnParametersSet()
     {
-        messageDto = message;
+        messageDto = Message;
     }
 
     async Task DeleteMessage()

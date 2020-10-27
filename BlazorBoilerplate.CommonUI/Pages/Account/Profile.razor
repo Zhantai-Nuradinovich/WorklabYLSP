@@ -14,7 +14,7 @@
                ContentTitle="Личный кабинет">
     @if (userInfo == null)
     {
-        <LoadingBackground ShowLogoBox="true"></LoadingBackground>
+        <LoadingBackground></LoadingBackground>
     }
     else
     {
@@ -25,16 +25,24 @@
             <fieldset>
 
                 <div class="form-group">
-                    <MatTextField @bind-Value="@userInfo.UserName" Label="User Name" Icon="person" IconTrailing="true" FullWidth="true" Required="true" ReadOnly="true"></MatTextField>
+                    <p>
+                        <MatTextField @bind-Value="@userInfo.UserName" Label="Логин" Icon="person" IconTrailing="true" FullWidth="true" Required="true" ReadOnly="true"></MatTextField>
+                    </p>
                 </div>
                 <div class="form-group">
-                    <MatTextField @bind-Value="@userInfo.Email" Label="Email" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    <p>
+                        <MatTextField @bind-Value="@userInfo.Email" Label="Почта" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    </p>
                 </div>
                 <div class="form-group">
-                    <MatTextField @bind-Value="@userInfo.FirstName" Label="First Name" PlaceHolder="Имя..." FullWidth="true"></MatTextField>
+                    <p>
+                        <MatTextField @bind-Value="@userInfo.FirstName" Label="Имя" PlaceHolder="Имя..." FullWidth="true"></MatTextField>
+                    </p>
                 </div>
                 <div class="form-group">
-                    <MatTextField @bind-Value="@userInfo.LastName" Label="Last Name" PlaceHolder="Фамилия..." FullWidth="true"></MatTextField>
+                    <p>
+                        <MatTextField @bind-Value="@userInfo.LastName" Label="Фамилия" PlaceHolder="Фамилия..." FullWidth="true"></MatTextField>
+                    </p>
                 </div>
 
                 <div class="form-group">
@@ -60,10 +68,14 @@
                     <ValidationSummary />
                     <fieldset>
                         <div class="form-group">
-                            <MatTextField @bind-Value="@registerParameters.Password" Label="Password" PlaceHolder="Пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                            <p>
+                                <MatTextField @bind-Value="@registerParameters.Password" Label="Password" PlaceHolder="Пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                            </p>
                         </div>
                         <div class="form-group">
-                            <MatTextField @bind-Value="@registerParameters.PasswordConfirm" Label="Password Confirmation" PlaceHolder="Повторите пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                            <p>
+                                <MatTextField @bind-Value="@registerParameters.PasswordConfirm" Label="Password Confirmation" PlaceHolder="Повторите пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                            </p>
                         </div>
                     </fieldset>
                 </EditForm>

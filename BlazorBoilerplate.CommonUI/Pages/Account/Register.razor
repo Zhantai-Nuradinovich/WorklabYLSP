@@ -24,16 +24,16 @@
         <ValidationSummary />
         <fieldset>
             <div class="form-group">
-                <MatTextField Style="font-family:cursive;" @bind-Value="@registerParameters.UserName" Label="User Name" PlaceHolder="Логин..." Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                <MatTextField Style="font-family:cursive;" @bind-Value="@registerParameters.UserName" PlaceHolder="Логин..." Label="Логин" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
             </div>
             <div class="form-group">
-                <MatTextField Style="font-family:cursive;" @bind-Value="@registerParameters.Email" Label="Email" PlaceHolder="Почта..." Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    <MatTextField Style="font-family:cursive;" @bind-Value="@registerParameters.Email" PlaceHolder="Почта..." Label="Почта" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
             </div>
             <div class="form-group">
-                <MatTextField Style="font-family:cursive;" @bind-Value="@registerParameters.Password" Label="Password" PlaceHolder="Пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                    <MatTextField Style="font-family:cursive;" @bind-Value="@registerParameters.Password" PlaceHolder="Пароль..." Label="Пароль" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
             </div>
             <div class="form-group">
-                <MatTextField Style="font-family:cursive;" @bind-Value="@registerParameters.PasswordConfirm" Label="Password Confirmation" PlaceHolder="Повторите пароль..." Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                    <MatTextField Style="font-family:cursive;" @bind-Value="@registerParameters.PasswordConfirm" PlaceHolder="Повторите пароль..." Label="Повторите пароль" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
             </div>
             <div class="form-group d-flex justify-content-end">
                 <MatButton Style="font-family:cursive; border-radius: 15px" Type="submit" Raised="true">Зарегистрироваться</MatButton>

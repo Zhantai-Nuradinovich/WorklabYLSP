@@ -4,7 +4,8 @@
 @using System.Net
 
 <div style="width:135px;">
-    <MatButton Icon="playlist_add" Label="Тест" OnClick="@((e) => OpenDialog())" Raised="true"></MatButton>
+    <MatButton Icon="playlist_add" Label="Тест" OnClick="@((e) => OpenDialog())" 
+               Style="background-color: #4F94C1; color: snow; border-radius: 5px; margin: 10px;"></MatButton>
 </div>
 
 <MatDialog Class="modal" @bind-IsOpen="@dialogIsOpen">

@@ -1,13 +1,10 @@
-﻿@using BlazorBoilerplate.Shared.Dto.Blog
+﻿@page "/medical_business"
+@using BlazorBoilerplate.Shared.Dto.Blog
 @inject HttpClient Http
 @inject IMatToaster matToaster
 @using System.Net
 
 
-@if (IsAdminOrCoordinator)
-{
-    <MatIconButton Icon="delete" OnClick="@(() => deleteDialogOpen = true)"></MatIconButton>
-}
 <div class="my-quiz-container" style="min-height: 400px;">
     <div id="quiz">
         <div class="container-fluid">
@@ -40,7 +37,11 @@
                     {
                         @if (IsQuizStarted)
                         {
-                            <p id="quiz-question" class="animated">@QuizItem?.Question</p> // zoomIn and zoomOut styles should be added/removed, when answered
+                            <p id="quiz-question" class="animated">
+                                <Animation Effect="@Effect.ZoomIn" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
+                                    @QuizItem?.Question
+                                </Animation>
+                            </p>
                             @if (!string.IsNullOrEmpty(QuizItem?.PicturePath))
                             {
                                 <img src="@QuizItem?.PicturePath" style="height: 100px; width: 100px" />
@@ -48,14 +49,19 @@
                             <div id="quiz-options">
                                 @foreach (var variant in QuizItem?.Normalized)
                                 {
-                                    <button class="btn quiz-ans-btn animated" @onclick="(e) => NextQuestion(variant)">@variant</button>
+                                    <button class="btn quiz-ans-btn animated"
+                                            @onclick="(e) => { NextQuestion(variant); RunAnimation(); }">
+                                        <Animation Effect="@Effect.SlideInDown" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
+                                            @variant
+                                        </Animation>
+                                    </button>
                                 }
                             </div>
                         }
                         else
                         {
                             <div id="quiz-options">
-                                <button  class="btn quiz-ans-btn animated pulse">Результат @TotalScore %</button>
+                                <button class="btn quiz-ans-btn animated pulse">Результат @TotalScore %</button>
                             </div>
                         }
                     }
@@ -64,71 +70,30 @@
         </div>
     </div>
 </div>
-<MatDivider />
 
-<MatDialog @bind-IsOpen="@deleteDialogOpen" Style="z-index:100">
-    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить</MatDialogTitle>
-    <MatDialogContent>
-        Хотите удалить @Quiz.Id ?
-    </MatDialogContent>
-    <MatDialogActions>
-        <MatButton OnClick="@(e => { deleteDialogOpen = false; })">Закрыть</MatButton>
-        <MatButton OnClick="@Delete">Удалить</MatButton>
-    </MatDialogActions>
-</MatDialog>
 
 @code {
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
-
-    [Parameter]
-    public QuizDto Quiz { get; set; }
-    public List<QuizItemDto> UserQuizItems { get; set; } = new List<QuizItemDto>();
-    public QuizItemDto QuizItem { get; set; }
-    IEnumerator<QuizItemDto> Enumerator { get; set; }
-
-    [Parameter]
-    public bool IsAdminOrCoordinator { get; set; }
-
     bool IsQuizStarted { get; set; } = false;
     bool IsStartButtonClicked { get; set; } = false;
     bool deleteDialogOpen = false;
     double TotalScore { get; set; } = 0;
     int curentQuestion { get; set; } = 1;
 
-    public async Task Delete()
+    public QuizDto Quiz { get; set; } = new QuizDto() { Id = 2, CourseId = 3, DirectionTitle = "MedicalBusuiness", Items = new List<QuizItemDto>() { new QuizItemDto() { Id = 3, QuizId = 3, PicturePath = "", Question = "Кто?", Answers = "RRR1NZN1QQQ1NZN1koko", RightAnswer= "RRR" }, new QuizItemDto() { Id = 3, QuizId = 3, PicturePath = "", Question = "КтоRNJRNJ?", Answers = "FFRRR1NZN1QQFQ1NZN1koko", RightAnswer= "FFRRR" } } };
+    public List<QuizItemDto> UserQuizItems { get; set; } = new List<QuizItemDto>();
+    public QuizItemDto QuizItem { get; set; }
+    IEnumerator<QuizItemDto> Enumerator { get; set; }
+
+    bool IsAnimated { get; set; } = true;
+
+    private void RunAnimation()
     {
-        try
-        {
-            var response = await Http.DeleteAsync("api/quiz/" + Quiz.Id);
-            if (response.StatusCode == (HttpStatusCode)Status200OK)
-            {
-                matToaster.Add("Удалено", MatToastType.Success);
-            }
-            else
-            {
-                matToaster.Add("Не удалось удалить: " + response.StatusCode, MatToastType.Danger);
-            }
-            deleteDialogOpen = false;
-            Quiz = new QuizDto();
-        }
-        catch (Exception ex)
-        {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
-        }
+        IsAnimated = true;
     }
 
-    public void CheckResults()
+    private void AnimationEnd()
     {
-        foreach (var question in UserQuizItems)
-        {
-            if(question.ChoosenAnswer == question.RightAnswer)
-            {
-                TotalScore++;
-            }
-        }
-
-        TotalScore = TotalScore / UserQuizItems.Count * 100;
+        IsAnimated = false;
     }
 
     public void StartQuiz()
@@ -146,6 +111,7 @@
     {
         QuizItem.ChoosenAnswer = variant;
         UserQuizItems.Add(QuizItem);
+
         if (Enumerator.MoveNext())
         {
             QuizItem = Enumerator.Current;
@@ -157,5 +123,18 @@
             IsQuizStarted = false;
             QuizItem = null;
         }
+    }
+
+    public void CheckResults()
+    {
+        foreach (var question in UserQuizItems)
+        {
+            if (question.ChoosenAnswer == question.RightAnswer)
+            {
+                TotalScore++;
+            }
+        }
+
+        TotalScore = TotalScore / UserQuizItems.Count * 100;
     }
 }

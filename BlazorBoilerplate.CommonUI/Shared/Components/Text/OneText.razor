@@ -1,0 +1,17 @@
+﻿@using BlazorBoilerplate.Shared.Dto.Blog
+@inject HttpClient Http
+@inject IMatToaster matToaster
+@using System.Net
+
+<div style="min-height: 400px;">
+    @((MarkupString)Text.TextContent)
+</div>
+<MatDivider/>
+
+@code {
+    [Parameter]
+    public TextDto Text { get; set; }
+
+    [Parameter]
+    public bool IsAdminOrCoordinator { get; set; }
+}

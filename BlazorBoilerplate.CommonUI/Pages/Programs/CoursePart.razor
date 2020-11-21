@@ -3,6 +3,7 @@
 @using BlazorBoilerplate.CommonUI.Shared.Components.Comment
 @using BlazorBoilerplate.Shared.Dto.Account
 @using BlazorBoilerplate.CommonUI.Shared.Components.Tests 
+@using BlazorBoilerplate.CommonUI.Shared.Components.Text
 @inject NavigationManager navigationManager
 @inject HttpClient Http
 @inject IMatToaster matToaster
@@ -13,24 +14,31 @@
                ContentTitle="Начнём!">
     @if (IsAdminOrCoordinator)
     {
-        <BaseQuiz CourseId="@(long.Parse(CourseId))"/>
+        <BaseQuiz CourseId="@(long.Parse(CourseId))" />
+        <BaseText CourseId="@(long.Parse(CourseId))" />
     }
+    <p class="heading">Надо посмотреть что-нибудь о пагинации контента и попробовать через енумератор. Продумать структуру как у курсеры и добавить привязку к пользователю + почитать об аналитике сайта</p>
+        @if (oneContent is QuizDto quiz)
+        {
+            <OneQuiz Quiz="@quiz" IsAdminOrCoordinator="@IsAdminOrCoordinator" />
+        }
+        else if (oneContent is TextDto text)
+        {
+            <OneText Text="@text" IsAdminOrCoordinator="@IsAdminOrCoordinator" />
+        }
+        else if (oneContent is ContentFileDto file)
+        {
+            <div>@(file?.ContentFileName)</div>
+        }
+    <MatButton Label="Назад" 
+               Style="background-color: #4F94C1; color: snow; border-radius: 5px; margin: 10px;"
+               OnClick="PreviousStep">
+    </MatButton>
 
-    @foreach (var contentRow in content)
-    {
-        if (contentRow is QuizDto quiz)
-        {
-            <OneQuiz Quiz="@quiz" IsAdminOrCoordinator="@IsAdminOrCoordinator"/>
-        }
-        else if (contentRow is TextDto)
-        {
-            <div>@(((TextDto)contentRow)?.TextContent)</div>
-        }
-        else if (contentRow is ContentFileDto)
-        {
-            <div>@(((ContentFileDto)contentRow)?.ContentFileName)</div>
-        }
-    }
+    <MatButton Label="Вперед" 
+               Style="background-color: #4F94C1; color: snow; border-radius: 5px; margin: 10px;"
+               OnClick="NextStep">
+    </MatButton>
     <CommentPart UserInfoDto="@userInfo" Comments="@comments" CourseId="@CourseView.CourseId" />
 </MainContainer>
 
@@ -47,6 +55,8 @@
     List<ContentFileDto> files = new List<ContentFileDto>();
     List<CommentDto> comments = new List<CommentDto>();
     List<ContentDto> content = new List<ContentDto>();
+    ContentDto oneContent = new ContentDto();
+    int contentIndex = 0;
 
     [CascadingParameter]
     Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -71,6 +81,19 @@
         content.AddRange(texts);
         content.AddRange(files);
         content = content.OrderBy(t => t.When).ToList();
+        oneContent = content[contentIndex];
+    }
+
+    public void NextStep()
+    {
+        contentIndex++;
+        oneContent = contentIndex < content.Count ? content[contentIndex] : null;
+    }
+
+    public void PreviousStep()
+    {
+        contentIndex--;
+        oneContent = contentIndex >= 0 ? content[contentIndex] : null;
     }
 
     async Task ReadCourse()

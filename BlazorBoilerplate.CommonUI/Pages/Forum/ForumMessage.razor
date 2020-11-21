@@ -9,7 +9,7 @@
             <span>@messageDto.When</span>
         </div>
         <div class="comment-content">
-            @messageDto.Text
+            @((MarkupString)messageDto.Text)
         </div>
         <MatIconButton Icon="delete"
                        Type="submit"

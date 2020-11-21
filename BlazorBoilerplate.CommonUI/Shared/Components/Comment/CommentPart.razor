@@ -38,7 +38,7 @@
                                         <span>@comment.When</span>
                                     </div>
                                     <div class="comment-content">
-                                        <p>@comment.Text</p>
+                                        @((MarkupString)comment.Text)
                                     </div>
                                 </div>
                                 <MatIconButton Icon="delete"
@@ -53,7 +53,7 @@
                 }
             </div>
             <EditForm OnValidSubmit="CreateMessage" Model="@commentDto" autocomplete="off">
-                <div class="comment-block">
+                <div class="chat-message clearfix">
                     @if (Creating)
                     {
                         <button style="width:100%;" class="btn btn-light">
@@ -62,24 +62,51 @@
                     }
                     else
                     {
-                        <div class="form-control">
-                            <InputTextArea id="btn btn-input"
-                                           class="form-row"
-                                           placeholder="Пишите..."
-                                           aria-label="Message"
-                                           @bind-Value="@commentDto.Text" />
-                        </div>
-                        @* https://chrissainty.com/a-detailed-look-at-data-binding-in-blazor/ *@
-                        @* https://docs.microsoft.com/en-us/aspnet/core/blazor/forms-validation?view=aspnetcore-3.0 *@
-                        @* https://remibou.github.io/Using-the-Blazor-form-validation/ *@
-                        <div class="form-control">
-                            <button id="messageCreate"
-                                    class="btn btn-primary"
-                                    ref="createButton"
-                                    type="submit">
-                                Отправить
-                            </button>
-                        </div>
+                        <BlazoredTextEditor @ref="@QuillHtml">
+                            <ToolbarContent>
+                                <span class="ql-formats">
+                                    <select class="ql-font">
+                                        <option selected=""></option>
+                                        <option value="serif"></option>
+                                        <option value="monospace"></option>
+                                    </select>
+                                    <select class="ql-size">
+                                        <option value="small"></option>
+                                        <option selected=""></option>
+                                        <option value="large"></option>
+                                        <option value="huge"></option>
+                                    </select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                    <button class="ql-indent" value="-1"></button>
+                                    <button class="ql-indent" value="+1"></button>
+                                    <select class="ql-align">
+                                        <option selected=""></option>
+                                        <option value="center"></option>
+                                        <option value="right"></option>
+                                        <option value="justify"></option>
+                                    </select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                </span>
+                            </ToolbarContent>
+                            <EditorContent>
+                            </EditorContent>
+                        </BlazoredTextEditor>
+                        <MatButton Style="background-color: #4F94C1; color: snow; border-radius: 5px; margin: 10px;" OnClick="CreateMessage">Отправить</MatButton>
                     }
                 </div>
             </EditForm>
@@ -98,6 +125,7 @@
     public UserInfoDto UserInfoDto { get; set; }
 
     CommentDto commentDto { get; set; } = new CommentDto();
+    BlazoredTextEditor QuillHtml;
     bool IsOpened { get; set; }
     bool Creating { get; set; } = false;
     string avatar = "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
@@ -131,6 +159,7 @@
         commentDto.UserID = UserInfoDto.UserId;
         commentDto.UserName = UserInfoDto.UserName;
         commentDto.When = DateTime.Now;
+        commentDto.Text = await this.QuillHtml.GetHTML();
         try
         {
             ApiResponseDto apiResponse = await Http.PostJsonAsync<ApiResponseDto>("api/comment", commentDto);

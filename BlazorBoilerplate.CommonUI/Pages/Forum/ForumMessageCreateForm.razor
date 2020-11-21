@@ -11,11 +11,37 @@
         }
         else
         {
-            <InputText id="btn btn-input"
-                       class="form-control"
-                       placeholder="Пишите..."
-                       aria-label="Message"
-                       @bind-Value="@messageDto.Text" />
+    <BlazoredTextEditor @ref="@QuillHtml">
+        <ToolbarContent>
+            <select class="ql-header">
+                <option selected=""></option>
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3"></option>
+                <option value="4"></option>
+                <option value="5"></option>
+            </select>
+            <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+                <select class="ql-color"></select>
+                <select class="ql-background"></select>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-link"></button>
+            </span>
+        </ToolbarContent>
+        <EditorContent>
+        </EditorContent>
+    </BlazoredTextEditor>
             @* https://chrissainty.com/a-detailed-look-at-data-binding-in-blazor/ *@
             @* https://docs.microsoft.com/en-us/aspnet/core/blazor/forms-validation?view=aspnetcore-3.0 *@
             @* https://remibou.github.io/Using-the-Blazor-form-validation/ *@
@@ -34,6 +60,7 @@
 @code
 {
     MessageDto messageDto { get; set; } = new MessageDto();
+    BlazoredTextEditor QuillHtml;
 
     [Parameter]
     public Func<MessageDto, Task> Send { get; set; }
@@ -46,6 +73,7 @@
     {
         Creating = true;
         messageDto.When = DateTime.Now;
+        messageDto.Text = await this.QuillHtml.GetHTML();
         StateHasChanged();
         await Send(messageDto);
         messageDto.Text = "";

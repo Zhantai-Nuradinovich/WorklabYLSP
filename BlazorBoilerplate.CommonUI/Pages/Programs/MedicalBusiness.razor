@@ -30,7 +30,12 @@
                     @if (!IsStartButtonClicked)
                     {
                         <div id="quiz-options">
-                            <button class="btn quiz-ans-btn animated pulse" @onclick="StartQuiz">Начать</button>
+                            <Animation Effect="@Effect.ZoomInDown"
+                                       Speed="@Speed.Fast"
+                                       Delay="@Delay.None"
+                                       IterationCount="1">
+                                <button class="btn quiz-ans-btn animated pulse" @onclick="StartQuiz">Начать</button>
+                            </Animation>
                         </div>
                     }
                     else
@@ -40,28 +45,58 @@
                             <p id="quiz-question" class="animated">
                                 <Animation Effect="@Effect.ZoomIn" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
                                     @QuizItem?.Question
+                                    @if (!string.IsNullOrEmpty(QuizItem?.PicturePath))
+                                    {
+                                        if (!IsTimeIsUp)
+                                        {
+                                            <img src="@QuizItem?.PicturePath" style="height: 400px; width: 400px" />
+                                        }
+                                        if (QuizItem.QuestionType == "Photo")
+                                        {
+                                            Task.Delay(10000).ContinueWith(t => { IsTimeIsUp = true; StateHasChanged(); }) ;
+                                        }
+                                    }
                                 </Animation>
                             </p>
-                            @if (!string.IsNullOrEmpty(QuizItem?.PicturePath))
-                            {
-                                <img src="@QuizItem?.PicturePath" style="height: 100px; width: 100px" />
-                            }
                             <div id="quiz-options">
-                                @foreach (var variant in QuizItem?.Normalized)
-                                {
-                                    <button class="btn quiz-ans-btn animated"
-                                            @onclick="(e) => { NextQuestion(variant); RunAnimation(); }">
-                                        <Animation Effect="@Effect.SlideInDown" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
-                                            @variant
-                                        </Animation>
-                                    </button>
-                                }
+                                <Animation Effect="@Effect.SlideInDown"
+                                           Speed="@Speed.Fast"
+                                           Delay="@Delay.None"
+                                           Enabled="IsAnimated"
+                                           IterationCount="1"
+                                           OnAnimationEnd="AnimationEnd">
+                                    @foreach (var variant in QuizItem?.Normalized)
+                                    {
+                                            @if (QuizItem.QuestionType == "Photo")
+                                            {
+                                                if (IsTimeIsUp)
+                                                {
+                                                    <button class="btn quiz-ans-btn animated"
+                                                            @onclick="(e) => { NextQuestion(variant); RunAnimation(); }">
+                                                        <img src="@variant" style="height: 300px; width: 300px" />
+                                                    </button>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <button class="btn quiz-ans-btn animated"
+                                                        @onclick="(e) => { NextQuestion(variant); RunAnimation(); }">
+                                                    @variant
+                                                </button>
+                                            }
+                                    }
+                                </Animation>
                             </div>
                         }
                         else
                         {
                             <div id="quiz-options">
-                                <button class="btn quiz-ans-btn animated pulse">Результат @TotalScore %</button>
+                                <Animation Effect="@Effect.ZoomInDown"
+                                           Speed="@Speed.Fast"
+                                           Delay="@Delay.None"
+                                           IterationCount="1">
+                                    <button class="btn quiz-ans-btn animated pulse">Результат @TotalScore %</button>
+                                </Animation>
                             </div>
                         }
                     }
@@ -75,11 +110,52 @@
 @code {
     bool IsQuizStarted { get; set; } = false;
     bool IsStartButtonClicked { get; set; } = false;
+    bool IsTimeIsUp { get; set; } = false;
     bool deleteDialogOpen = false;
     double TotalScore { get; set; } = 0;
     int curentQuestion { get; set; } = 1;
 
-    public QuizDto Quiz { get; set; } = new QuizDto() { Id = 2, CourseId = 3, DirectionTitle = "MedicalBusuiness", Items = new List<QuizItemDto>() { new QuizItemDto() { Id = 3, QuizId = 3, PicturePath = "", Question = "Кто?", Answers = "RRR1NZN1QQQ1NZN1koko", RightAnswer= "RRR" }, new QuizItemDto() { Id = 3, QuizId = 3, PicturePath = "", Question = "КтоRNJRNJ?", Answers = "FFRRR1NZN1QQFQ1NZN1koko", RightAnswer= "FFRRR" } } };
+    public QuizDto Quiz { get; set; } = new QuizDto() {
+        Id = 2,
+        CourseId = 3,
+        DirectionTitle = "MedicalBusuiness",
+        Items = new List<QuizItemDto>() {
+            new QuizItemDto() {
+                Id = 3,
+                QuizId = 3,
+                PicturePath = "",
+                Question = "Кто?",
+                Answers = "RRR1NZN1QQQ1NZN1koko1NZN1koko",
+                RightAnswer= "RRR"
+            },
+            new QuizItemDto() {
+                Id = 3,
+                QuizId = 3,
+                PicturePath = "",
+                Question = "КтоRNJRNJ?",
+                Answers = "FFRRR1NZN1QQFQ1NZN1koko",
+                RightAnswer= "FFRRR"
+            },
+            new QuizItemDto() {
+                Id = 4,
+                QuizId = 3,
+                PicturePath = "https://sun9-19.userapi.com/impg/2cXkyR85B86hmhyW5L6zk9Nz8IHP9ElBqOhT_A/u2IXBMYQZY0.jpg?size=575x721&quality=96&proxy=1&sign=86225f203d4bc97b4bcc2947fa28b146",
+                Question = "КтоRNJRNJ?",
+                Answers = "https://sun9-19.userapi.com/impg/2cXkyR85B86hmhyW5L6zk9Nz8IHP9ElBqOhT_A/u2IXBMYQZY0.jpg?size=575x721&quality=96&proxy=1&sign=86225f203d4bc97b4bcc2947fa28b1461NZN1https://sun9-75.userapi.com/impg/XhUp2uWZZYZhuYsw1eTe_7NfpJko0dMj-vZmpg/0ZsmOD1a2Pw.jpg?size=720x1080&quality=96&sign=b3c7f604725eca0ad887b1c43d22cd511NZN1https://sun9-19.userapi.com/impg/2cXkyR85B86hmhyW5L6zk9Nz8IHP9ElBqOhT_A/u2IXBMYQZY0.jpg?size=575x721&quality=96&proxy=1&sign=86225f203d4bc97b4bcc2947fa28b146",
+                RightAnswer= "https://sun9-75.userapi.com/impg/XhUp2uWZZYZhuYsw1eTe_7NfpJko0dMj-vZmpg/0ZsmOD1a2Pw.jpg?size=720x1080&quality=96&sign=b3c7f604725eca0ad887b1c43d22cd51",
+                QuestionType= "Photo",
+            },
+            new QuizItemDto() {
+                Id = 3,
+                QuizId = 3,
+                PicturePath = "",
+                Question = "КтоRNJRNJ?",
+                Answers = "FFRRR",
+                RightAnswer= "FFRRR"
+            }
+        }
+    };
+
     public List<QuizItemDto> UserQuizItems { get; set; } = new List<QuizItemDto>();
     public QuizItemDto QuizItem { get; set; }
     IEnumerator<QuizItemDto> Enumerator { get; set; }
@@ -111,6 +187,7 @@
     {
         QuizItem.ChoosenAnswer = variant;
         UserQuizItems.Add(QuizItem);
+        IsTimeIsUp = false;
 
         if (Enumerator.MoveNext())
         {
@@ -123,6 +200,8 @@
             IsQuizStarted = false;
             QuizItem = null;
         }
+
+        StateHasChanged();
     }
 
     public void CheckResults()

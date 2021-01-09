@@ -1,0 +1,235 @@
+﻿<div>
+    @*style="background: #252C33;"*@
+    <div class="menu-chat">
+        <div class="name-chat">Информация о направлении</div>
+        <div class="members-chat"><b>You</b>, Marga, Charo & Brotons</div>
+    </div>
+    <div class="grid-item col-sm-12 col-sm-12 col-md-8">
+        <MatFAB Style="justify-content: center; text-align: center;" OnClick="GetNext" Label="Дальше"></MatFAB>
+        <br />
+        <br />
+    </div>
+    @if (unit != null)
+    {
+        <ol class="chat">
+            <Animation Effect="@Effect.ZoomIn" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
+                <li class="@unit.LiStyle">
+                    <div class="msg">
+                        @if (unit.IsAiya)
+                        {
+                            <div class="user">Айя<span class="range admin">Медик</span></div>
+                        }
+                        @unit.Text
+                        <time>час:минута</time>
+                    </div>
+                </li>
+            </Animation>
+        </ol>
+        <Animation Effect="@Effect.FlipInX" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
+            <img src="@unit.Img" style="width: auto; height: 300px;" />
+        </Animation>
+    }
+    <MatDivider />
+</div>
+
+@*<div class="typezone">
+        <form><textarea type="text" placeholder="Say something"></textarea><input type="submit" class="send" value="" /></form>
+        <div class="emojis"></div>  Это красивый чат, надо подумать, как он мог бы отправлять сообщения
+    </div>*@
+@code {
+    public List<Information> infoList { get; set; } = new List<Information>()
+    {
+        new Information()
+        { //firstM
+            LiStyle = "self",
+            Img = "https://i.imgur.com/uFNrP2O.png",
+            Text =@<div>
+            <p>Айя,</p>
+            <p>я не могу выбрать свою будущую профессию!</p>
+            <p>Дело в том, что мне нравится, как онкология, так и косметология.</p>
+                </div>
+        },
+        new Information()
+        { //FirstF
+            LiStyle = "other",
+            IsAiya=true,
+            Img = "https://i.imgur.com/uVRaq2T.png",
+            Text = @<div>
+                <p>Выбор действительно непростой, однако тебе нечего волноваться.</p>
+                <p>И онкологом, и косметологом ты сможешь стать только, поступив на лечебный факультет медицинского вуза.</p>
+                    </div>
+        },
+        new Information()
+        { //secondM
+            LiStyle = "self",
+            Img = "https://i.imgur.com/40zfpDF.png",
+            Text =@<div>
+                <p>Правда? Это отличная новость!</p>
+                <p>У меня будет время, чтобы выбрать направление, которое мне больше по душе.</p>
+               </div>
+        },
+        new Information()
+        { //secondF
+            LiStyle = "other",
+            IsAiya=true,
+            Img = "https://i.imgur.com/3bHfly5.png",
+            Text =@<div>
+                <p>Знаешь, в процессе обучения ты можешь выбрать совершенно другое направление, так как получаешь очень обширные знания.</p>
+               </div>
+        },
+        new Information()
+        { //ThirdM
+            LiStyle = "self",
+            Img = "https://i.imgur.com/40zfpDF.png",
+            Text =@<div>
+                       <p>Например?</p>
+               </div>
+        },
+        new Information()
+        { //ThirdF
+            LiStyle = "other",
+            IsAiya=true,
+            Img = "https://i.imgur.com/3bHfly5.png",
+            Text =@<div>
+                <p>Ну, по завершении обучения на специальности лечебное дело, </p>
+                <p>специалистам необходимо иметь навыки при работе с медицинской аппаратурой, </p>
+                <p>а также, опираясь на знание фармакологии, полностью разбираться в медицинских препаратах.</p>
+                <p>Кроме того, врачи должны иметь практические знания в области реабилитационных направлений медицины</p>
+                <p> и быть готовыми для проведения судебно-медицинской экспертизы.</p>
+               </div>
+        },
+        new Information()
+        { //FourthM
+            LiStyle = "self",
+            Img = "https://i.imgur.com/9CVfdEQ.png",
+            Text =@<div>
+                       <p>Потрясающе! И сколько же лет надо обучаться в вузе?</p>
+               </div>
+        },
+        new Information()
+        { //FourthF
+            LiStyle = "other",
+            IsAiya=true,
+            Img = "https://i.imgur.com/Axlqg3A.png",
+            Text =@<div>
+                <p>Образовательный стандарт специальности </p>
+                <p>устанавливает шестилетний срок обучения при очной форме</p>
+                <p> и срок в 6,5 лет — при очно-заочной форме.</p>
+               </div>
+        },
+        new Information()
+        { //FifthM
+            LiStyle = "self",
+            Img = "https://i.imgur.com/LBb6TRq.png",
+            Text =@<div>
+                       <p>А после окончания вуза </p>
+                <p>я смогу сразу приступить к работе врача?</p>
+               </div>
+        },
+        new Information()
+        { //FifthF
+            LiStyle = "other",
+            IsAiya=true,
+            Img = "https://i.imgur.com/CeRjfO4.png",
+            Text =@<div>
+                <p>Нет, выпускник по специальности «Лечебное дело» </p>
+                <p>не имеет права самостоятельно вести пациентов, назначать и проводить лечение. </p>
+                <p>Однако ты сможешь заниматься научной деятельностью,</p>
+                <p> занимать различные должности в медицинских учреждениях.</p>
+               </div>
+        },
+        new Information()
+        { //SixthM
+            LiStyle = "self",
+            Img = "https://i.imgur.com/1L4ygHo.png",
+            Text =@<div>
+                       <p>Понятно.</p>
+                <p>А когда я смогу начать лечить пациентов?</p>
+               </div>
+        },
+        new Information()
+        { //SixthF
+            LiStyle = "other",
+            IsAiya=true,
+            Img = "https://i.imgur.com/HmBubf3.png",
+            Text =@<div>
+                <p>Чтобы работать врачом, по окончании вуза </p>
+                <p>необходимо получить послевузовское образование. </p>
+                <p>Это интернатура (1 год) или ординатура (2 года) по выбранной специализации. </p>
+                <p>После этого ты станешь врачом, имеющим право и квалификацию самостоятельно работать с пациентами.</p>
+               </div>
+        },
+        new Information()
+        { //SeventhM
+            LiStyle = "self",
+            Img = "https://i.imgur.com/RGEO6cj.png",
+            Text =@<div>
+                       <p>Путь становления врача действительно непрост, </p>
+                <p>однако я уверен, что это стоит того!</p>
+               </div>
+        },
+        new Information()
+        { //SixthF
+            LiStyle = "other",
+            IsAiya=true,
+            Img = "https://i.imgur.com/HRsGUrx.png",
+            Text =@<div>
+                       <p>Если это то, чего ты хочешь от жизни, то да, это стоит того. </p>
+               </div>
+        }
+    };
+
+    IEnumerator<Information> enumerator;
+    Information unit;
+
+    bool IsAnimated { get; set; } = true;
+
+    private void RunAnimation()
+    {
+        IsAnimated = true;
+    }
+
+    private void AnimationEnd()
+    {
+        IsAnimated = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetEnum();
+    }
+
+    async Task GetEnum()
+    {
+        enumerator = infoList.GetEnumerator();
+        if (enumerator.MoveNext())
+        {
+            unit = enumerator.Current;
+        }
+
+        await Task.Delay(100); //костыль
+    }
+
+    public void GetNext()
+    {
+        if (enumerator.MoveNext())
+        {
+            unit = enumerator.Current;
+            StateHasChanged();
+        }
+        else
+        {
+            unit = null;
+        }
+        StateHasChanged();
+        RunAnimation();
+    }
+
+    public class Information
+    {
+        public string LiStyle { get; set; }
+        public bool IsAiya { get; set; } = false;
+        public RenderFragment Text { get; set; }
+        public string Img { get; set; }
+    }
+}

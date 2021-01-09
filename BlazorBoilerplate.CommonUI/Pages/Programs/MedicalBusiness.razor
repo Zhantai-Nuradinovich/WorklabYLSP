@@ -4,163 +4,121 @@
 @inject IMatToaster matToaster
 @using System.Net
 
+<MainContainer>
+    должно быть всплывающееся окно, где разъясняют всякое
+    @if (page == 0)
+    {
+        <MedicalBusinessTestQuiz QuizItems="QuizItemsStart" />
+    }
+    else if (page == 1)
+    {
+        <Animation Effect="@(IsRightSlide ? Effect.FadeInRight : Effect.FadeInLeft)" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
+            <MedicalBusinessTestInfo />
+        </Animation>
+    }
+    else if (page == 2)
+    {
+        <Animation Effect="@(IsRightSlide ? Effect.FadeInRight : Effect.FadeInLeft)" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
+            <RomanceClub />
+        </Animation>
+    }
+    else if (page == 3)
+    {
+        <Animation Effect="@(IsRightSlide ? Effect.FadeInRight : Effect.FadeInLeft)" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
+            <MedicalBusinessTestQuiz QuizItems="QuizItemsAmbulance" />
+        </Animation>
+    }
 
-<div class="my-quiz-container" style="min-height: 400px;">
-    <div id="quiz">
-        <div class="container-fluid">
-            <div id="quiz-stats" class="row text-center">
-                <div class="col-xs-3">
-                    <i class="fa fa-bar-chart"></i>
-                </div>
-                @if (IsQuizStarted)
-                {
-                    <div class="col-xs-3 col-lg-2">
-                        <p>Вопрос</p>
-                        <span class="animated">@curentQuestion/@Quiz.Items.Count</span>
-                    </div>
-                }
-                <div class="col-xs-3 col-lg-2 animated">
-                    <p>@Quiz?.DirectionTitle</p>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row" style="justify-content: center;">
-                <div class="col-xs-12 col-md-10 col-md-offset-1 text-center">
-                    @if (!IsStartButtonClicked)
-                    {
-                        <div id="quiz-options">
-                            <Animation Effect="@Effect.ZoomInDown"
-                                       Speed="@Speed.Fast"
-                                       Delay="@Delay.None"
-                                       IterationCount="1">
-                                <button class="btn quiz-ans-btn animated pulse" @onclick="StartQuiz">Начать</button>
-                            </Animation>
-                        </div>
-                    }
-                    else
-                    {
-                        @if (IsQuizStarted)
-                        {
-                            <p id="quiz-question" class="animated">
-                                <Animation Effect="@Effect.ZoomIn" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
-                                    @QuizItem?.Question
-                                    @if (!string.IsNullOrEmpty(QuizItem?.PicturePath))
-                                    {
-                                        if (!IsTimeIsUp)
-                                        {
-                                            <img src="@QuizItem?.PicturePath" style="height: 400px; width: 400px" />
-                                        }
-                                        if (QuizItem.QuestionType == "Photo")
-                                        {
-                                            Task.Delay(10000).ContinueWith(t => { IsTimeIsUp = true; StateHasChanged(); }) ;
-                                        }
-                                    }
-                                </Animation>
-                            </p>
-                            <div id="quiz-options">
-                                <Animation Effect="@Effect.SlideInDown"
-                                           Speed="@Speed.Fast"
-                                           Delay="@Delay.None"
-                                           Enabled="IsAnimated"
-                                           IterationCount="1"
-                                           OnAnimationEnd="AnimationEnd">
-                                    @foreach (var variant in QuizItem?.Normalized)
-                                    {
-                                            @if (QuizItem.QuestionType == "Photo")
-                                            {
-                                                if (IsTimeIsUp)
-                                                {
-                                                    <button class="btn quiz-ans-btn animated"
-                                                            @onclick="(e) => { NextQuestion(variant); RunAnimation(); }">
-                                                        <img src="@variant" style="height: 300px; width: 300px" />
-                                                    </button>
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <button class="btn quiz-ans-btn animated"
-                                                        @onclick="(e) => { NextQuestion(variant); RunAnimation(); }">
-                                                    @variant
-                                                </button>
-                                            }
-                                    }
-                                </Animation>
-                            </div>
-                        }
-                        else
-                        {
-                            <div id="quiz-options">
-                                <Animation Effect="@Effect.ZoomInDown"
-                                           Speed="@Speed.Fast"
-                                           Delay="@Delay.None"
-                                           IterationCount="1">
-                                    <button class="btn quiz-ans-btn animated pulse">Результат @TotalScore %</button>
-                                </Animation>
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    <MatButton OnClick="PreviousStep" Label="Предыдущий шаг" />
+    <MatButton OnClick="NextStep" Label="Следующий шаг" />
+</MainContainer>
 
 
-@code {
-    bool IsQuizStarted { get; set; } = false;
-    bool IsStartButtonClicked { get; set; } = false;
-    bool IsTimeIsUp { get; set; } = false;
-    bool deleteDialogOpen = false;
-    double TotalScore { get; set; } = 0;
-    int curentQuestion { get; set; } = 1;
-
-    public QuizDto Quiz { get; set; } = new QuizDto() {
-        Id = 2,
-        CourseId = 3,
-        DirectionTitle = "MedicalBusuiness",
-        Items = new List<QuizItemDto>() {
+@code{
+    public List<QuizItemDto> QuizItemsStart = new List<QuizItemDto>() {
             new QuizItemDto() {
-                Id = 3,
+                Id = 1,
                 QuizId = 3,
-                PicturePath = "",
-                Question = "Кто?",
-                Answers = "RRR1NZN1QQQ1NZN1koko1NZN1koko",
-                RightAnswer= "RRR"
+                PicturePath = "https://i.imgur.com/i3yETLS.png",
+                Question = "Посмотрите на картинку внимательнее, через 10 секунд она исчезнет =)",
+                Answers = "https://i.imgur.com/ew0dKLa.png1NZN1https://i.imgur.com/4u2O2DV.png1NZN1https://i.imgur.com/i3yETLS.png1NZN1https://i.imgur.com/GQpWXiB.png",
+                RightAnswer= "https://i.imgur.com/i3yETLS.png",
+                QuestionType= "PhotoWithTime"
             },
             new QuizItemDto() {
-                Id = 3,
+                Id = 2,
                 QuizId = 3,
                 PicturePath = "",
-                Question = "КтоRNJRNJ?",
-                Answers = "FFRRR1NZN1QQFQ1NZN1koko",
-                RightAnswer= "FFRRR"
+                Question = "Проверьте свою аккуратность. Непонятный вопрос, но вот",
+                Answers = "https://i.imgur.com/RFfEro1.png1NZN1https://i.imgur.com/Mo8SnOx.jpg1NZN1https://i.imgur.com/bRCRTer.jpg",
+                RightAnswer= "https://i.imgur.com/RFfEro1.png",
+                QuestionType="StrangeOne"
+            },
+            new QuizItemDto()
+            {
+                Id=3,
+                QuizId=3,
+                PicturePath="https://i.imgur.com/Jg7Buv8.jpg",
+                Question= "Оцените свою брезгливость по 10 бальной шкале",
+                Answers="0-31NZN14-71NZN18-10",
+                RightAnswer= "0-3",
+                QuestionType= "InputNumber"
             },
             new QuizItemDto() {
                 Id = 4,
                 QuizId = 3,
-                PicturePath = "https://sun9-19.userapi.com/impg/2cXkyR85B86hmhyW5L6zk9Nz8IHP9ElBqOhT_A/u2IXBMYQZY0.jpg?size=575x721&quality=96&proxy=1&sign=86225f203d4bc97b4bcc2947fa28b146",
-                Question = "КтоRNJRNJ?",
-                Answers = "https://sun9-19.userapi.com/impg/2cXkyR85B86hmhyW5L6zk9Nz8IHP9ElBqOhT_A/u2IXBMYQZY0.jpg?size=575x721&quality=96&proxy=1&sign=86225f203d4bc97b4bcc2947fa28b1461NZN1https://sun9-75.userapi.com/impg/XhUp2uWZZYZhuYsw1eTe_7NfpJko0dMj-vZmpg/0ZsmOD1a2Pw.jpg?size=720x1080&quality=96&sign=b3c7f604725eca0ad887b1c43d22cd511NZN1https://sun9-19.userapi.com/impg/2cXkyR85B86hmhyW5L6zk9Nz8IHP9ElBqOhT_A/u2IXBMYQZY0.jpg?size=575x721&quality=96&proxy=1&sign=86225f203d4bc97b4bcc2947fa28b146",
-                RightAnswer= "https://sun9-75.userapi.com/impg/XhUp2uWZZYZhuYsw1eTe_7NfpJko0dMj-vZmpg/0ZsmOD1a2Pw.jpg?size=720x1080&quality=96&sign=b3c7f604725eca0ad887b1c43d22cd51",
-                QuestionType= "Photo",
+                PicturePath = "",
+                Question = "Через 10 секунд текст исчезнет. Запишите то, что запомнили",
+                Answers = "Самая крепкая связка человеческого тела — Бартенева связка, укрепляющая тазобедренный сустав, — выдерживает нагрузку в 350 килограммов1NZN1Неправильный вариант1NZN1Тем более неправильный",
+                RightAnswer= "Самая крепкая связка человеческого тела — Бартенева связка, укрепляющая тазобедренный сустав, — выдерживает нагрузку в 350 килограммов",
+                QuestionType= "TextWithTime"
             },
             new QuizItemDto() {
-                Id = 3,
+                Id = 5,
                 QuizId = 3,
                 PicturePath = "",
-                Question = "КтоRNJRNJ?",
-                Answers = "FFRRR",
-                RightAnswer= "FFRRR"
+                Question = "Представьте, что Вы врач. Вы были на дежурстве, которое длилось 35 часов.\n Вы очень устали, хотите есть, спать и просто хотите домой.\n И в тот момент, когда Вы собираетесь уходить, привозят пациента в тяжелом состоянии. У Вас есть 2 ассистента, но Вы не уверены, что они справятся с этим случаем. Как Вы поступите?",
+                Answers = "Оставлю пациента ассистентам1NZN1Несмотря на усталость проведу операцию1NZN1Буду наблюдать, как ассистенты проводят операцию. Если что-то пойдёт не так, то помогу",
+                RightAnswer= "Буду наблюдать, как ассистенты проводят операцию. Если что-то пойдёт не так, то помогу",
+                QuestionType="Usual"
             }
-        }
     };
 
-    public List<QuizItemDto> UserQuizItems { get; set; } = new List<QuizItemDto>();
-    public QuizItemDto QuizItem { get; set; }
-    IEnumerator<QuizItemDto> Enumerator { get; set; }
+    public List<QuizItemDto> QuizItemsAmbulance = new List<QuizItemDto>() {
+            new QuizItemDto() {
+                Id = 1,
+                QuizId = 3,
+                PicturePath = "https://i.imgur.com/tk9dfPo.jpg",
+                Question = "Как вы думаете, что это? НАДО ОБЪЕДИНИТЬ ВСЕ ФОТКИ, ЕЩЁ 3 ЕСТЬ",
+                Answers = "Инфаркт1NZN1Инсульт1NZN1Человек неважно чувствует себя",
+                RightAnswer= "Инсульт", // инсульт — это острое нарушение кровоснабжения головного мозга, которое сохраняется более 24 часов или приводит к смерти больного в более короткий промежуток времени
+                QuestionType= "UsualWithDescription"
+            },
+            new QuizItemDto() {
+                Id = 2,
+                QuizId = 3,
+                PicturePath = "",
+                Question = "Умеете ли вы оказывать первую помощь при инсульте?",
+                Answers = "Да1NZN1Нет",
+                RightAnswer= "Да",
+                QuestionType="Usual"
+            },
+            new QuizItemDto()
+            {
+                Id=3,
+                QuizId=3,
+                PicturePath="",
+                Question= "У человека случился инсульт, что вы предпримите?",
+                Answers="Позвоню в скорую помощь (103)1NZN1Помогу принять удобное положение: уложить на спину, приподнять голову и плечи1NZN1Проверять сознание и дыхание1NZN1Всё",
+                RightAnswer= "Всё",
+                QuestionType= "Usual"
+            }
+    };
+    //Сюда добавим текст и "пагинацию материала"
+    public int page = 0;
 
     bool IsAnimated { get; set; } = true;
+    bool IsRightSlide { get; set; } = true;
 
     private void RunAnimation()
     {
@@ -172,48 +130,19 @@
         IsAnimated = false;
     }
 
-    public void StartQuiz()
+    public void NextStep()
     {
-        IsQuizStarted = true;
-        IsStartButtonClicked = true;
-        Enumerator = Quiz.Items.GetEnumerator();
-        if (Enumerator.MoveNext())
-        {
-            QuizItem = Enumerator.Current;
-        }
+        if (page + 1 != 4)
+            page++;
+
+        IsRightSlide = true;
     }
 
-    public void NextQuestion(string variant)
+    public void PreviousStep()
     {
-        QuizItem.ChoosenAnswer = variant;
-        UserQuizItems.Add(QuizItem);
-        IsTimeIsUp = false;
+        if (page - 1 != -1)
+            page--;
 
-        if (Enumerator.MoveNext())
-        {
-            QuizItem = Enumerator.Current;
-            curentQuestion++;
-        }
-        else
-        {
-            CheckResults();
-            IsQuizStarted = false;
-            QuizItem = null;
-        }
-
-        StateHasChanged();
-    }
-
-    public void CheckResults()
-    {
-        foreach (var question in UserQuizItems)
-        {
-            if (question.ChoosenAnswer == question.RightAnswer)
-            {
-                TotalScore++;
-            }
-        }
-
-        TotalScore = TotalScore / UserQuizItems.Count * 100;
+        IsRightSlide = false;
     }
 }

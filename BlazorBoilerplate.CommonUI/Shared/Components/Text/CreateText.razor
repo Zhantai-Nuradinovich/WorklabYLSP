@@ -4,11 +4,11 @@
 @using System.Net
 
 <div style="width:135px;">
-    <MatButton Icon="format_size" Label="Текст" OnClick="@(e =>  { textDialogIsOpen = true; })" 
+    <MatButton Icon="playlist_add" Label="Текст" OnClick="@((e) => OpenDialog())"
                Style="background-color: #4F94C1; color: snow; border-radius: 5px; margin: 10px;"></MatButton>
 </div>
 
-<MatDialog Class="modal" @bind-IsOpen="@textDialogIsOpen">
+<MatDialog Class="modal" @bind-IsOpen="@dialogIsOpen">
     <MatDialogTitle Class="modal-dialog modal-lg">Создать</MatDialogTitle>
     <MatDialogContent Class="modal-content">
         <EditForm Model="@Text">
@@ -58,26 +58,34 @@
                     </EditorContent>
                 </BlazoredTextEditor>
             </fieldset>
+            <MatDivider />
         </EditForm>
     </MatDialogContent>
     <MatDialogActions>
-        <MatButton OnClick="@(e => { textDialogIsOpen = false; })">Закрыть</MatButton>
-        <MatButton OnClick="@CreateText">Завершить</MatButton>
+        <MatButton OnClick="@(e => { dialogIsOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@NewText">Завершить</MatButton>
     </MatDialogActions>
 </MatDialog>
-<br />
+
 @code {
-    [Parameter]
-    public long CourseId { get; set; }
+    bool dialogIsOpen = false;
+    string value = ""; // Посмотри в документации, как вытащить сгенерированный текст из редактора и дальше просто присвоить нужно
+
     TextDto Text { get; set; } = new TextDto();
     BlazoredTextEditor QuillHtml;
     string QuillHTMLContent;
 
-    bool textDialogIsOpen = false;
+    [Parameter]
+    public int CourseId { get; set; }
 
-    public async Task CreateText()
+    public void OpenDialog()
     {
-        textDialogIsOpen = false;
+        dialogIsOpen = true;
+    }
+
+    public async Task NewText()
+    {
+        dialogIsOpen = false;
         try
         {
             Text.TextContent = await this.QuillHtml.GetHTML();
@@ -99,3 +107,4 @@
         }
     }
 }
+

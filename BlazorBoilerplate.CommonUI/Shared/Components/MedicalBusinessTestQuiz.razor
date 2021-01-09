@@ -1,0 +1,210 @@
+﻿@using System.Threading
+@using BlazorBoilerplate.Shared.Dto.Blog
+
+<div class="my-quiz-container" style="min-height: 400px;">
+    <div id="quiz">
+        <div class="container-fluid">
+            <div id="quiz-stats" class="row text-center">
+                <div class="col-xs-3">
+                    <i class="fa fa-bar-chart"></i>
+                </div>
+                @if (IsQuizStarted)
+                {
+                    <div class="col-xs-3 col-lg-2">
+                        <p>Вопрос</p>
+                        <span class="animated">@curentQuestion/@QuizItems.Count</span>
+                    </div>
+                }
+                <div class="col-xs-3 col-lg-2 animated">
+                    <p>Психологический тест</p>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row" style="justify-content: center;">
+                <div class="col-xs-12 col-md-10 col-md-offset-1 text-center">
+                    @if (!IsStartButtonClicked)
+                    {
+                        <div id="quiz-options">
+                            <Animation Effect="@Effect.ZoomInDown"
+                                       Speed="@Speed.Fast"
+                                       Delay="@Delay.None"
+                                       IterationCount="1">
+                                <button class="btn quiz-ans-btn animated pulse" @onclick="StartQuiz">Начать</button>
+                            </Animation>
+                        </div>
+                    }
+                    else
+                    {
+                        @if (IsQuizStarted)
+                        {
+                            <p id="quiz-question" class="animated">
+                                <Animation Effect="@Effect.ZoomIn" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
+                                    @QuizItem?.Question
+                                    @if (!string.IsNullOrEmpty(QuizItem?.PicturePath))
+                                    {
+                                        if (!IsTimeIsUp)
+                                        {
+                                            <img src="@QuizItem.PicturePath" style="height: 400px; width: 400px" />
+                                        }
+                                        if (QuizItem.QuestionType == "PhotoWithTime")
+                                        {
+                                            <h1>@Count</h1>
+                                            StartCountdown();
+                                        }
+                                    }
+                                    else if (QuizItem.QuestionType == "TextWithTime")
+                                    {
+                                        if (!IsTimeIsUp)
+                                        {
+                                            <MatH6>
+                                                @QuizItem.RightAnswer
+                                            </MatH6>
+                                        }
+                                    }
+                                </Animation>
+                            </p>
+                            <div id="quiz-options">
+                                <Animation Effect="@Effect.SlideInDown"
+                                           Speed="@Speed.Fast"
+                                           Delay="@Delay.None"
+                                           Enabled="IsAnimated"
+                                           IterationCount="1"
+                                           OnAnimationEnd="AnimationEnd">
+                                    @foreach (var variant in QuizItem.Answers.Split("1NZN1"))
+                                    {
+                                        @if (QuizItem.QuestionType == "PhotoWithTime" || QuizItem.QuestionType == "StrangeOne")
+                                        {
+                                            if (IsTimeIsUp)
+                                            {
+                                                <button class="btn quiz-ans-btn animated"
+                                                        @onclick="(e) => { NextQuestion(variant); RunAnimation(); }">
+                                                    <img src="@variant" style="height: 300px; width: 300px" />
+                                                </button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <button class="btn quiz-ans-btn animated"
+                                                    @onclick="(e) => { NextQuestion(variant); RunAnimation(); }">
+                                                @variant
+                                            </button>
+                                        }
+                                    }
+                                </Animation>
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="quiz-options">
+                                <Animation Effect="@Effect.ZoomInDown"
+                                           Speed="@Speed.Fast"
+                                           Delay="@Delay.None"
+                                           IterationCount="1">
+                                    <button class="btn quiz-ans-btn animated pulse">Результат @TotalScore % <br /> Кликайте на следующий шаг!!</button>
+                                </Animation>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    string info = "Здесь добавлю загрузку, которая поможет";
+    bool IsQuizStarted { get; set; } = false;
+    bool IsStartButtonClicked { get; set; } = false;
+    bool IsTimeIsUp { get; set; } = false;
+    bool deleteDialogOpen = false;
+    double TotalScore { get; set; } = 0;
+    int curentQuestion { get; set; } = 1;
+    int Count { get; set; } = 10;
+
+    [Parameter]
+    public List<QuizItemDto> QuizItems { get; set; }
+
+    public List<QuizItemDto> UserQuizItems { get; set; } = new List<QuizItemDto>();
+    public QuizItemDto QuizItem { get; set; }
+    IEnumerator<QuizItemDto> Enumerator { get; set; }
+
+    bool IsAnimated { get; set; } = true;
+
+    private void RunAnimation()
+    {
+        IsAnimated = true;
+    }
+
+    private void AnimationEnd()
+    {
+        IsAnimated = false;
+    }
+
+    void StartCountdown() //сделать отдельный компонент таймер, чтобы не перезагружался весь тест ПОПРОБОВАТЬ ПОИСКАТЬ РЕАЛИЗАЦИИ НА JS
+    {
+        //Task.Delay(5000).ContinueWith(t => { IsTimeIsUp = true; }); Не рабочий
+        var timer = new Timer(new TimerCallback(_ =>
+        {
+            if (Count <= 0)
+            {
+                IsTimeIsUp = true;
+            }
+            else
+            {
+                Count--;
+
+                InvokeAsync(() =>
+                {
+                    StateHasChanged();
+                });
+            }
+        }), null, 1000, 1000);
+    }
+
+    public void StartQuiz()
+    {
+        IsQuizStarted = true;
+        IsStartButtonClicked = true;
+        Enumerator = QuizItems.GetEnumerator();
+        if (Enumerator.MoveNext())
+        {
+            QuizItem = Enumerator.Current;
+        }
+    }
+
+    public void NextQuestion(string variant)
+    {
+        QuizItem.RightAnswer = variant;
+        UserQuizItems.Add(QuizItem);
+        IsTimeIsUp = false;
+
+        if (Enumerator.MoveNext())
+        {
+            QuizItem = Enumerator.Current;
+            curentQuestion++;
+        }
+        else
+        {
+            CheckResults();
+            IsQuizStarted = false;
+            QuizItem = null;
+        }
+
+        StateHasChanged();
+    }
+
+    public void CheckResults()
+    {
+        foreach (var question in QuizItems)
+        {
+            if (question.RightAnswer == UserQuizItems.Find(x => x.Id == question.Id).RightAnswer)
+            {
+                TotalScore++;
+            }
+        }
+
+        TotalScore = TotalScore / UserQuizItems.Count * 100;
+    }
+}

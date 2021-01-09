@@ -1,0 +1,236 @@
+﻿@using BlazorBoilerplate.Shared.Dto.Blog
+@inject HttpClient Http
+@inject IMatToaster matToaster
+@using System.Net
+
+@* Добавить плюсик, после которого появляются две нижние кнопки *@
+<MatButton OnClick="@((e) => NewQuestionDialogOpen() )">Добавить вопрос</MatButton>
+<MatButton OnClick="@((e) => DialogOpen() )">Редактировать</MatButton>
+<MatIconButton Icon="delete" OnClick="@(() => deleteQuizDialogOpen = true)"></MatIconButton>
+
+
+<MatDialog Class="modal" @bind-IsOpen="@dialogIsOpen">
+    <MatDialogTitle Class="modal-dialog modal-lg">Обновить</MatDialogTitle>
+    <MatDialogContent Class="modal-content">
+        <EditForm Model="@Quiz">
+            <p>
+                <MatTextField Label="Название" Id="@($"{Quiz?.QuizName}")" @bind-Value="@Quiz.QuizName"></MatTextField>
+            </p>
+            @foreach (var newQuestion in Quiz.Items)
+            {
+                <MatButton OnClick="e => DeleteQuestion(newQuestion)"></MatButton>
+                <fieldset>
+                    <div class="form-group">
+                        <input placeholder="Ваш вопрос" id="@($"{newQuestion?.Question}")" value="@newQuestion?.Question"
+                               @onchange="@(e => newQuestion.Question = e.Value.ToString())" />
+                    </div>
+                    <div class="form-group">
+                        <input placeholder="Варианты ответов" id="@($"{newQuestion?.Answers}")" value="@newQuestion?.Answers"
+                               @onchange="@(e => newQuestion.Answers = e.Value.ToString())" />
+                    </div>
+                    <div class="form-group">
+                        <input placeholder="Правильный ответ" id="@($"{newQuestion?.RightAnswer}")" value="@newQuestion?.RightAnswer"
+                               @onchange="@(e => newQuestion.RightAnswer = e.Value.ToString())" />
+                    </div>
+                    <div class="form-group">
+                        <input placeholder="Тип вопроса" id="@($"{newQuestion?.QuestionType}")" value="@newQuestion?.QuestionType"
+                               @onchange="@(e => newQuestion.QuestionType = e.Value.ToString())" />
+                    </div>
+                    <div class="form-group">
+                        <input placeholder="Путь к картинке" id="@($"{newQuestion?.PicturePath}")" value="@newQuestion?.PicturePath"
+                               @onchange="@(e => newQuestion.PicturePath = e.Value.ToString())" />
+                    </div>
+                </fieldset>
+                <MatDivider />
+            }
+            <br />
+            <MatDivider />
+            <MatButton OnClick="NewQuestionDialogOpen">Новый вопрос</MatButton>
+            <MatDivider />
+        </EditForm>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { dialogIsOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@SaveChanges">Обновить</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+
+<MatDialog Class="modal" IsOpen="@questionDialogIsOpen">
+    <MatDialogTitle Class="modal-dialog modal-sm">Вопрос</MatDialogTitle>
+    <MatDialogContent Class="modal-content">
+        <EditForm Model="@QuizItem" OnValidSubmit="@NewQuestion">
+            <fieldset>
+                <div class="form-group">
+                    <p>
+                        <MatTextField @bind-Value="@QuizItem.Question" Label="Ваш вопрос"></MatTextField>
+                    </p>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <MatTextField @bind-Value="@QuizItem.Answers" Label="Ваши ответы"></MatTextField>
+                    </p>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <MatTextField @bind-Value="@QuizItem.RightAnswer" Label="Правильный ответ"></MatTextField>
+                    </p>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <MatTextField @bind-Value="@QuizItem.QuestionType" Label="Тип вопроса"></MatTextField>
+                    </p>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <MatTextField @bind-Value="@QuizItem.PicturePath" Label="Путь к картинке"></MatTextField>
+                    </p>
+                </div>
+            </fieldset>
+        </EditForm>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@((e) => { questionDialogIsOpen = false ; dialogIsOpen = true; })">Х</MatButton>
+        <MatButton Style="text-align: center;" OnClick="@NewQuestion">Дальше</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@deleteQuizDialogOpen" Style="z-index:100">
+    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить</MatDialogTitle>
+    <MatDialogContent>
+        Хотите удалить @(Quiz?.Id) ?
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { deleteQuizDialogOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@(e => DeleteQuiz())">Удалить</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+@code {
+    [Parameter]
+    public int QuizId { get; set; }
+
+    public QuizDto Quiz { get; set; } = new QuizDto();
+
+    public QuizItemDto QuizItem { get; set; } = new QuizItemDto();
+    //Надо придумать мини-сервис по обработке типов вопросов, чтобы грамотно было
+    bool questionDialogIsOpen = false;
+    bool dialogIsOpen = false;
+    bool deleteQuizDialogOpen = false;
+
+    public async Task GetQuiz()
+    {
+        ApiResponseDto apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/quiz/" + Quiz.Id);
+
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Texts retrieved");
+            Quiz = Newtonsoft.Json.JsonConvert.DeserializeObject<QuizDto>(apiResponse.Result.ToString());
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось получить");
+        }
+    }
+
+    //public async Task GetItems()
+    //{
+    //    try
+    //    {
+    //        var result = await apiClient.GetQuizItems(QuizId);
+    //        quizItems = new List<QuizItem>(result);
+    //        matToaster.Add($"{Quiz.QuizName} items got", MatToastType.Success, L["Operation Successful"]);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+    //    }
+    //}
+
+    public async Task NewQuestionDialogOpen()
+    {
+        await GetQuiz();
+
+        questionDialogIsOpen = true;
+        dialogIsOpen = false;
+    }
+
+    public async Task DialogOpen()
+    {
+        await GetQuiz();
+
+        dialogIsOpen = true;
+    }
+
+    public async Task NewQuestion()
+    {
+        ApiResponseDto apiResponse = await Http.PostJsonAsync<ApiResponseDto>("api/quizitem", QuizItem);
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Обновлено");
+            Quiz.Items.Add(QuizItem);
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось обновить");
+        }
+        QuizItem = null;
+    }
+
+    public async Task SaveChanges() // В БД, почему-то, айдишник вопроса типа лонг, надо исправить....
+    {
+        ApiResponseDto apiResponse = await Http.PutJsonAsync<ApiResponseDto>("api/quiz", Quiz);
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Обновлено");
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось обновить");
+        }
+
+        StateHasChanged();
+    }
+
+    public async Task DeleteQuestion(QuizItemDto quizItem)
+    {
+        try
+        {
+            var response = await Http.DeleteAsync("api/quizitem/" + quizItem.Id);
+            if (response.StatusCode == (HttpStatusCode)Status200OK)
+            {
+                matToaster.Add("Удалено", MatToastType.Success);
+                StateHasChanged();
+            }
+            else
+            {
+                matToaster.Add("Не удалось удалить: " + response.StatusCode, MatToastType.Danger);
+            }
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
+        }
+    }
+
+    public async Task DeleteQuiz()
+    {
+        try
+        {
+            var response = await Http.DeleteAsync("api/quiz/" + Quiz.Id);
+            if (response.StatusCode == (HttpStatusCode)Status200OK)
+            {
+                matToaster.Add("Удалено", MatToastType.Success);
+                StateHasChanged();
+            }
+            else
+            {
+                matToaster.Add("Не удалось удалить: " + response.StatusCode, MatToastType.Danger);
+            }
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
+        }
+    }
+}

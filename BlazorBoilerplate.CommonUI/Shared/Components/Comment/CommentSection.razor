@@ -116,19 +116,38 @@
 
 @code {
     [Parameter]
-    public List<CommentDto> Comments { get; set; }
-
-    [Parameter]
     public long CourseId { get; set; }
 
     [Parameter]
     public UserInfoDto UserInfoDto { get; set; }
 
+    public List<CommentDto> Comments { get; set; }
     CommentDto commentDto { get; set; } = new CommentDto();
+
     BlazoredTextEditor QuillHtml;
     bool IsOpened { get; set; }
     bool Creating { get; set; } = false;
     string avatar = "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ReadComments();
+    }
+
+    async Task ReadComments()
+    {
+        ApiResponseDto apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/comment/course/" + CourseId);
+
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Quizzes retrieved");
+            Comments = Newtonsoft.Json.JsonConvert.DeserializeObject<CommentDto[]>(apiResponse.Result.ToString()).ToList<CommentDto>();
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось получить");
+        }
+    }
 
     async Task DeleteMessage(long id)
     {

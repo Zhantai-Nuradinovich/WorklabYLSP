@@ -9,115 +9,77 @@
                Title="Worklab"
                SubTitle="Погрузись в эту сферу с головой"
                ContentTitle="Пример добавления направлений">
-    @if (IsAdminOrCoordinator) 
+    @if (IsAdminOrCoordinator)
     {
         <div style="width:135px;">
             <MatButton Icon="playlist_add" Label="Новое направление" OnClick="@((e) => OpenDialog())" Raised="true"></MatButton>
         </div>
     }
     <MatDivider />
-    @foreach (var dir in directions)
-    {
-        <div class="content">
-            <h1 class="heading">
-                @dir.Title <br />
-                @if (IsAdminOrCoordinator)
-                {
-                    <MatIconButton Icon="delete" OnClick="@(() => OpenDirDeleteDialog(dir.ScienceDirectionId))"></MatIconButton>
-                }
-            </h1>
-            <p class="description">@dir.Description</p>
-            @foreach (var oneCourse in courses.Where(x => x.ScienceDirectionId == dir.ScienceDirectionId))
-            {
-                <div class="card">
-                    <div class="front" style="background-image: url(//source.unsplash.com/300x40&quot;+n+&quot;);">
-                        <p>@oneCourse.CourseName</p>
-                    </div>
-                    <div class="back">
-                        <div>
-                            <p>@oneCourse.Description</p>
-                            <button class="button" style="color: white;">
-                                <MatButton Link="@navigationManager.ToAbsoluteUri("courses/"+oneCourse.CourseId).AbsoluteUri">Попробовать</MatButton>
-                            </button>
-                            @if (IsAdminOrCoordinator)
-                            {
-                                <MatIconButton Icon="delete" OnClick="@(() => OpenCourseDeleteDialog(oneCourse.CourseId))"></MatIconButton>
-                            }
-                        </div>
+    <div class="content">
+        <h1 class="heading">
+            Название направления
+        </h1>
+        @foreach (var program in courses) // courses.Where(x => x. DirectionName == "Medicine")
+        {
+            <div class="card">
+                <div class="front" style="background-image: url(@program.PicturePath);">
+                    <p>@program.CourseName</p>
+                </div>
+                <div class="back">
+                    <div>
+                        <p>@program.Annotation</p>
+                        <button class="button" style="color: white;">
+                            <MatButton Link="@navigationManager.ToAbsoluteUri("courses/"+program.Id).AbsoluteUri">Попробовать</MatButton>
+                        </button>
+                        @if (IsAdminOrCoordinator)
+                        {
+                            <MatIconButton Icon="delete" OnClick="@(() => OpenDeleteDialog(program.Id))"></MatIconButton>
+                        }
                     </div>
                 </div>
-            }
-             @if (IsAdminOrCoordinator)
-             {
-                <MatIconButton Icon="add" OnClick="@((e) => OpenCourseDialog(dir.ScienceDirectionId))"></MatIconButton>
-             }
-             <MatDivider />
-        </div>
-    }
+            </div>
+        }
 
-    <MatDialog @bind-IsOpen="@dialogIsOpen">
+
+    </div>
+
+    <MatDialog @bind-IsOpen="@courseDialogIsOpen">
         <MatDialogTitle>Создать</MatDialogTitle>
         <MatDialogContent>
-            <EditForm Model="@Direction" OnValidSubmit="@CreateDirection">
+            <EditForm Model="@Course" OnValidSubmit="@NewEntity">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
                 <fieldset>
                     <div class="form-group">
-                        <MatTextField @bind-Value="@Direction.Title" Label="Название" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                        <MatTextField @bind-Value="@Course.CourseName" Label="Название курса" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
                     </div>
                     <div class="form-group">
-                        <MatTextField @bind-Value="@Direction.Description" Label="Описание" TextArea="true" FullWidth="true"></MatTextField>
+                        <MatTextField @bind-Value="@Course.DirectionName" Label="Название направления" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    </div>
+                    <div class="form-group">
+                        <MatTextField @bind-Value="@Course.Annotation" Label="Описание" TextArea="true" FullWidth="true"></MatTextField>
+                    </div>
+                    <div class="form-group">
+                        <MatTextField @bind-Value="@Course.PicturePath" Label="Путь к картинке, если надо" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
                     </div>
                 </fieldset>
             </EditForm>
         </MatDialogContent>
         <MatDialogActions>
             <MatButton OnClick="@(e => { courseDialogIsOpen = false; })">Закрыть</MatButton>
-            <MatButton OnClick="@CreateDirection">Завершить</MatButton>
-        </MatDialogActions>
-    </MatDialog>
-
-    <MatDialog @bind-IsOpen="@courseDialogIsOpen">
-        <MatDialogTitle>Создать</MatDialogTitle>
-        <MatDialogContent>
-            <EditForm Model="@Course" OnValidSubmit="@CreateCourse">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <fieldset>
-                    <div class="form-group">
-                        <MatTextField @bind-Value="@Course.CourseName" Label="Название" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
-                    </div>
-                    <div class="form-group">
-                        <MatTextField @bind-Value="@Course.Description" Label="Описание" TextArea="true" FullWidth="true"></MatTextField>
-                    </div>
-                </fieldset>
-            </EditForm>
-        </MatDialogContent>
-        <MatDialogActions>
-            <MatButton OnClick="@(e => { dialogIsOpen = false; })">Закрыть</MatButton>
-            <MatButton OnClick="@CreateCourse">Завершить</MatButton>
+            <MatButton OnClick="@NewEntity">Завершить</MatButton>
         </MatDialogActions>
     </MatDialog>
 
     <MatDialog @bind-IsOpen="@courseDeleteDialogOpen" Style="z-index:100">
         <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить удаление</MatDialogTitle>
         <MatDialogContent>
-            Хотите удалить @Course.CourseName ?
+            Хотите удалить @course.CourseName ?
         </MatDialogContent>
         <MatDialogActions>
             <MatButton OnClick="@(e => { courseDeleteDialogOpen = false; })">Закрыть</MatButton>
-            <MatButton OnClick="@DeleteCourse">Удалить</MatButton>
-        </MatDialogActions>
-    </MatDialog>
-
-    <MatDialog @bind-IsOpen="@dirDeleteDialogOpen" Style="z-index:100">
-        <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить удаление</MatDialogTitle>
-        <MatDialogContent>
-            Хотите удалить @Direction.Title ?
-        </MatDialogContent>
-        <MatDialogActions>
-            <MatButton OnClick="@(e => { dirDeleteDialogOpen = false; })">Закрыть</MatButton>
-            <MatButton OnClick="@DeleteDirection">Удалить</MatButton>
+            <MatButton OnClick="@Delete">Удалить</MatButton>
         </MatDialogActions>
     </MatDialog>
 </MainContainer>
@@ -130,20 +92,13 @@
     Task<AuthenticationState> authenticationStateTask { get; set; }
 
     bool courseDeleteDialogOpen = false;
-    bool dirDeleteDialogOpen = false;
-    bool dialogIsOpen = false;
     bool courseDialogIsOpen = false;
-    bool totalScoreDialogIsOpen = false;
-    List<ScienceDirectionDto> directions = new List<ScienceDirectionDto>();
     List<CourseDto> courses = new List<CourseDto>();
-
-    ScienceDirectionDto Direction { get; set; } = new ScienceDirectionDto();
     CourseDto Course { get; set; } = new CourseDto();
 
     protected override async Task OnInitializedAsync()
     {
-        await ReadDirections();
-        await ReadCourses();
+        await LoadMainEntities();
 
         var user = (await authenticationStateTask).User;
 
@@ -153,19 +108,10 @@
         }
     }
 
-    async Task ReadDirections()
+    async Task LoadMainEntities()
     {
-        ApiResponseDto apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/sciencedirection");
+        await ReadCourses();
 
-        if (apiResponse.StatusCode == Status200OK)
-        {
-            matToaster.Add(apiResponse.Message, MatToastType.Success, "Направления получены");
-            directions = Newtonsoft.Json.JsonConvert.DeserializeObject<ScienceDirectionDto[]>(apiResponse.Result.ToString()).ToList<ScienceDirectionDto>();
-        }
-        else
-        {
-            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось получить");
-        }
     }
 
     async Task ReadCourses()
@@ -183,32 +129,20 @@
         }
     }
 
-    public async Task CreateDirection()
+    public async void Update(CourseDto course)
     {
-        dialogIsOpen = false;
-        try
+        ApiResponseDto apiResponse = await Http.PutJsonAsync<ApiResponseDto>("api/course", course);
+        if (apiResponse.StatusCode == Status200OK)
         {
-            ApiResponseDto apiResponse = await Http.PostJsonAsync<ApiResponseDto>("api/sciencedirection", Direction);
-            if (apiResponse.StatusCode == Status200OK)
-            {
-                matToaster.Add(apiResponse.Message, MatToastType.Success);
-                Direction = Newtonsoft.Json.JsonConvert.DeserializeObject<ScienceDirectionDto>(apiResponse.Result.ToString());
-                directions.Add(Direction);
-
-                Direction = new ScienceDirectionDto(); //reset direction after insert
-            }
-            else
-            {
-                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось создать");
-            }
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Обновлено");
         }
-        catch (Exception ex)
+        else
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось создать");
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось обновить");
         }
     }
 
-    public async Task CreateCourse()
+    public async Task NewEntity()
     {
         courseDialogIsOpen = false;
         try
@@ -217,10 +151,7 @@
             if (apiResponse.StatusCode == Status200OK)
             {
                 matToaster.Add(apiResponse.Message, MatToastType.Success);
-                Course = Newtonsoft.Json.JsonConvert.DeserializeObject<CourseDto>(apiResponse.Result.ToString());
-                courses.Add(Course);
-
-                Course = new CourseDto(); //reset direction after insert
+                await LoadMainEntities();
             }
             else
             {
@@ -234,7 +165,7 @@
     }
 
     //Delete
-    public async Task DeleteCourse()
+    public async Task Delete()
     {
         try
         {
@@ -258,50 +189,14 @@
         }
     }
 
-    public async Task DeleteDirection()
-    {
-        try
-        {
-            var response = await Http.DeleteAsync("api/sciencedirection/" + Direction.ScienceDirectionId);
-            if (response.StatusCode == (HttpStatusCode)Status200OK)
-            {
-                matToaster.Add("Удалено", MatToastType.Success);
-                directions.Remove(Direction);
-                StateHasChanged();
-            }
-            else
-            {
-                matToaster.Add("Не удалось удалить: " + response.StatusCode, MatToastType.Danger);
-            }
-            dirDeleteDialogOpen = false;
-            Direction = new ScienceDirectionDto(); //reset course after delete
-        }
-        catch (Exception ex)
-        {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
-        }
-    }
-
     public void OpenDialog()
     {
-        dialogIsOpen = true;
-    }
-
-    public void OpenCourseDialog(long id)
-    {
         courseDialogIsOpen = true;
-        Course.ScienceDirectionId = id;
     }
 
-    public void OpenCourseDeleteDialog(long id)
+    public void OpenDeleteDialog(int courseID)
     {
+        Course = courses.Where(x => x.CourseId == courseID).SingleOrDefault();
         courseDeleteDialogOpen = true;
-        Course.CourseId = id;
-    }
-
-    public void OpenDirDeleteDialog(long id)
-    {
-        dirDeleteDialogOpen = true;
-        Direction.ScienceDirectionId = id;
     }
 }

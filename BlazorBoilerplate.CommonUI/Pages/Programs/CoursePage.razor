@@ -1,0 +1,113 @@
+﻿@page "/courses/{CourseId}"
+@using BlazorBoilerplate.Shared.Dto.Blog
+@using BlazorBoilerplate.Shared.Dto.Account
+@using BlazorBoilerplate.CommonUI.Shared.Components.Comment
+@using BlazorBoilerplate.CommonUI.Shared.Components.Quizzes
+@using BlazorBoilerplate.CommonUI.Shared.Components.Text
+@inject NavigationManager navigationManager
+@inject HttpClient Http
+@inject IMatToaster matToaster
+@inject AuthenticationStateProvider authStateProvider
+
+<MainContainer Title="@CourseView?.CourseName"
+               SubTitle="@CourseView?.Description"
+               ContentTitle="Начнём!">
+    @if (IsAdminOrCoordinator)
+    {
+        <CreateQuiz CourseId="@(int.Parse(CourseId))" />
+        <CreateText CourseId="@(int.Parse(CourseId))" />
+    }
+    <p class="heading">Надо посмотреть что-нибудь о пагинации контента и попробовать через енумератор. Продумать структуру как у курсеры и добавить привязку к пользователю + почитать об аналитике сайта</p>
+    @if (oneContent is QuizDto quiz)
+    {
+        <OneQuiz Quiz="@quiz" IsAdminOrCoordinator="@IsAdminOrCoordinator" />
+    }
+    else if (oneContent is TextDto text)
+    {
+        <OneText Text="@text" IsAdminOrCoordinator="@IsAdminOrCoordinator" />
+    }
+
+    <MatButton Label="Вперед"
+               Style="background-color: #4F94C1; color: snow; border-radius: 5px; margin: 10px;"
+               OnClick="NextStep">
+    </MatButton>
+    <CommentSection UserInfoDto="@userViewModel" CourseId="@long.Parse(CourseId)" />
+</MainContainer>
+
+@code {
+    bool IsAdminOrCoordinator { get; set; } = false;
+
+    [Parameter]
+    public string CourseId { get; set; }
+
+    UserInfoDto userViewModel { get; set; } = new UserInfoDto();
+    List<QuizDto> quizzes = new List<QuizDto>();
+    List<TextDto> texts = new List<TextDto>();
+    List<object> content { get; set; } = new List<object>();
+
+    IEnumerator<object> enumerator;
+    object oneContent;
+
+    [CascadingParameter]
+    Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await authenticationStateTask).User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            IsAdminOrCoordinator = user.IsInRole("Administrator") || user.IsInRole("Coordinator");
+        }
+
+        userViewModel = await ((IdentityAuthenticationStateProvider)authStateProvider).GetUserInfo();
+
+        await ReadTexts();
+        await ReadQuizzes();
+        content.AddRange(quizzes);
+        content.AddRange(texts);
+        content = content.OrderBy(t => t is QuizDto ? (t as QuizDto).When : (t as TextDto).When).ToList();
+
+        enumerator = content.GetEnumerator();
+
+        if (enumerator.MoveNext())
+        {
+            oneContent = enumerator.Current;
+        }
+    }
+
+    public void NextStep()
+    {
+        oneContent = enumerator.MoveNext() ? enumerator.Current : null;
+    }
+
+    async Task ReadQuizzes()
+    {
+        ApiResponseDto apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/quiz/course/" + CourseId);
+
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Quizzes retrieved");
+            quizzes = Newtonsoft.Json.JsonConvert.DeserializeObject<QuizDto[]>(apiResponse.Result.ToString()).ToList<QuizDto>();
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось получить");
+        }
+    }
+
+    async Task ReadTexts()
+    {
+        ApiResponseDto apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/text/course/" + CourseId);
+
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Texts retrieved");
+            texts = Newtonsoft.Json.JsonConvert.DeserializeObject<TextDto[]>(apiResponse.Result.ToString()).ToList<TextDto>();
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось получить");
+        }
+    }
+}

@@ -1,0 +1,149 @@
+﻿@using BlazorBoilerplate.Shared.Dto.Blog
+@inject HttpClient Http
+@inject IMatToaster matToaster
+@using System.Net
+
+
+<MatButton OnClick="@((e) => DialogOpen() )">Редактировать</MatButton>
+<MatIconButton Icon="delete" OnClick="@(() => deleteTextDialogOpen = true)"></MatIconButton>
+
+<MatDialog Class="modal" @bind-IsOpen="@dialogIsOpen">
+    <MatDialogTitle Class="modal-dialog modal-lg">Обновить</MatDialogTitle>
+    <MatDialogContent Class="modal-content">
+        <EditForm Model="@Text">
+            <fieldset>
+                <BlazoredTextEditor @ref="@QuillHtml">
+                    <ToolbarContent>
+                        <span class="ql-formats">
+                            <select class="ql-font">
+                                <option selected=""></option>
+                                <option value="serif"></option>
+                                <option value="monospace"></option>
+                            </select>
+                            <select class="ql-size">
+                                <option value="small"></option>
+                                <option selected=""></option>
+                                <option value="large"></option>
+                                <option value="huge"></option>
+                            </select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                            <button class="ql-strike"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                            <button class="ql-indent" value="-1"></button>
+                            <button class="ql-indent" value="+1"></button>
+                            <select class="ql-align">
+                                <option selected=""></option>
+                                <option value="center"></option>
+                                <option value="right"></option>
+                                <option value="justify"></option>
+                            </select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                        </span>
+                    </ToolbarContent>
+                    <EditorContent>
+                    </EditorContent>
+                </BlazoredTextEditor>
+            </fieldset>
+            <MatDivider />
+        </EditForm>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { dialogIsOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@SaveChanges">Обновить</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@deleteTextDialogOpen" Style="z-index:100">
+    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить</MatDialogTitle>
+    <MatDialogContent>
+        Хотите удалить @(Text?.TextId) ?
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { deleteTextDialogOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@(e => DeleteText())">Удалить</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+@code {
+    [Parameter]
+    public int TextId { get; set; }
+
+    public TextDto Text { get; set; } = new TextDto();
+    BlazoredTextEditor QuillHtml;
+    string QuillHTMLContent;
+
+    bool dialogIsOpen = false;
+    bool deleteTextDialogOpen = false;
+
+    public async Task GetText()
+    {
+        ApiResponseDto apiResponse = await Http.GetFromJsonAsync<ApiResponseDto>("api/text/" + Text.TextId);
+
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Texts retrieved");
+            Text = Newtonsoft.Json.JsonConvert.DeserializeObject<TextDto>(apiResponse.Result.ToString());
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось получить");
+        }
+    }
+
+    public async void SaveChanges()
+    {
+        Text.TextContent = await this.QuillHtml.GetHTML();
+        ApiResponseDto apiResponse = await Http.PutJsonAsync<ApiResponseDto>("api/text", Text);
+        if (apiResponse.StatusCode == Status200OK)
+        {
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Обновлено");
+        }
+        else
+        {
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось обновить");
+        }
+        StateHasChanged();
+    }
+
+    public async Task DialogOpen()
+    {
+        dialogIsOpen = true;
+        await GetText();
+    }
+
+    public async Task DeleteText()
+    {
+        try
+        {
+            var response = await Http.DeleteAsync("api/text/" + Text.TextId);
+            if (response.StatusCode == (HttpStatusCode)Status200OK)
+            {
+                matToaster.Add("Удалено", MatToastType.Success);
+                StateHasChanged();
+            }
+            else
+            {
+                matToaster.Add("Не удалось удалить: " + response.StatusCode, MatToastType.Danger);
+            }
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось сохранить");
+        }
+        Text = null;
+        deleteTextDialogOpen = false;
+    }
+}

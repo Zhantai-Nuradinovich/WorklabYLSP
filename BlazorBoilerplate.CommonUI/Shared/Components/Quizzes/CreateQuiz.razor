@@ -1,0 +1,67 @@
+﻿@using BlazorBoilerplate.Shared.Dto.Blog
+@inject HttpClient Http
+@inject IMatToaster matToaster
+@using System.Net
+
+
+<div style="width:135px;">
+    <MatButton Icon="playlist_add" Label="Тест" OnClick="@((e) => OpenDialog())"
+               Style="background-color: #4F94C1; color: snow; border-radius: 5px; margin: 10px;"></MatButton>
+</div>
+
+<MatDialog Class="modal" @bind-IsOpen="@dialogIsOpen">
+    <MatDialogTitle Class="modal-dialog modal-lg">Создать</MatDialogTitle>
+    <MatDialogContent Class="modal-content">
+        <EditForm Model="@Quiz">
+            <p>
+                <MatTextField Label="Название" Id="@($"{Quiz?.QuizName}")" @bind-Value="@Quiz.QuizName"></MatTextField>
+            </p>
+            <MatDivider />
+        </EditForm>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { dialogIsOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@NewQuiz">Завершить</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+@code {
+    bool dialogIsOpen = false;
+    List<QuizItemDto> quizItems = new List<QuizItemDto>();
+
+    QuizDto Quiz { get; set; } = new QuizDto();
+    QuizItemDto QuizItem { get; set; } = new QuizItemDto();
+
+    [Parameter]
+    public int CourseId { get; set; }
+
+    public void OpenDialog()
+    {
+        dialogIsOpen = true;
+    }
+
+    //При вставки вопросов в БД ошибка => айдишник предоставляется БД => ID сущности Quiz прежний => не существует такого айди в БД => error
+    public async Task NewQuiz()
+    {
+        dialogIsOpen = false;
+        try
+        {
+            Quiz.CourseId = CourseId;
+            Quiz.When = DateTime.Now;
+            ApiResponseDto apiResponse = await Http.PostJsonAsync<ApiResponseDto>("api/quiz", Quiz);
+            if (apiResponse.StatusCode == Status200OK)
+            {
+                matToaster.Add(apiResponse.Message, MatToastType.Success);
+                Quiz = new QuizDto();
+            }
+            else
+            {
+                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Не удалось создать");
+            }
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.Message, MatToastType.Danger, "Не удалось создать");
+        }
+    }
+}

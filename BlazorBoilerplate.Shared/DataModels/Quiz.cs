@@ -12,9 +12,9 @@ namespace BlazorBoilerplate.Shared.DataModels
 
         [Required]
         [MaxLength(128)]
-        public string DirectionTitle { get; set; }
+        public string QuizName { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public DateTime When { get; set; }
 
         [Required]
         public virtual List<QuizItem> Items { get; set; }

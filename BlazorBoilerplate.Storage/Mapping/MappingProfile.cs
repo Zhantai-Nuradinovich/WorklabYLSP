@@ -24,9 +24,7 @@ namespace BlazorBoilerplate.Storage.Mapping
             CreateMap<ApiLogItem, ApiLogItemDto>().ReverseMap();
             CreateMap<Message, MessageDto>().ReverseMap();
             CreateMap<Comment, CommentDto>().ReverseMap();
-            CreateMap<ContentFile, ContentFileDto>().ReverseMap();
             CreateMap<Course, CourseDto>().ReverseMap();
-            CreateMap<ScienceDirection, ScienceDirectionDto>().ReverseMap();
             CreateMap<Text, TextDto>().ReverseMap();
         }
     }

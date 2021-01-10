@@ -25,9 +25,7 @@ namespace BlazorBoilerplate.Storage
             services.AddTransient<IQuizStore, QuizStore>();
             services.AddTransient<IQuizItemStore, QuizItemStore>();
             services.AddTransient<ICommentStore, CommentStore>();
-            services.AddTransient<IContentFileStore, ContentFileStore>();
             services.AddTransient<ICourseStore, CourseStore>();
-            services.AddTransient<IScienceDirectionStore, ScienceDirectionStore>();
             services.AddTransient<ITextStore, TextStore>();
             //services.AddTransient<ITenantStore, TenantStore>();
             services.AddTransient<IApiLogStore, ApiLogStore>();

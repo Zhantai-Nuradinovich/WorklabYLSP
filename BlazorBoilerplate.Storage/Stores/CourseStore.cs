@@ -34,39 +34,32 @@ namespace BlazorBoilerplate.Storage.Stores
 
         public async Task DeleteById(long id)
         {
-            var files = _db.Files.Where(t => t.CourseId == id).ToList();
-            var texts = _db.Texts.Where(t => t.CourseId == id).ToList();
-            var quizzes = _db.Quizzes.Where(t => t.CourseId == id).ToList();
-            var quizItems = new List<QuizItem>();
+            //var texts = _db.Texts.Where(t => t.CourseId == id).ToList();
+            //var quizzes = _db.Quizzes.Where(t => t.CourseId == id).ToList();
+            //var quizItems = new List<QuizItem>();
 
-            foreach (var quiz in quizzes)
-            {
-                quizItems.AddRange(_db.QuizItems.Where(x => x.QuizId == quiz.Id));
-            }
+            //foreach (var quiz in quizzes)
+            //{
+            //    quizItems.AddRange(_db.QuizItems.Where(x => x.QuizId == quiz.Id));
+            //}
 
-            if (quizItems != null)
-            {
-                _db.QuizItems.RemoveRange(quizItems);
-                _db.SaveChanges();
-            }
+            //if (quizItems != null)
+            //{
+            //    _db.QuizItems.RemoveRange(quizItems);
+            //    _db.SaveChanges();
+            //}
 
-            if(quizzes != null)
-            {
-                _db.Quizzes.RemoveRange(quizzes);
-                _db.SaveChanges();
-            }
+            //if(quizzes != null)
+            //{
+            //    _db.Quizzes.RemoveRange(quizzes);
+            //    _db.SaveChanges();
+            //}
 
-            if(texts != null)
-            {
-                _db.Texts.RemoveRange(texts);
-                _db.SaveChanges();
-            }
-
-            if (files != null)
-            {
-                _db.Files.RemoveRange(files);
-                _db.SaveChanges();
-            }
+            //if(texts != null)
+            //{
+            //    _db.Texts.RemoveRange(texts);
+            //    _db.SaveChanges();
+            //}
 
             _db.Courses.Remove(await _db.Courses.SingleOrDefaultAsync(t => t.CourseId == id));
             await _db.SaveChangesAsync(CancellationToken.None);
@@ -80,7 +73,7 @@ namespace BlazorBoilerplate.Storage.Stores
 
         public async Task<CourseDto> GetById(long id)
         {
-            var course = await _db.Courses.SingleOrDefaultAsync(t => t.CourseId == id);
+            var course = await _db.Courses.Include(t => t.Quizzes).Include(t => t.Texts).SingleOrDefaultAsync(t => t.CourseId == id);
             if (course == null)
                 throw new InvalidDataException($"Unable to find Course with ID: {id}");
 

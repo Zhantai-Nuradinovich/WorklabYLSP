@@ -7,16 +7,16 @@ using System.Text;
 
 namespace BlazorBoilerplate.Shared.Dto.Blog
 {
-    public class QuizDto : ContentDto
+    public class QuizDto
     {
         [Key]
         public long Id { get; set; }
 
         [Required]
         [MaxLength(128)]
-        public string DirectionTitle { get; set; }
+        public string QuizName { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public DateTime When { get; set; }
 
         [Required]
         public virtual List<QuizItemDto> Items { get; set; }

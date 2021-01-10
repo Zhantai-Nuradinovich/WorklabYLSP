@@ -1,4 +1,4 @@
-#Technology
+# Technology
 Blazor is a web framework designed to run in the browser on a WebAssembly-based .NET runtime. This project is able BOTH (WebAssembly / Core-Hosted) and Server-Side Blazor with a .NET Core 3.1 Server. The UI for this application is by Material Design provided mostly by MatBlazor.
 Version 0.2.3 and below utilize AspNETCore Authorization / Authentication. Version 0.3.0 and up will be using Identity Server 4. Version 0.6.0 and up are capable of both CSB and SSB!    
 

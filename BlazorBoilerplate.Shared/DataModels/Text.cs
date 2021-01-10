@@ -11,7 +11,7 @@ namespace BlazorBoilerplate.Shared.DataModels
         public long TextId { get; set; }
         [Required]
         public string TextContent { get; set; }
-        public DateTime CreationDate { get; set; }
+        public DateTime When { get; set; }
         public long CourseId { get; set; }
         public Course Course { get; set; }
     }

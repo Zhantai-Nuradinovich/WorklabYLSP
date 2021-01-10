@@ -6,13 +6,13 @@ using System.Text;
 
 namespace BlazorBoilerplate.Shared.Dto.Blog
 {
-    public class TextDto : ContentDto
+    public class TextDto
     {
         [Key]
         public long TextId { get; set; }
         [Required]
         public string TextContent { get; set; }
-        public DateTime CreationDate { get; set; }
+        public DateTime When { get; set; }
         public long CourseId { get; set; }
     }
 }

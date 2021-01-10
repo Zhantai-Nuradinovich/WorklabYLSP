@@ -358,10 +358,8 @@ namespace BlazorBoilerplate.Server
             services.AddTransient<ITodoManager, ToDoManager>();
             services.AddTransient<IQuizManager, QuizManager>();
             services.AddTransient<IQuizItemManager, QuizItemManager>();
-            services.AddTransient<IContentFileManager, ContentFileManager>();
             services.AddTransient<ITextManager, TextManager>();
             services.AddTransient<ICourseManager, CourseManager>();
-            services.AddTransient<IScienceDirectionManager, ScienceDirectionManager>();
             services.AddTransient<ICommentManager, CommentManager>();
             services.AddTransient<IUserProfileManager, UserProfileManager>();
 

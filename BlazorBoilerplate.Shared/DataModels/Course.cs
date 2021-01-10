@@ -9,15 +9,14 @@ namespace BlazorBoilerplate.Shared.DataModels
     {
         [Key]
         public long CourseId { get; set; }
-        public long ScienceDirectionId { get; set; }
-        public ScienceDirection ScienceDirection { get; set; }
         [Required]
         [MaxLength(128)]
         public string CourseName { get; set; }
+        public string DirectionName { get; set; }
         [Required]
         [MaxLength(256)]
-        public string Description { get; set; }
-        public List<ContentFile> Files { get; set; }
+        public string Annotation { get; set; }
+        public string PicturePath { get; set; }
         public List<Quiz> Quizzes { get; set; }
         //public List<Theme> Themes { get; set; }
         public List<Text> Texts { get; set; }

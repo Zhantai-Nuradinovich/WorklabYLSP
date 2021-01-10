@@ -30,11 +30,11 @@
                     <div>
                         <p>@program.Annotation</p>
                         <button class="button" style="color: white;">
-                            <MatButton Link="@navigationManager.ToAbsoluteUri("courses/"+program.Id).AbsoluteUri">Попробовать</MatButton>
+                            <MatButton Link="@navigationManager.ToAbsoluteUri("courses/"+program.CourseId).AbsoluteUri">Попробовать</MatButton>
                         </button>
                         @if (IsAdminOrCoordinator)
                         {
-                            <MatIconButton Icon="delete" OnClick="@(() => OpenDeleteDialog(program.Id))"></MatIconButton>
+                            <MatIconButton Icon="delete" OnClick="@(() => OpenDeleteDialog(program.CourseId))"></MatIconButton>
                         }
                     </div>
                 </div>
@@ -75,7 +75,7 @@
     <MatDialog @bind-IsOpen="@courseDeleteDialogOpen" Style="z-index:100">
         <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить удаление</MatDialogTitle>
         <MatDialogContent>
-            Хотите удалить @course.CourseName ?
+            Хотите удалить @Course.CourseName ?
         </MatDialogContent>
         <MatDialogActions>
             <MatButton OnClick="@(e => { courseDeleteDialogOpen = false; })">Закрыть</MatButton>
@@ -194,7 +194,7 @@
         courseDialogIsOpen = true;
     }
 
-    public void OpenDeleteDialog(int courseID)
+    public void OpenDeleteDialog(long courseID)
     {
         Course = courses.Where(x => x.CourseId == courseID).SingleOrDefault();
         courseDeleteDialogOpen = true;
